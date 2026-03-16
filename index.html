@@ -303,6 +303,10 @@ document.getElementById('otp-form').addEventListener('submit', function(e) {
     // Update navbar login button to "My Profile"
     document.querySelector('button[onclick*="Login"]').innerText = "My Profile";
 });
+     function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.toggle('hidden');
+}
 </script>
 <div id="auth-modal" class="fixed inset-0 z-[100] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden relative animate-in fade-in zoom-in duration-300">
