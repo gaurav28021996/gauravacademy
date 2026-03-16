@@ -255,6 +255,49 @@
         cart.splice(index, 1);
         updateCartUI();
     }
+     // Toggle Modal Visibility
+function toggleAuthModal() {
+    const modal = document.getElementById('auth-modal');
+    modal.classList.toggle('hidden');
+    // Reset to step 1 if closing
+    if (modal.classList.contains('hidden')) {
+        document.getElementById('reg-form').classList.remove('hidden');
+        document.getElementById('otp-form').classList.add('hidden');
+    }
+}
+
+// Handle Registration Submit
+document.getElementById('reg-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const phone = document.getElementById('user-phone').value;
+    
+    // UI Transition to OTP
+    document.getElementById('display-phone').innerText = "+91 " + phone;
+    this.classList.add('hidden');
+    document.getElementById('otp-form').classList.remove('hidden');
+    document.getElementById('auth-title').innerText = "Verify OTP";
+    document.getElementById('auth-subtitle').innerText = "Check your messages for the code";
+});
+
+// Auto-focus OTP inputs
+const otpInputs = document.querySelectorAll('.otp-input');
+otpInputs.forEach((input, index) => {
+    input.addEventListener('keyup', (e) => {
+        if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+            otpInputs[index + 1].focus();
+        }
+    });
+});
+
+// Final Login Verification
+document.getElementById('otp-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Simulate successful login
+    toggleAuthModal();
+    alert("Login Successful! Welcome to Gaurav Classes.");
+    // Update navbar login button to "My Profile"
+    document.querySelector('button[onclick*="Login"]').innerText = "My Profile";
+});
 </script>
 <div id="auth-modal" class="fixed inset-0 z-[100] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden relative animate-in fade-in zoom-in duration-300">
