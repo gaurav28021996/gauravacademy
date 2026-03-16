@@ -317,6 +317,35 @@ document.getElementById('otp-form').addEventListener('submit', function(e) {
     // Update navbar login button to "My Profile"
     document.querySelector('button[onclick*="Login"]').innerText = "My Profile";
 });
+     // Toggle password visibility
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('user-password');
+    const eyeIcon = document.getElementById('eye-icon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+
+// Handle Login
+document.getElementById('auth-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Simulate API call
+    const email = document.getElementById('user-email').value;
+    alert("Login Successful! Welcome, " + email);
+    
+    toggleAuthModal();
+    
+    // Update Auth Button to show user is logged in
+    const authBtn = document.getElementById('auth-btn');
+    authBtn.innerText = "My Profile";
+    authBtn.onclick = null; // Disable modal trigger
+});
 
 </script>
 <div id="auth-modal" class="fixed inset-0 z-[100] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
