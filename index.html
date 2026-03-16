@@ -183,6 +183,22 @@
     </footer>
 
  <script>
+     // Add this at the very top of your <script> tag
+document.addEventListener('DOMContentLoaded', () => {
+    // Ensure the home view is visible by default
+    showView('home');
+});
+
+// Update the Login Success part of your existing script
+document.getElementById('otp-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    toggleAuthModal();
+    alert("Login Successful! Welcome to Gaurav Classes.");
+    
+    // Fix: Correctly targeting the button by the ID we added
+    document.getElementById('auth-btn').innerText = "My Profile";
+    document.getElementById('auth-btn').onclick = null; // Optional: change behavior for profile
+});
     let cart = [];
 
     // Smooth Navigation Function
