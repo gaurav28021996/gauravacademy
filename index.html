@@ -3,153 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaurav Classes | Premium Education Store</title>
+    <title>Gaurav Classes | Premium Study Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        body { font-family: 'Outfit', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); }
-        .gradient-text { background: linear-gradient(90deg, #1e40af, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .bento-card:hover { transform: translateY(-5px); transition: all 0.3s ease; }
+        body { font-family: 'Outfit', sans-serif; scroll-behavior: smooth; }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .hidden { display: none; }
+        .active-nav { color: #2563eb; border-bottom: 2px solid #2563eb; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
 
-    <div class="bg-blue-900 text-white text-[10px] py-1 text-center font-bold tracking-widest uppercase">
-        🚀 New: 2026 Board Model Papers Now Available
-    </div>
-
     <nav class="sticky top-0 z-50 glass px-6 py-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black shadow-lg shadow-blue-200">G</div>
-                <span class="text-xl font-extrabold tracking-tight text-slate-800">Gaurav Classes</span>
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="showView('home')">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black shadow-lg">G</div>
+                <span class="text-xl font-extrabold tracking-tight">Gaurav Classes</span>
             </div>
             
-            <div class="hidden md:flex items-center bg-slate-100 rounded-full px-4 py-2 space-x-6 text-sm font-medium">
-                <a href="#" class="text-blue-600">Home</a>
-                <a href="#" class="hover:text-blue-600 transition">Textbooks</a>
-                <a href="#" class="hover:text-blue-600 transition">Test Series</a>
-                <a href="#" class="hover:text-blue-600 transition">PYQPs</a>
+            <div class="hidden md:flex items-center space-x-8 text-sm font-bold uppercase tracking-wider">
+                <button onclick="showView('textbooks')" class="nav-link hover:text-blue-600 transition">Textbooks</button>
+                <button onclick="showView('pyqs')" class="nav-link hover:text-blue-600 transition">PYQPs</button>
+                <button onclick="showView('testseries')" class="nav-link hover:text-blue-600 transition">Test Series</button>
             </div>
 
-            <div class="flex items-center space-x-4">
-                <button class="p-2 text-slate-500 hover:text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></button>
-                <button class="bg-slate-900 text-white px-6 py-2 rounded-full font-semibold text-sm hover:shadow-xl hover:shadow-slate-200 transition">Start Learning</button>
+            <div class="flex items-center space-x-5">
+                <div class="relative cursor-pointer" onclick="showView('checkout')">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] px-1.5 rounded-full">0</span>
+                </div>
+                <button class="bg-slate-900 text-white px-6 py-2 rounded-full font-bold text-sm hover:bg-blue-600 transition">Login</button>
             </div>
         </div>
     </nav>
 
-    <section class="relative pt-16 pb-24 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-            <div>
-                <span class="bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Trusted by 10,000+ Students</span>
-                <h1 class="text-5xl md:text-7xl font-extrabold mt-6 leading-tight">Master Your <span class="gradient-text">Exams</span> with Precision.</h1>
-                <p class="text-lg text-slate-500 mt-6 leading-relaxed max-w-lg">Get curated NCERT textbooks, chapterwise test papers, and previous year questions for all boards and competitive exams like JEE & NEET.</p>
-                <div class="mt-10 flex flex-wrap gap-4">
-                    <button class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold shadow-2xl shadow-blue-200 hover:bg-blue-700 transition">Explore Resources</button>
-                    <button class="bg-white border-2 border-slate-200 text-slate-700 px-8 py-4 rounded-2xl font-bold hover:bg-slate-50 transition">Mock Tests</button>
+    <main class="max-w-7xl mx-auto px-6 py-10">
+        
+        <section id="view-home" class="view">
+            <div class="text-center py-20">
+                <h1 class="text-5xl md:text-7xl font-black mb-6">Your Academic <span class="text-blue-600">Victory</span> Starts Here.</h1>
+                <p class="text-slate-500 text-lg mb-10">Curated materials for Class 9-12, JEE, NEET, and NDA.</p>
+                <div class="flex justify-center gap-4">
+                    <button onclick="showView('textbooks')" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold shadow-xl">Get Textbooks</button>
+                    <button onclick="showView('testseries')" class="bg-white border-2 border-slate-200 px-8 py-4 rounded-2xl font-bold">Try Mock Test</button>
                 </div>
             </div>
-            <div class="relative">
-                <div class="absolute -top-10 -left-10 w-64 h-64 bg-blue-400 opacity-20 blur-3xl rounded-full"></div>
-                <div class="glass p-4 rounded-[2.5rem] shadow-2xl relative">
-                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=1000" class="rounded-[2rem] object-cover h-[400px] w-full" alt="Student Studying">
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="max-w-7xl mx-auto px-6 py-20">
-        <h2 class="text-3xl font-bold mb-10">Choose Your Goal</h2>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div class="md:col-span-2 bg-gradient-to-br from-blue-600 to-indigo-700 p-8 rounded-[2rem] text-white bento-card flex flex-col justify-between">
-                <div>
-                    <h3 class="text-2xl font-bold">Boards 2026</h3>
-                    <p class="opacity-80 mt-2 text-sm">Class 9th to 12th complete prep kit with model papers.</p>
-                </div>
-                <button class="bg-white text-blue-700 w-fit px-6 py-2 rounded-xl mt-6 font-bold text-sm">Browse All Boards</button>
-            </div>
-            <div class="bg-emerald-50 p-8 rounded-[2rem] bento-card flex flex-col border border-emerald-100">
-                <div class="w-12 h-12 bg-emerald-500 rounded-2xl mb-4 flex items-center justify-center text-white">🧪</div>
-                <h3 class="text-xl font-bold">JEE / NEET</h3>
-                <p class="text-slate-500 text-sm mt-2 font-medium">Chapterwise PYQPs</p>
-            </div>
-            <div class="bg-orange-50 p-8 rounded-[2rem] bento-card flex flex-col border border-orange-100">
-                <div class="w-12 h-12 bg-orange-500 rounded-2xl mb-4 flex items-center justify-center text-white">🪖</div>
-                <h3 class="text-xl font-bold">NDA / Army</h3>
-                <p class="text-slate-500 text-sm mt-2 font-medium">Targeted Test Series</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="max-w-7xl mx-auto px-6 py-20 bg-white rounded-[3rem] shadow-sm mb-20">
-        <div class="flex justify-between items-end mb-12">
-            <div>
-                <h2 class="text-3xl font-bold">New Arrivals</h2>
-                <p class="text-slate-400 mt-2 font-medium">Handpicked resources for Class 10 & 12</p>
-            </div>
-            <button class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1 hover:text-blue-700">View All</button>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-            <div class="group cursor-pointer">
-                <div class="relative overflow-hidden rounded-[2rem] bg-slate-100 aspect-[3/4]">
-                    <img src="https://via.placeholder.com/400x533" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="Book">
-                    <div class="absolute top-4 right-4">
-                        <span class="bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold shadow-sm italic">BESTSELLER</span>
-                    </div>
-                </div>
-                <div class="mt-6">
-                    <p class="text-xs font-bold text-blue-600 tracking-widest uppercase mb-2">Class 10 • Science</p>
-                    <h4 class="text-lg font-bold group-hover:text-blue-600 transition">UP Board 2026 Model Paper Set</h4>
-                    <div class="flex items-center justify-between mt-4">
-                        <div class="flex items-baseline space-x-2">
-                            <span class="text-xl font-black">₹199</span>
-                            <span class="text-sm text-slate-400 line-through font-medium">₹499</span>
-                        </div>
-                        <button class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition shadow-lg shadow-slate-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                        </button>
+        <section id="view-textbooks" class="view hidden">
+            <h2 class="text-3xl font-bold mb-8">Official Textbooks</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="bg-white p-4 rounded-[2rem] shadow-sm border hover:shadow-md transition">
+                    <img src="https://via.placeholder.com/300x400?text=NCERT+Physics" class="rounded-2xl mb-4 w-full h-64 object-cover">
+                    <span class="text-xs font-bold text-blue-600">CLASS 12 • NCERT</span>
+                    <h3 class="font-bold text-lg">Physics Part I</h3>
+                    <div class="flex justify-between items-center mt-4">
+                        <span class="text-xl font-black">₹249</span>
+                        <button onclick="addToCart('Physics Part I', 249)" class="bg-slate-900 text-white p-3 rounded-xl hover:bg-blue-600 transition"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
             </div>
-            </div>
-    </section>
+        </section>
 
+        <section id="view-pyqs" class="view hidden">
+            <h2 class="text-3xl font-bold mb-8">Previous Year Papers</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-3xl border-l-8 border-orange-500 shadow-sm flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-xl">UP Board 2024</h4>
+                        <p class="text-sm text-slate-400">Class 10 Science Set</p>
+                    </div>
+                    <button onclick="addToCart('UP Board 10th Sci', 99)" class="bg-orange-500 text-white px-4 py-2 rounded-xl font-bold">₹99</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-testseries" class="view hidden text-center py-20">
+            <div class="max-w-md mx-auto">
+                <i class="fas fa-vial text-6xl text-blue-200 mb-6"></i>
+                <h2 class="text-3xl font-bold">Exam Simulator</h2>
+                <p class="text-slate-500 mt-4 mb-8">Experience real-time JEE/NEET patterns with our digital test series.</p>
+                <button class="bg-blue-600 text-white w-full py-4 rounded-2xl font-bold shadow-lg">Start Free Demo Test</button>
+            </div>
+        </section>
+
+        <section id="view-checkout" class="view hidden">
+            <h2 class="text-3xl font-bold mb-8">Your Cart</h2>
+            <div class="grid md:grid-cols-3 gap-10">
+                <div class="md:col-span-2 space-y-4" id="cart-items">
+                    <p class="text-slate-400 italic">Your cart is empty.</p>
+                </div>
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border h-fit">
+                    <h3 class="text-xl font-bold mb-6">Summary</h3>
+                    <div class="flex justify-between mb-4 font-medium">
+                        <span>Total Amount</span>
+                        <span id="total-price">₹0</span>
+                    </div>
+                    <button class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-100 mt-4 hover:bg-blue-700 transition">Pay Securely</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-white py-12 mt-20">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="font-bold opacity-50">&copy; 2026 Gaurav Classes. Built for Excellence.</p>
+        </div>
+    </footer>
+
+    <script>
+        let cart = [];
+
+        // Navigation Function
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(view => view.classList.add('hidden'));
+            document.getElementById('view-' + viewId).classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        // Cart Logic
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateCartUI();
+            alert(name + " added to cart!");
+        }
+
+        function updateCartUI() {
+            // Update Badge
+            document.getElementById('cart-count').innerText = cart.length;
+
+            // Update Checkout Page
+            const cartItemsContainer = document.getElementById('cart-items');
+            const totalElement = document.getElementById('total-price');
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p class="text-slate-400 italic">Your cart is empty.</p>';
+                totalElement.innerText = "₹0";
+                return;
+            }
+
+            let html = "";
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                html += `
+                    <div class="flex justify-between items-center bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                        <span class="font-bold">${item.name}</span>
+                        <span class="font-black text-blue-600">₹${item.price}</span>
+                    </div>
+                `;
+            });
+            cartItemsContainer.innerHTML = html;
+            totalElement.innerText = "₹" + total;
+        }
+    </script>
 </body>
 </html>
-<nav class="sticky top-0 bg-white shadow-md p-4 flex justify-between">
-    <h1 class="font-bold text-xl">Gaurav Classes</h1>
-    <div class="space-x-4">
-        <button onclick="navigate('textbooks')">Textbooks</button>
-        <button onclick="navigate('testseries')">Test Series</button>
-        <button onclick="navigate('pyqs')">PYQs</button>
-        <button onclick="navigate('checkout')" class="bg-blue-600 text-white px-4 py-2 rounded">Cart</button>
-    </div>
-</nav>
-
-<main id="app">
-    <section id="view-textbooks" class="hidden">
-        <h2 class="text-2xl font-bold p-6">Textbooks Collection</h2>
-        </section>
-
-    <section id="view-testseries" class="hidden">
-        <h2 class="text-2xl font-bold p-6">Available Test Series</h2>
-        </section>
-
-    <section id="view-pyqs" class="hidden">
-        <h2 class="text-2xl font-bold p-6">Previous Year Question Papers</h2>
-        </section>
-
-    <section id="view-checkout" class="hidden p-8">
-        <h2 class="text-3xl font-bold mb-6">Complete Your Order</h2>
-        <div class="grid md:grid-cols-2 gap-8">
-            <div class="bg-white p-6 rounded shadow">
-                </div>
-            <div class="bg-slate-50 p-6 rounded">
-                <button class="w-full bg-green-600 text-white py-4 font-bold rounded">Pay Securely</button>
-            </div>
-        </div>
-    </section>
-</main>
