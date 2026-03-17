@@ -3,21 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaurav Classes | Premium Study Hub</title>
+    <title>Gaurav Classes | Premium Student Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        body { font-family: 'Outfit', sans-serif; scroll-behavior: smooth; }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .active-nav { color: #2563eb; border-bottom: 2px solid #2563eb; }
+        body { font-family: 'Outfit', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
         .hidden { display: none !important; }
+        .text-gradient { background: linear-gradient(90deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Smooth View Transitions */
+        .view { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
 
-   <nav class="sticky top-0 z-50 glass px-6 py-4">
+<nav class="sticky top-0 z-50 glass px-6 py-4">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
         <div class="flex items-center space-x-2 cursor-pointer" onclick="showView('home')">
             <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black shadow-lg">G</div>
@@ -35,381 +45,112 @@
                 <i class="fas fa-shopping-cart text-xl"></i>
                 <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] px-1.5 rounded-full">0</span>
             </div>
-            <button id="auth-btn" onclick="toggleAuthModal()" class="bg-slate-900 text-white px-6 py-2 rounded-full font-bold text-sm hover:bg-blue-600 transition">Login</button>
-            
-            <button class="md:hidden" onclick="toggleMobileMenu()">
-                <i class="fas fa-bars text-2xl"></i>
-            </button>
+            <button id="auth-btn" onclick="toggleAuthModal()" class="bg-slate-900 text-white px-6 py-2 rounded-full font-bold text-sm hover:bg-blue-600 transition shadow-md">Login</button>
         </div>
     </div>
 </nav>
-   <main class="max-w-7xl mx-auto px-6 py-10">
+
+<main class="max-w-7xl mx-auto px-6 py-10">
     
     <section id="view-home" class="view">
         <div class="text-center py-20">
-            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">Your Path to <span class="text-blue-600 underline">Topper List</span></h1>
-            <p class="text-slate-500 text-lg mb-10 max-w-2xl mx-auto">Get access to premium NCERT books, Chapter-wise Test Series, and Board PYQPs for Class 9-12 & Competitive Exams.</p>
+            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">Your Path to <span class="text-gradient">Topper List</span></h1>
+            <p class="text-slate-500 text-lg mb-10 max-w-2xl mx-auto">Get access to premium NCERT books, Chapter-wise Test Series, and Board PYQPs for Class 9-12.</p>
             <div class="flex flex-wrap justify-center gap-4">
-                <button onclick="showView('textbooks')" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:scale-105 transition">Shop Textbooks</button>
+                <button onclick="showView('textbooks')" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:scale-105 transition">Explore Books</button>
                 <button onclick="showView('testseries')" class="bg-white border-2 border-slate-200 px-8 py-4 rounded-2xl font-bold hover:bg-slate-50 transition">Free Mock Test</button>
             </div>
         </div>
     </section>
 
+    <section id="view-dashboard" class="view hidden">
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="w-full md:w-64 space-y-6">
+                <div class="bg-white p-6 rounded-[2rem] border text-center shadow-sm">
+                    <div id="user-initial" class="w-20 h-20 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center text-white text-3xl font-black mx-auto mb-4 shadow-lg">G</div>
+                    <h3 id="dash-user-name" class="font-bold text-xl text-slate-900">Student</h3>
+                    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">Premium Student</p>
+                </div>
+                <nav class="bg-white p-4 rounded-[2rem] border shadow-sm space-y-1">
+                    <button class="w-full flex items-center space-x-3 p-3 bg-blue-50 text-blue-600 rounded-xl font-bold">
+                        <i class="fas fa-th-large w-5"></i><span>Overview</span>
+                    </button>
+                    <button class="w-full flex items-center space-x-3 p-3 text-slate-400 hover:bg-slate-50 rounded-xl font-bold transition">
+                        <i class="fas fa-book-open w-5"></i><span>My Library</span>
+                    </button>
+                    <button onclick="logout()" class="w-full flex items-center space-x-3 p-3 text-red-500 hover:bg-red-50 rounded-xl font-bold transition mt-4">
+                        <i class="fas fa-power-off w-5"></i><span>Logout</span>
+                    </button>
+                </nav>
+            </div>
+            <div class="flex-1 space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-blue-600 p-6 rounded-[2rem] text-white">
+                        <p class="text-xs font-bold uppercase opacity-70">Study Material</p>
+                        <h4 id="dash-books-count" class="text-4xl font-black mt-2">0</h4>
+                    </div>
+                    <div class="bg-white p-6 rounded-[2rem] border">
+                        <p class="text-xs font-bold uppercase text-slate-400">Mock Score</p>
+                        <h4 class="text-4xl font-black mt-2 text-slate-800">88%</h4>
+                    </div>
+                    <div class="bg-white p-6 rounded-[2rem] border">
+                        <p class="text-xs font-bold uppercase text-slate-400">Global Rank</p>
+                        <h4 class="text-4xl font-black mt-2 text-slate-800">#42</h4>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-[2.5rem] border shadow-sm">
+                    <h3 class="text-2xl font-black mb-6">Recent Resources</h3>
+                    <div id="dashboard-resources" class="space-y-4">
+                        <div class="text-center py-10 opacity-40 italic">No resources yet. Shop to get started!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="view-textbooks" class="view hidden">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-bold">Standard Textbooks</h2>
-            <div class="flex gap-2">
-                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">NCERT</span>
-                <span class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-bold">State Boards</span>
-            </div>
-        </div>
+        <h2 class="text-3xl font-bold mb-8">Standard Textbooks</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div class="bg-white p-4 rounded-[2rem] shadow-sm border group">
-                <div class="overflow-hidden rounded-2xl mb-4">
-                    <img src="https://via.placeholder.com/300x400?text=Physics+Class+12" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                </div>
-                <h3 class="font-bold text-lg">Class 12 Physics (Vol 1)</h3>
-                <p class="text-slate-400 text-xs mb-4">Latest 2026 Edition • NCERT</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-xl font-black text-slate-800">₹299</span>
-                    <button onclick="addToCart('Physics Class 12', 299)" class="bg-blue-600 text-white p-3 rounded-xl hover:bg-slate-900 transition"><i class="fas fa-shopping-basket"></i></button>
-                </div>
-            </div>
-            </div>
-    </section>
-
-    <section id="view-testseries" class="view hidden">
-        <h2 class="text-3xl font-bold mb-4">Mock Test Series</h2>
-        <p class="text-slate-500 mb-8 font-medium">Timed simulations to improve your speed and accuracy.</p>
-        
-        <div class="space-y-6">
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-wrap md:flex-nowrap items-center justify-between gap-6 hover:border-blue-300 transition">
-                <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl font-black">JEE</div>
-                    <div>
-                        <h4 class="font-bold text-xl uppercase">JEE Main 2026 Full Syllabus</h4>
-                        <p class="text-sm text-slate-400">90 Questions • 180 Minutes • Negative Marking</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-6 w-full md:w-auto">
-                    <div class="text-right">
-                        <span class="block text-blue-600 font-black text-xl">₹499</span>
-                        <span class="text-xs text-slate-400">Full Access</span>
-                    </div>
-                    <button onclick="addToCart('JEE Main Series', 499)" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold hover:shadow-lg shadow-blue-100">Unlock All</button>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-wrap md:flex-nowrap items-center justify-between gap-6 hover:border-green-300 transition">
-                <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center text-2xl font-black">NDA</div>
-                    <div>
-                        <h4 class="font-bold text-xl uppercase">NDA Mathematics Special</h4>
-                        <p class="text-sm text-slate-400">120 Questions • 150 Minutes</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-6 w-full md:w-auto">
-                    <div class="text-right">
-                        <span class="block text-green-600 font-black text-xl">₹299</span>
-                        <span class="text-xs text-slate-400">Sectional Access</span>
-                    </div>
-                    <button onclick="addToCart('NDA Math Series', 299)" class="bg-green-600 text-white px-8 py-3 rounded-2xl font-bold hover:shadow-lg shadow-green-100">Unlock All</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="view-pyqs" class="view hidden">
-        <h2 class="text-3xl font-bold mb-8">Previous Year Papers</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 relative group overflow-hidden">
-                <div class="absolute top-0 right-0 bg-yellow-400 text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase">Best Seller</div>
-                <h4 class="font-bold text-lg mb-1">UP Board Class 12</h4>
-                <p class="text-sm text-slate-400 mb-6 font-medium italic">Physics (2015 - 2025)</p>
-                <div class="flex items-center justify-between">
-                    <div>
-                        <span class="text-lg font-black text-blue-600">₹149</span>
-                        <span class="text-xs text-slate-300 line-through ml-2">₹299</span>
-                    </div>
-                    <button onclick="addToCart('UP Class 12 Physics PYQ', 149)" class="bg-slate-100 text-slate-900 px-4 py-2 rounded-xl text-sm font-bold group-hover:bg-blue-600 group-hover:text-white transition">Buy PDF</button>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 relative group overflow-hidden">
-                <h4 class="font-bold text-lg mb-1">CBSE Class 10</h4>
-                <p class="text-sm text-slate-400 mb-6 font-medium italic">Maths All Sets (2018 - 2025)</p>
-                <div class="flex items-center justify-between">
-                    <div>
-                        <span class="text-lg font-black text-blue-600">₹129</span>
-                    </div>
-                    <button onclick="addToCart('CBSE 10th Math PYQ', 129)" class="bg-slate-100 text-slate-900 px-4 py-2 rounded-xl text-sm font-bold group-hover:bg-blue-600 group-hover:text-white transition">Buy PDF</button>
+            <div class="bg-white p-4 rounded-[2rem] border card-hover group">
+                <img src="https://via.placeholder.com/300x400?text=Physics+Class+12" class="w-full h-64 object-cover rounded-2xl mb-4 group-hover:scale-105 transition">
+                <h3 class="font-bold text-lg">Class 12 Physics</h3>
+                <div class="flex justify-between items-center mt-4">
+                    <span class="text-xl font-black">₹299</span>
+                    <button onclick="addToCart('Physics Class 12', 299)" class="bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
         </div>
     </section>
 
     <section id="view-checkout" class="view hidden">
-        <h2 class="text-3xl font-bold mb-8">Ready to Study?</h2>
+        <h2 class="text-3xl font-bold mb-8">Your Cart</h2>
         <div class="grid md:grid-cols-3 gap-10">
-            <div class="md:col-span-2">
-                <div id="cart-items" class="space-y-4 mb-8">
-                    </div>
-            </div>
-            <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border h-fit sticky top-24">
-                <h3 class="text-xl font-bold mb-6">Payment Summary</h3>
-                <div class="space-y-3 mb-6 border-b pb-6">
-                    <div class="flex justify-between text-slate-500"><span>Items Total</span><span id="sub-total">₹0</span></div>
-                    <div class="flex justify-between text-green-600 font-bold"><span>Discount</span><span>-₹0</span></div>
-                </div>
-                <div class="flex justify-between mb-8">
-                    <span class="text-xl font-bold">Payable Now</span>
-                    <span id="total-price" class="text-xl font-black text-blue-600">₹0</span>
-                </div>
-                <input type="email" placeholder="Email Address for Delivery" class="w-full mb-4 p-4 rounded-xl border border-slate-200 focus:outline-blue-500 bg-slate-50 text-sm">
-                <button class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-100 hover:bg-blue-700 active:scale-95 transition">Pay Securely via UPI</button>
-                <p class="text-[10px] text-center text-slate-400 mt-4 uppercase font-bold tracking-widest">Digital access instant after payment</p>
+            <div class="md:col-span-2" id="cart-items"></div>
+            <div class="bg-white p-8 rounded-[2.5rem] border shadow-sm h-fit sticky top-24 text-center">
+                <p class="text-slate-400 font-bold uppercase text-xs">Total Amount</p>
+                <h3 id="total-price" class="text-4xl font-black text-blue-600 my-4">₹0</h3>
+                <button onclick="alert('Proceeding to Payment...')" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-blue-600 transition shadow-lg">Checkout Now</button>
             </div>
         </div>
     </section>
 
 </main>
 
-    <footer class="bg-slate-900 text-white py-12 mt-20">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <p class="font-bold opacity-50">&copy; 2026 Gaurav Classes. Built for Excellence.</p>
-        </div>
-    </footer>
-
- <script>
-     // Add this at the very top of your <script> tag
-document.addEventListener('DOMContentLoaded', () => {
-    // Ensure the home view is visible by default
-    showView('home');
-});
-
-// Update the Login Success part of your existing script
-document.getElementById('otp-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    toggleAuthModal();
-    alert("Login Successful! Welcome to Gaurav Classes.");
-    
-    // Fix: Correctly targeting the button by the ID we added
-    document.getElementById('auth-btn').innerText = "My Profile";
-    document.getElementById('auth-btn').onclick = null; // Optional: change behavior for profile
-});
-    let cart = [];
-
-    // Smooth Navigation Function
-    function showView(viewId) {
-        document.querySelectorAll('.view').forEach(view => {
-            view.classList.add('hidden');
-            view.style.opacity = "0";
-        });
-        const targetView = document.getElementById('view-' + viewId);
-        targetView.classList.remove('hidden');
-        
-        // Simple fade-in animation
-        setTimeout(() => {
-            targetView.style.opacity = "1";
-            targetView.style.transition = "opacity 0.4s ease-in";
-        }, 10);
-
-        window.scrollTo(0, 0);
-    }
-
-    // Add to Cart Logic
-    function addToCart(name, price) {
-        cart.push({ name, price });
-        updateCartUI();
-        
-        // Feedback toast (simulated)
-        const toast = document.createElement('div');
-        toast.className = "fixed bottom-5 right-5 bg-slate-900 text-white px-6 py-3 rounded-xl shadow-2xl z-[100] animate-bounce";
-        toast.innerHTML = `<i class="fas fa-check-circle text-green-400 mr-2"></i> ${name} added!`;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2500);
-    }
-
-    // Update UI Elements
-    function updateCartUI() {
-        document.getElementById('cart-count').innerText = cart.length;
-        const cartItemsContainer = document.getElementById('cart-items');
-        const totalPriceEl = document.getElementById('total-price');
-        const subTotalEl = document.getElementById('sub-total');
-
-        if (cart.length === 0) {
-            cartItemsContainer.innerHTML = `
-                <div class="text-center py-10 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-                    <i class="fas fa-box-open text-4xl text-slate-200 mb-4"></i>
-                    <p class="text-slate-400 font-medium italic">Your cart is empty. Start adding resources!</p>
-                </div>`;
-            totalPriceEl.innerText = "₹0";
-            subTotalEl.innerText = "₹0";
-            return;
-        }
-
-        let total = 0;
-        cartItemsContainer.innerHTML = cart.map((item, index) => {
-            total += item.price;
-            return `
-                <div class="flex justify-between items-center bg-white p-6 rounded-2xl border border-slate-100 shadow-sm animate-fade-in">
-                    <div>
-                        <h4 class="font-bold text-slate-800">${item.name}</h4>
-                        <span class="text-xs text-blue-600 font-bold">DIGITAL ACCESS</span>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <span class="font-black">₹${item.price}</span>
-                        <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-600"><i class="fas fa-trash-alt"></i></button>
-                    </div>
-                </div>`;
-        }).join('');
-
-        totalPriceEl.innerText = "₹" + total;
-        subTotalEl.innerText = "₹" + total;
-    }
-
-    function removeFromCart(index) {
-        cart.splice(index, 1);
-        updateCartUI();
-    }
-     // Toggle Modal Visibility
-function toggleAuthModal() {
-    const modal = document.getElementById('auth-modal');
-    modal.classList.toggle('hidden');
-    // Reset to step 1 if closing
-    if (modal.classList.contains('hidden')) {
-        document.getElementById('reg-form').classList.remove('hidden');
-        document.getElementById('otp-form').classList.add('hidden');
-    }
-}
-
-// Handle Registration Submit
-document.getElementById('reg-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const phone = document.getElementById('user-phone').value;
-    
-    // UI Transition to OTP
-    document.getElementById('display-phone').innerText = "+91 " + phone;
-    this.classList.add('hidden');
-    document.getElementById('otp-form').classList.remove('hidden');
-    document.getElementById('auth-title').innerText = "Verify OTP";
-    document.getElementById('auth-subtitle').innerText = "Check your messages for the code";
-});
-
-// Auto-focus OTP inputs
-const otpInputs = document.querySelectorAll('.otp-input');
-otpInputs.forEach((input, index) => {
-    input.addEventListener('keyup', (e) => {
-        if (e.target.value.length === 1 && index < otpInputs.length - 1) {
-            otpInputs[index + 1].focus();
-        }
-    });
-});
-
-// Final Login Verification
-document.getElementById('otp-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    // Simulate successful login
-    toggleAuthModal();
-    alert("Login Successful! Welcome to Gaurav Classes.");
-    // Update navbar login button to "My Profile"
-    document.querySelector('button[onclick*="Login"]').innerText = "My Profile";
-});
-     // Toggle password visibility
-function togglePasswordVisibility() {
-    const passwordInput = document.getElementById('user-password');
-    const eyeIcon = document.getElementById('eye-icon');
-    
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
-    } else {
-        passwordInput.type = 'password';
-        eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
-    }
-}
-
-// Handle Login
-document.getElementById('auth-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Simulate API call
-    const email = document.getElementById('user-email').value;
-    alert("Login Successful! Welcome, " + email);
-    
-    toggleAuthModal();
-    
-    // Update Auth Button to show user is logged in
-    const authBtn = document.getElementById('auth-btn');
-    authBtn.innerText = "My Profile";
-    authBtn.onclick = null; // Disable modal trigger
-});
-
-</script>
 <div id="auth-modal" class="fixed inset-0 z-[100] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden relative animate-in fade-in zoom-in duration-300">
-        
-        <button onclick="toggleAuthModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-900">
-            <i class="fas fa-times text-xl"></i>
-        </button>
-
-        <div class="p-10">
-            <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-4 shadow-lg shadow-blue-200">G</div>
-                <h2 id="auth-title" class="text-2xl font-black text-slate-900">Welcome to Gaurav Classes</h2>
-                <p id="auth-subtitle" class="text-slate-500 text-sm mt-2">Enter your details to start learning</p>
+    <div class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl p-10 relative">
+        <button onclick="toggleAuthModal()" class="absolute top-6 right-6 text-slate-300 hover:text-slate-900 transition"><i class="fas fa-times text-xl"></i></button>
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-4">G</div>
+            <h2 id="auth-title" class="text-2xl font-black">Welcome Back</h2>
+            <p id="auth-subtitle" class="text-slate-500 text-sm mt-2">
+                Need an account? <button onclick="toggleAuthMode()" class="text-blue-600 font-bold" id="toggle-link">Sign Up</button>
+            </p>
+        </div>
+        <form id="auth-form" class="space-y-4">
+            <div id="name-field" class="space-y-1 hidden">
+                <label class="text-xs font-bold text-slate-400 uppercase ml-1">Full Name</label>
+                <input type="text" id="user-name" placeholder="Gaurav Kumar" class="w-full p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none">
             </div>
-
-           <form id="auth-form" class="space-y-4">
-    <div class="space-y-1">
-        <label class="text-xs font-bold text-slate-400 uppercase ml-1">Email Address</label>
-        <input type="email" id="user-email" placeholder="student@example.com" class="w-full p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none transition" required>
-    </div>
-    
-    <div class="space-y-1">
-        <label class="text-xs font-bold text-slate-400 uppercase ml-1">Password</label>
-        <div class="relative">
-            <input type="password" id="user-password" placeholder="••••••••" class="w-full p-4 pr-12 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none transition" required>
-            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-4 top-4 text-slate-400 hover:text-blue-600">
-                <i id="eye-icon" class="fas fa-eye"></i>
-            </button>
-            <div class="text-center mb-8">
-    <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl font-black mx-auto mb-4 shadow-lg shadow-blue-200">G</div>
-    <h2 id="auth-title" class="text-2xl font-black text-slate-900">Welcome Back</h2>
-    <p id="auth-subtitle" class="text-slate-500 text-sm mt-2">
-        Don't have an account? 
-        <button type="button" onclick="toggleAuthMode()" class="text-blue-600 font-bold hover:underline">Sign Up</button>
-    </p>
-</div>
-        </div>
-    </div>
-    
-    <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-100 hover:bg-blue-700 transition mt-4">Login</button>
-<form id="auth-form" class="space-y-4">
-    <div id="name-field" class="space-y-1 hidden">
-        <label class="text-xs font-bold text-slate-400 uppercase ml-1">Full Name</label>
-        <input type="text" id="user-name" placeholder="Gaurav Kumar" class="w-full p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none transition">
-    </div>
-
-    <div class="space-y-1">
-        <label class="text-xs font-bold text-slate-400 uppercase ml-1">Email Address</label>
-        <input type="email" id="user-email" placeholder="student@example.com" class="w-full p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none transition" required>
-    </div>
-    
-    <div class="space-y-1">
-        <label class="text-xs font-bold text-slate-400 uppercase ml-1">Password</label>
-        <div class="relative">
-            <input type="password" id="user-password" placeholder="••••••••" class="w-full p-4 pr-12 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none transition" required>
-            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-4 top-4 text-slate-400 hover:text-blue-600"><i id="eye-icon" class="fas fa-eye"></i></button>
-        </div>
-    </div>
-    
-    <button type="submit" id="submit-btn" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-100 hover:bg-blue-700 transition mt-4">Login</button>
-</form>
-        </div>
-    </div>
-</div>
-</body>
-</html>
+            <div class="space-y-1">
+                <label class="text-xs font-bold text-slate-400 uppercase ml-1">Email</label>
+                <input type="email" id="user-email" placeholder="student@example.com" class="w-full p-4
