@@ -257,6 +257,35 @@
     function toggleMobileMenu() {
         // Implementation for sidebar...
     }
+    function filterClass(classId) {
+    // 1. Find all buttons and remove the blue 'active' style
+    document.querySelectorAll('.class-tab').forEach(tab => {
+        tab.classList.remove('active-tab');
+    });
+
+    // 2. Add the blue 'active' style to the button that was just clicked
+    // We use 'event.currentTarget' to find exactly which button called the function
+    if (event) {
+        event.currentTarget.classList.add('active-tab');
+    }
+
+    // 3. Filter the books
+    const books = document.querySelectorAll('.searchable');
+    books.forEach(book => {
+        const bookClass = book.getAttribute('data-class');
+        
+        // Match logic: Show if class matches OR show all if you decide to add an 'all' button
+        if (bookClass === classId) {
+            book.style.display = 'block';
+            book.classList.add('fade-in'); // Trigger the animation
+        } else {
+            book.style.display = 'none';
+        }
+    });
+
+    // Scroll back to top of the grid smoothly
+    window.scrollTo({ top: 200, behavior: 'smooth' });
+}
 </script>
 
 </body>
