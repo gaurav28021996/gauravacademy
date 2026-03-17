@@ -71,6 +71,21 @@
             width: 240px;
         }
         .search-expand:focus { width: 350px; }
+        /* Add this inside your existing <style> tag */
+.active-tab {
+    background: #2563eb !important;
+    color: white !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
+    transform: translateY(-2px);
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.class-tab {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
     </style>
 </head>
 <body>
@@ -172,35 +187,50 @@
     </section>
 
     <section id="view-textbooks" class="fade-in hidden">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-            <div>
-                <h2 class="text-4xl font-extrabold text-slate-900">Standard Library</h2>
-                <p class="text-slate-500 mt-2">Pick your subject and start learning.</p>
-            </div>
-            <div class="flex space-x-2 bg-slate-100 p-1.5 rounded-2xl w-fit">
-                <button class="px-5 py-2 rounded-xl bg-white shadow-sm font-bold text-sm">Class 12</button>
-                <button class="px-5 py-2 rounded-xl text-slate-500 font-bold text-sm">Class 10</button>
-            </div>
-        </div>
+    <div class="mb-10">
+        <h2 class="text-4xl font-extrabold text-slate-900 mb-2">Digital Library</h2>
+        <p class="text-slate-500">Select your goal to view curated study materials.</p>
+    </div>
 
-        <div class="carousel-container">
-            <div class="carousel-item searchable" data-name="Physics Vol 1">
-                <div class="study-card bg-white p-5 rounded-[2.5rem]">
-                    <div class="relative overflow-hidden rounded-3xl mb-4">
-                        <img src="https://via.placeholder.com/300x400?text=Physics+12" class="w-full h-64 object-cover">
-                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black uppercase">Physics</div>
-                    </div>
-                    <h4 class="font-extrabold text-slate-800 px-2">Physics Mastery Vol 1</h4>
-                    <div class="flex justify-between items-center mt-6 bg-slate-50 p-3 rounded-2xl">
-                        <span class="font-black text-xl text-blue-600">₹299</span>
-                        <button onclick="addToCart('Physics Mastery', 299)" class="w-10 h-10 bg-slate-900 text-white rounded-xl hover:bg-blue-600 transition">
-                            <i class="fas fa-plus"></i>
-                        </button>
+    <div class="flex overflow-x-auto space-x-2 pb-6 no-scrollbar sticky top-20 bg-slate-50/80 backdrop-blur-md z-40 py-2">
+        <button onclick="filterClass('6')" class="class-tab px-6 py-3 rounded-2xl bg-white border border-slate-200 font-bold text-sm whitespace-nowrap" data-class="6">Class 6</button>
+        <button onclick="filterClass('7')" class="class-tab px-6 py-3 rounded-2xl bg-white border border-slate-200 font-bold text-sm whitespace-nowrap" data-class="7">Class 7</button>
+        <button onclick="filterClass('8')" class="class-tab px-6 py-3 rounded-2xl bg-white border border-slate-200 font-bold text-sm whitespace-nowrap" data-class="8">Class 8</button>
+        <button onclick="filterClass('9')" class="class-tab px-6 py-3 rounded-2xl bg-white border border-slate-200 font-bold text-sm whitespace-nowrap" data-class="9">Class 9</button>
+        <button onclick="filterClass('10')" class="class-tab px-6 py-3 rounded-2xl bg-white border border-slate-200 font-bold text-sm whitespace-nowrap" data-class="10">Class 10</button>
+        <button onclick="filterClass('11')" class="class-tab px-6 py-3 rounded-2xl bg-white border border-slate-200 font-bold text-sm whitespace-nowrap" data-class="11">Class 11</button>
+        <button onclick="filterClass('12')" class="class-tab px-6 py-3 rounded-2xl bg-white border border-slate-200 font-bold text-sm whitespace-nowrap active-tab" data-class="12">Class 12</button>
+        
+        <div class="w-[2px] bg-slate-200 mx-2 self-center h-8"></div>
+        
+        <button onclick="filterClass('poly')" class="class-tab px-6 py-3 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 font-bold text-sm whitespace-nowrap">Polytechnic</button>
+        <button onclick="filterClass('jee')" class="class-tab px-6 py-3 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 font-bold text-sm whitespace-nowrap">JEE Main/Adv</button>
+        <button onclick="filterClass('neet')" class="class-tab px-6 py-3 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 font-bold text-sm whitespace-nowrap">NEET</button>
+    </div>
+
+    <div class="space-y-16 mt-8">
+        <div id="section-ncert">
+            <h3 class="text-2xl font-black text-slate-800 mb-6 flex items-center"><span class="w-2 h-8 bg-blue-600 rounded-full mr-3"></span>NCERT Section</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="ncert-grid">
+                <div class="study-card bg-white p-4 rounded-[2rem] searchable" data-class="12" data-type="ncert" data-name="Physics NCERT 12">
+                    <img src="https://via.placeholder.com/300x400?text=Physics+NCERT" class="w-full h-56 object-cover rounded-[1.5rem] mb-4">
+                    <h4 class="font-bold text-slate-800 truncate px-1">Physics Part I</h4>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase px-1">Class 12 • NCERT</p>
+                    <div class="flex justify-between items-center mt-4 pt-4 border-t border-slate-50">
+                        <span class="font-black text-blue-600">Free</span>
+                        <button onclick="addToCart('Physics NCERT 12', 0)" class="w-10 h-10 bg-slate-900 text-white rounded-xl hover:bg-blue-600 transition"><i class="fas fa-download"></i></button>
                     </div>
                 </div>
             </div>
-            </div>
-    </section>
+        </div>
+
+        <div id="section-reference">
+            <h3 class="text-2xl font-black text-slate-800 mb-6 flex items-center"><span class="w-2 h-8 bg-purple-600 rounded-full mr-3"></span>Other Reference Books</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="ref-grid">
+                </div>
+        </div>
+    </div>
+</section>
 </main>
 
 <script>
