@@ -138,6 +138,146 @@
         </div>
     </section>
 
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaurav Classes | Premium Learning Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --accent: #7c3aed;
+        }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            scroll-behavior: smooth;
+            background-color: #f8fafc;
+        }
+        
+        /* Glassmorphic Header */
+        .glass-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Modern UI Elements */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
+        }
+
+        .study-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .study-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Carousel Logic */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .active-tab {
+            background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
+            color: white !important;
+            border-color: transparent !important;
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px -10px rgba(37, 99, 235, 0.5);
+        }
+
+        .class-tab {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .search-expand {
+            transition: width 0.4s ease;
+            width: 240px;
+        }
+        .search-expand:focus { width: 350px; }
+    </style>
+</head>
+<body>
+
+<header class="sticky top-0 z-[100] glass-header px-4 md:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-3 cursor-pointer group" onclick="showView('home')">
+            <div class="w-11 h-11 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:rotate-6 transition-transform">
+                <i class="fas fa-graduation-cap text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-extrabold tracking-tight leading-none">Gaurav Classes</h1>
+                <span class="text-[10px] font-bold text-blue-600 uppercase tracking-tighter">Digital Campus</span>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center relative">
+            <i class="fas fa-search absolute left-4 text-slate-400"></i>
+            <input type="text" onkeyup="globalSearch()" id="main-search" placeholder="Search books or subjects..." class="search-expand pl-12 pr-4 py-2.5 bg-slate-100/50 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-500/20 text-sm font-medium">
+        </div>
+
+        <div class="flex items-center space-x-2 md:space-x-6">
+            <nav class="hidden md:flex items-center space-x-1">
+                <button onclick="showView('home')" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition">Home</button>
+                <button onclick="showView('textbooks')" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition">Books</button>
+            </nav>
+            <div class="flex items-center space-x-3">
+                <button onclick="showView('checkout')" class="relative p-2.5 rounded-xl hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-cart-shopping text-slate-700"></i>
+                    <span id="cart-count" class="absolute top-1 right-1 bg-blue-600 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">0</span>
+                </button>
+                <button class="btn-primary text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg">Login</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 py-12">
+
+    <section id="view-home" class="fade-in">
+        <div class="grid lg:grid-cols-2 gap-12 items-center py-10">
+            <div>
+                <div class="inline-flex items-center space-x-2 bg-blue-50 border border-blue-100 px-3 py-1 rounded-full mb-6">
+                    <span class="flex h-2 w-2 rounded-full bg-blue-600 animate-pulse"></span>
+                    <span class="text-xs font-bold text-blue-700 uppercase">Enrollment Open 2026</span>
+                </div>
+                <h2 class="text-5xl md:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6">
+                    Unlock Your <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Academic Potential.</span>
+                </h2>
+                <p class="text-slate-500 text-lg mb-10 leading-relaxed max-w-lg">
+                    Premium study materials, NCERT textbooks, and competitive exam prep for Classes 6-12, JEE, and NEET.
+                </p>
+                <button onclick="showView('textbooks')" class="btn-primary text-white px-10 py-4 rounded-2xl font-bold flex items-center space-x-3">
+                    <span>Explore Library</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="hidden lg:block relative">
+                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] shadow-2xl rotate-2">
+            </div>
+        </div>
+    </section>
+
     <section id="view-textbooks" class="fade-in hidden">
         <div class="mb-10 text-center md:text-left">
             <h2 class="text-4xl font-extrabold text-slate-900 mb-2">Digital Library</h2>
@@ -250,6 +390,187 @@
     }
 
     window.onload = generateBooks;
+</script>
+
+</body>
+</html>
+</main>
+
+<script>
+    const bookData = [
+        { id: 1, class: "12", type: "ncert", name: "Physics Part I", price: 0, img: "https://via.placeholder.com/300x400?text=Physics+12" },
+        { id: 2, class: "12", type: "ncert", name: "Chemistry Part I", price: 0, img: "https://via.placeholder.com/300x400?text=Chemistry+12" },
+        { id: 3, class: "12", type: "reference", name: "Modern ABC Physics", price: 650, img: "https://via.placeholder.com/300x400?text=Modern+ABC" },
+        { id: 4, class: "10", type: "ncert", name: "Maths Standard", price: 0, img: "https://via.placeholder.com/300x400?text=Maths+10" },
+        { id: 5, class: "10", type: "ncert", name: "Science Explorer", price: 0, img: "https://via.placeholder.com/300x400?text=Science+10" },
+        { id: 6, class: "jee", type: "reference", name: "HC Verma Physics", price: 450, img: "https://via.placeholder.com/300x400?text=HC+Verma" },
+        { id: 7, class: "neet", type: "reference", name: "NCERT Fingertips", price: 540, img: "https://via.placeholder.com/300x400?text=Fingertips" },
+        { id: 8, class: "poly", type: "reference", name: "Applied Math I", price: 320, img: "https://via.placeholder.com/300x400?text=Poly+Math" },
+        { id: 9, class: "9", type: "ncert", name: "Social Science", price: 0, img: "https://via.placeholder.com/300x400?text=SST+9" }
+    ];
+
+    function showView(viewId) {
+        document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
+        document.getElementById('view-' + viewId).classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function generateBooks() {
+        const ncertGrid = document.getElementById('ncert-grid');
+        const refGrid = document.getElementById('ref-grid');
+        ncertGrid.innerHTML = ''; refGrid.innerHTML = '';
+
+        bookData.forEach(book => {
+            const cardHTML = `
+                <div class="study-card bg-white p-5 rounded-[2.5rem] searchable" data-class="${book.class}" data-name="${book.name}">
+                    <div class="relative overflow-hidden rounded-[1.5rem] mb-4">
+                        <img src="${book.img}" class="w-full h-56 object-cover">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-[10px] font-black uppercase">${book.type}</div>
+                    </div>
+                    <h4 class="font-bold text-slate-800 truncate">${book.name}</h4>
+                    <p class="text-xs text-slate-400 font-bold uppercase mt-1">Class ${book.class}</p>
+                    <div class="flex justify-between items-center mt-5 pt-4 border-t border-slate-50">
+                        <span class="font-black text-blue-600">${book.price === 0 ? 'FREE' : '₹' + book.price}</span>
+                        <button onclick="addToCart('${book.name}', ${book.price})" class="w-11 h-11 bg-slate-900 text-white rounded-2xl hover:bg-blue-600 transition">
+                            <i class="fas ${book.price === 0 ? 'fa-download' : 'fa-cart-plus'}"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            if (book.type === 'ncert') ncertGrid.innerHTML += cardHTML;
+            else refGrid.innerHTML += cardHTML;
+        });
+        filterClass('12'); // Default filter on load
+    }
+
+    function filterClass(classId) {
+        document.querySelectorAll('.class-tab').forEach(tab => tab.classList.remove('active-tab'));
+        const activeBtn = document.querySelector(`[data-class="${classId}"]`);
+        if (activeBtn) {
+            activeBtn.classList.add('active-tab');
+            activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+
+        document.querySelectorAll('.searchable').forEach(card => {
+            card.style.display = card.getAttribute('data-class') === classId ? 'block' : 'none';
+        });
+    }
+
+    function globalSearch() {
+        const query = document.getElementById('main-search').value.toLowerCase();
+        document.querySelectorAll('.searchable').forEach(card => {
+            const name = card.getAttribute('data-name').toLowerCase();
+            card.style.display = name.includes(query) ? 'block' : 'none';
+        });
+    }
+
+    let cartCount = 0;
+    function addToCart(name, price) {
+        cartCount++;
+        document.getElementById('cart-count').innerText = cartCount;
+        alert(name + " added to bag!");
+    }
+
+    window.onload = generateBooks;
+    // 1. DATA CENTER: One place for all resources
+const libraryData = [
+    // TYPE: 'book', 'pyq', 'test'
+    { id: 101, type: 'book', class: '12', name: 'Physics NCERT P1', price: 0, tag: 'Official', img: 'https://via.placeholder.com/300x400?text=Physics+12' },
+    { id: 201, type: 'pyq', class: '12', name: 'CBSE Board 2025 Paper', price: 0, tag: 'Solved', img: 'https://via.placeholder.com/300x400?text=2025+PYQ' },
+    { id: 202, type: 'pyq', class: '10', name: 'UP Board 2024 Math', price: 0, tag: 'Solved', img: 'https://via.placeholder.com/300x400?text=UP+Board' },
+    { id: 301, type: 'test', class: 'jee', name: 'Organic Chemistry Quiz', price: 0, tag: 'High Yield', img: 'https://via.placeholder.com/300x400?text=JEE+Test' },
+    { id: 302, type: 'test', class: '12', name: 'Electricity Chapter Test', price: 0, tag: 'Timed', img: 'https://via.placeholder.com/300x400?text=Unit+Test' },
+    { id: 401, type: 'book', class: 'jee', name: 'IIT JEE Adv Physics', price: 850, tag: 'Reference', img: 'https://via.placeholder.com/300x400?text=IIT+Physics' }
+];
+
+let currentViewType = 'book'; // Default
+let currentSelectedClass = '12';
+
+// 2. VIEW SWITCHER: Updates UI text and triggers re-render
+function openLibrary(type) {
+    currentViewType = type;
+    
+    // Update UI Titles based on selection
+    const titles = {
+        'book': { t: 'Digital Library', d: 'Explore NCERT and Reference textbooks.' },
+        'pyq': { t: 'Previous Year Papers', d: 'Master the exam pattern with last 10 years papers.' },
+        'test': { t: 'Chapter-wise Tests', d: 'Real-time mock tests with instant results.' }
+    };
+    
+    document.getElementById('library-title').innerText = titles[type].t;
+    document.getElementById('library-desc').innerText = titles[type].d;
+    
+    // Show the section
+    showView('library'); 
+    renderLibrary();
+}
+
+// 3. RENDER LOOP: The heart of the system
+function renderLibrary() {
+    const grid = document.getElementById('universal-grid');
+    grid.innerHTML = '';
+
+    // Filter data by both VIEW (Book/PYQ/Test) and CLASS (10/12/JEE)
+    const filtered = libraryData.filter(item => 
+        item.type === currentViewType && item.class === currentSelectedClass
+    );
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full py-20 text-center text-slate-400 font-bold">No resources found for this category yet.</div>`;
+        return;
+    }
+
+    filtered.forEach(item => {
+        const actionIcon = item.type === 'test' ? 'fa-play' : 'fa-download';
+        const actionText = item.type === 'test' ? 'Start Test' : (item.price === 0 ? 'Download' : 'Add to Bag');
+        
+        grid.innerHTML += `
+            <div class="study-card bg-white p-5 rounded-[2.5rem] fade-in border border-slate-100">
+                <div class="relative overflow-hidden rounded-[1.5rem] mb-4 group">
+                    <img src="${item.img}" class="w-full h-56 object-cover transition-transform group-hover:scale-110">
+                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-[10px] font-black uppercase text-blue-600">
+                        ${item.tag}
+                    </div>
+                </div>
+                <h4 class="font-bold text-slate-800 truncate px-1">${item.name}</h4>
+                <div class="flex justify-between items-center mt-5 pt-4 border-t border-slate-50">
+                    <div>
+                        <span class="block text-[10px] text-slate-400 font-bold uppercase tracking-widest">Price</span>
+                        <span class="font-black text-blue-600">${item.price === 0 ? 'FREE' : '₹' + item.price}</span>
+                    </div>
+                    <button onclick="handleAction(${item.id})" class="flex items-center space-x-2 bg-slate-900 text-white px-4 py-2.5 rounded-2xl hover:bg-blue-600 transition shadow-lg">
+                        <i class="fas ${actionIcon} text-xs"></i>
+                        <span class="text-xs font-bold">${actionText}</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function filterByClass(classId) {
+    currentSelectedClass = classId;
+    
+    // Active UI handling
+    document.querySelectorAll('.class-tab').forEach(tab => tab.classList.remove('active-tab'));
+    const btn = document.querySelector(`[data-class="${classId}"]`);
+    if(btn) {
+        btn.classList.add('active-tab');
+        btn.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+    }
+    
+    renderLibrary();
+}
+
+// Action Handler (Logic for Start Test vs Download)
+function handleAction(id) {
+    const item = libraryData.find(i => i.id === id);
+    if(item.type === 'test') {
+        alert("Starting " + item.name + ". Good luck!");
+    } else {
+        addToCart(item.name, item.price);
+    }
+}
 </script>
 
 </body>
