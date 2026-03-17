@@ -286,6 +286,67 @@
     // Scroll back to top of the grid smoothly
     window.scrollTo({ top: 200, behavior: 'smooth' });
 }
+    const bookData = [
+    // CLASS 12
+    { id: 1, class: "12", type: "ncert", name: "Physics Part I", price: 0, img: "https://via.placeholder.com/300x400?text=Physics+12" },
+    { id: 2, class: "12", type: "ncert", name: "Chemistry Part I", price: 0, img: "https://via.placeholder.com/300x400?text=Chemistry+12" },
+    { id: 3, class: "12", type: "reference", name: "Modern ABC Physics", price: 650, img: "https://via.placeholder.com/300x400?text=Modern+ABC" },
+    
+    // CLASS 10
+    { id: 4, class: "10", type: "ncert", name: "Maths Standard", price: 0, img: "https://via.placeholder.com/300x400?text=Maths+10" },
+    { id: 5, class: "10", type: "ncert", name: "Science Explorer", price: 0, img: "https://via.placeholder.com/300x400?text=Science+10" },
+    
+    // COMPETITIVE
+    { id: 6, class: "jee", type: "reference", name: "Irodov Physics", price: 180, img: "https://via.placeholder.com/300x400?text=Irodov" },
+    { id: 7, class: "neet", type: "reference", name: "NCERT Fingertips Bio", price: 540, img: "https://via.placeholder.com/300x400?text=Fingertips" },
+    
+    // CLASS 6-9
+    { id: 8, class: "9", type: "ncert", name: "Civics Class 9", price: 0, img: "https://via.placeholder.com/300x400?text=Civics+9" },
+    { id: 9, class: "6", type: "ncert", name: "History Our Pasts", price: 0, img: "https://via.placeholder.com/300x400?text=History+6" }
+];
+
+function generateBooks() {
+    const ncertGrid = document.getElementById('ncert-grid');
+    const refGrid = document.getElementById('ref-grid');
+
+    // Clear existing static content
+    ncertGrid.innerHTML = '';
+    refGrid.innerHTML = '';
+
+    bookData.forEach(book => {
+        const cardHTML = `
+            <div class="study-card bg-white p-4 rounded-[2rem] searchable" 
+                 data-class="${book.class}" 
+                 data-type="${book.type}" 
+                 data-name="${book.name}">
+                <div class="relative overflow-hidden rounded-[1.5rem] mb-4">
+                    <img src="${book.img}" class="w-full h-52 object-cover">
+                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-tighter">
+                        ${book.type === 'ncert' ? 'Official' : 'Reference'}
+                    </div>
+                </div>
+                <h4 class="font-bold text-slate-800 truncate px-1">${book.name}</h4>
+                <p class="text-[10px] text-slate-400 font-bold uppercase px-1">Class ${book.class}</p>
+                <div class="flex justify-between items-center mt-4 pt-4 border-t border-slate-50">
+                    <span class="font-black text-blue-600">${book.price === 0 ? 'FREE' : '₹' + book.price}</span>
+                    <button onclick="addToCart('${book.name}', ${book.price})" class="w-10 h-10 bg-slate-900 text-white rounded-xl hover:bg-blue-600 transition">
+                        <i class="fas ${book.price === 0 ? 'fa-download' : 'fa-plus'} text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // Logic to push into the correct section
+        if (book.type === 'ncert') {
+            ncertGrid.innerHTML += cardHTML;
+        } else {
+            refGrid.innerHTML += cardHTML;
+        }
+    });
+}
+
+// Run this function as soon as the page loads
+window.onload = generateBooks;
 </script>
 
 </body>
