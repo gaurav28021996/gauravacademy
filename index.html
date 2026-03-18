@@ -3,206 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaurav Classes | Premium Education Store</title>
+    <title>Gaurav Classes | Digital Learning Ecosystem</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { font-family: 'Outfit', sans-serif; scroll-behavior: smooth; }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
-        .gradient-text { background: linear-gradient(90deg, #1e40af, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .active-pill { background: #2563eb !important; color: white !important; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); }
-        .card-shadow { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .card-shadow:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-        .hidden-view { display: none; }
+        :root { --primary: #2563eb; --accent: #7c3aed; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; background-color: #f8fafc; color: #1e293b; }
+        .glass-header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--accent)); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4); }
+        .study-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .study-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .active-tab { background: linear-gradient(135deg, #2563eb, #7c3aed) !important; color: white !important; border-color: transparent !important; }
+        .fade-in { animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .plan-card { background: white; border: 1px solid #e2e8f0; border-radius: 2rem; padding: 2rem; transition: all 0.3s ease; }
+        .plan-card:hover { border-color: #2563eb; background: #f0f7ff; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900">
+<body>
 
-    <div class="bg-blue-900 text-white text-[10px] py-1.5 text-center font-bold tracking-widest uppercase">
-        🚀 Pro Tip: NCERT Books are always free after registration!
+<header class="sticky top-0 z-[100] glass-header px-4 md:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-3 cursor-pointer group" onclick="showView('home')">
+            <div class="w-11 h-11 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:rotate-6 transition-transform">
+                <i class="fas fa-graduation-cap text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-extrabold tracking-tight">Gaurav Classes</h1>
+                <span class="text-[10px] font-bold text-blue-600 uppercase tracking-tighter">Campus 2.0</span>
+            </div>
+        </div>
+
+        <nav class="hidden lg:flex items-center space-x-1">
+            <button onclick="showView('home')" class="px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-100 transition">Home</button>
+            <button onclick="openLibrary('book')" class="px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-100 transition">Library</button>
+            <button onclick="openLibrary('pyq')" class="px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-100 transition">PYQs</button>
+        </nav>
+
+        <div class="flex items-center space-x-3">
+            <button onclick="showView('checkout')" class="relative p-2.5 rounded-xl hover:bg-slate-100 transition">
+                <i class="fa-solid fa-bag-shopping text-slate-700"></i>
+                <span id="cart-count" class="absolute top-1 right-1 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">0</span>
+            </button>
+            <div id="auth-buttons">
+                <button onclick="showView('auth')" class="btn-primary text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg">Login / Register</button>
+            </div>
+            <div id="user-profile" class="hidden flex items-center space-x-3 cursor-pointer" onclick="showView('dashboard')">
+                <span id="user-display-name" class="text-sm font-bold text-slate-700 hidden md:block">Hi, Student</span>
+                <img src="https://ui-avatars.com/api/?name=Student&background=2563eb&color=fff" class="w-10 h-10 rounded-xl border-2 border-blue-100">
+            </div>
+        </div>
     </div>
+</header>
 
-    <nav class="sticky top-0 z-50 glass px-6 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-2 cursor-pointer" onclick="showView('store-view')">
-                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black shadow-lg shadow-blue-200">G</div>
-                <span class="text-xl font-extrabold tracking-tight text-slate-800">Gaurav Classes</span>
-            </div>
-            
-            <div class="hidden md:flex items-center bg-slate-100/50 rounded-full px-4 py-1.5 space-x-6 text-sm font-semibold">
-                <button onclick="showView('store-view')" class="hover:text-blue-600 transition">Store</button>
-                <button onclick="showView('dashboard-view')" class="hover:text-blue-600 transition">My Dashboard</button>
-            </div>
+<main class="max-w-7xl mx-auto px-6 py-8">
 
-            <div class="flex items-center space-x-4">
-                <div class="relative cursor-pointer hover:scale-110 transition" onclick="checkout()">
-                    <i class="fa-solid fa-bag-shopping text-slate-700 text-lg"></i>
-                    <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+    <section id="view-home" class="fade-in">
+        <div class="grid lg:grid-cols-2 gap-12 items-center py-10">
+            <div>
+                <span class="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-6 inline-block">2026 Academic Session</span>
+                <h2 class="text-6xl md:text-7xl font-extrabold text-slate-900 leading-tight mb-6">Master Your <br><span class="text-blue-600">Future</span>.</h2>
+                <p class="text-slate-500 text-lg mb-10 leading-relaxed">Integrated learning for Boards, JEE, and NEET. Personalized plans for every grade.</p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#study-plans" class="btn-primary text-white px-10 py-4 rounded-2xl font-bold shadow-xl">Explore Plans</a>
                 </div>
-                <button class="bg-slate-900 text-white px-6 py-2 rounded-full font-bold text-sm hover:bg-blue-600 transition">Login</button>
+            </div>
+            <div class="hidden lg:block">
+                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] shadow-2xl">
             </div>
         </div>
-    </nav>
 
-    <main id="store-view" class="view-section">
-        <header class="max-w-7xl mx-auto px-6 pt-16 pb-12 text-center">
-            <span class="bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">Enroll Now for 2026</span>
-            <h1 class="text-5xl md:text-7xl font-extrabold mt-6 leading-tight">Gaurav <span class="gradient-text">Study Store</span>.</h1>
-            <p class="text-slate-500 mt-6 max-w-2xl mx-auto text-lg">Select your class to explore textbooks, test series, and previous year papers.</p>
-        </header>
-
-        <section class="max-w-7xl mx-auto px-6 mb-20">
-            <div class="flex flex-wrap justify-center gap-3 mb-12" id="class-filters"></div>
-            <div id="resource-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
-        </section>
-    </main>
-
-    <main id="dashboard-view" class="view-section hidden-view">
-        <div class="max-w-7xl mx-auto px-6 py-16">
-            <div class="flex justify-between items-center mb-10">
-                <h2 class="text-4xl font-black">Student <span class="text-blue-600">Dashboard</span></h2>
-                <span class="bg-slate-200 px-4 py-2 rounded-xl text-sm font-bold">Welcome, Student!</span>
-            </div>
+        <div id="study-plans" class="pt-20 pb-10">
+            <h3 class="text-3xl font-black mb-2 text-center">Choose Your <span class="text-blue-600">Plan</span></h3>
+            <p class="text-center text-slate-500 mb-12">Click a card to see available resources in the library.</p>
             
-            <div id="dashboard-empty" class="text-center py-20 bg-white rounded-[3rem] border-2 border-dashed border-slate-200">
-                <i class="fa-solid fa-book-open text-slate-300 text-5xl mb-4"></i>
-                <p class="text-slate-500 font-medium">Your library is empty. Purchase materials from the store to see them here.</p>
-            </div>
-
-            <div id="dashboard-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
-        </div>
-    </main>
-
-    <script>
-        const classes = ['6', '7', '8', '9', '10', '11', '12', 'JEE', 'NEET'];
-        let activeClass = '10';
-        let cart = [];
-        let myLibrary = [];
-
-        function generateResources(cls) {
-            const isAdvanced = ['10', '12', 'JEE', 'NEET'].includes(cls);
-            const types = ['NCERT Book', 'Full Test Series', 'Daily Practice Paper (DPP)', 'Video Lectures'];
-            if (isAdvanced) {
-                types.push('Previous Year Questions (PYQs)', '2026 Model Papers');
-            }
-
-            return types.map((type, index) => ({
-                id: `${cls}-${index}`,
-                title: `${cls === 'JEE' || cls === 'NEET' ? '' : 'Class '}${cls}: ${type}`,
-                category: type,
-                isFree: type.includes('NCERT'),
-                price: type.includes('NCERT') ? 0 : (249 + (index * 75)),
-                img: `https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&q=80&w=400`
-            }));
-        }
-
-        function renderFilters() {
-            const container = document.getElementById('class-filters');
-            container.innerHTML = classes.map(cls => `
-                <button onclick="setActiveClass('${cls}')" 
-                    class="px-6 py-2.5 rounded-full text-sm font-bold border-2 border-slate-200 transition-all duration-300 
-                    ${activeClass === cls ? 'active-pill border-blue-600' : 'bg-white text-slate-600 hover:border-blue-300'}">
-                    ${cls === 'JEE' || cls === 'NEET' ? cls : 'Class ' + cls}
-                </button>
-            `).join('');
-        }
-
-        function renderCards() {
-            const container = document.getElementById('resource-grid');
-            const data = generateResources(activeClass);
-            
-            container.innerHTML = data.map(item => `
-                <div class="group bg-white rounded-[2.5rem] p-4 card-shadow border border-slate-100">
-                    <div class="relative overflow-hidden rounded-[2rem] bg-slate-100 aspect-[4/5] mb-6">
-                        <img src="${item.img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                        <div class="absolute top-4 left-4">
-                            <span class="${item.isFree ? 'bg-emerald-500' : 'bg-blue-600'} text-white text-[10px] font-black px-3 py-1 rounded-full uppercase">
-                                ${item.isFree ? 'Free Access' : 'Premium'}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="px-2">
-                        <h4 class="text-lg font-bold text-slate-800 leading-tight mb-4 h-12">${item.title}</h4>
-                        <div class="flex items-center justify-between">
-                            <span class="text-2xl font-black">${item.isFree ? '₹0' : '₹' + item.price}</span>
-                            <button onclick="handleAction(${JSON.stringify(item).replace(/"/g, '&quot;')})" 
-                                class="px-5 py-2.5 rounded-2xl font-bold text-sm transition-all
-                                ${item.isFree ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-slate-900 text-white hover:bg-blue-600'}">
-                                ${item.isFree ? 'Get Free' : 'Add to Bag'}
-                            </button>
-                        </div>
-                    </div>
+            <div class="grid md:grid-cols-3 gap-6" id="home-plans-grid">
                 </div>
-            `).join('');
-        }
+        </div>
+    </section>
 
-        function handleAction(item) {
-            if (item.isFree) {
-                alert("This NCERT resource has been added to your dashboard for free!");
-                myLibrary.push(item);
-                updateDashboard();
-            } else {
-                cart.push(item);
-                document.getElementById('cart-count').innerText = cart.length;
+    <section id="view-library" class="fade-in hidden">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+            <div>
+                <h2 id="library-title" class="text-4xl font-extrabold text-slate-900">Digital Library</h2>
+                <p id="library-desc" class="text-slate-500 mt-2">Filter by resource type.</p>
+            </div>
+            <div class="flex bg-slate-100 p-1.5 rounded-2xl overflow-x-auto no-scrollbar">
+                <button onclick="openLibrary('book')" id="tab-book" class="px-5 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap">Books</button>
+                <button onclick="openLibrary('lecture')" id="tab-lecture" class="px-5 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap">Lectures</button>
+                <button onclick="openLibrary('pyq')" id="tab-pyq" class="px-5 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap">PYQs</button>
+                <button onclick="openLibrary('test')" id="tab-test" class="px-5 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap">Tests</button>
+                <button onclick="openLibrary('dpp')" id="tab-dpp" class="px-5 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap">DPPs</button>
+            </div>
+        </div>
+
+        <div class="flex overflow-x-auto space-x-3 pb-8 no-scrollbar snap-x mb-8" id="class-carousel"></div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" id="universal-grid"></div>
+    </section>
+
+    <section id="view-auth" class="fade-in hidden py-10">
+        <div class="max-w-md mx-auto bg-white p-10 rounded-[3rem] shadow-xl border">
+            <h3 class="text-2xl font-black mb-6">Login to Gaurav Classes</h3>
+            <form onsubmit="handleAuth(event)" class="space-y-4">
+                <input type="text" id="reg-name" placeholder="Full Name" required class="w-full p-4 bg-slate-50 rounded-2xl outline-none border focus:border-blue-500">
+                <input type="email" id="reg-email" placeholder="Email" required class="w-full p-4 bg-slate-50 rounded-2xl outline-none border focus:border-blue-500">
+                <button type="submit" class="w-full btn-primary text-white py-4 rounded-2xl font-bold">Access Dashboard</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="view-dashboard" class="fade-in hidden">
+        <h2 class="text-3xl font-black mb-6">Student Dashboard</h2>
+        <div id="dashboard-items" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            </div>
+    </section>
+
+    <section id="view-checkout" class="fade-in hidden">
+        <h2 class="text-4xl font-black mb-8">Checkout Bag</h2>
+        <div id="cart-items-container" class="space-y-4"></div>
+        <button onclick="processOrder()" class="mt-8 btn-primary text-white px-8 py-4 rounded-2xl font-bold">Complete Purchase</button>
+    </section>
+
+</main>
+
+<script>
+    const classes = ['6', '7', '8', '9', '10', '11', '12', 'jee', 'neet'];
+    let libraryData = [];
+    let cart = [];
+    let currentUser = null;
+    let currentViewType = 'book';
+    let currentSelectedClass = '10';
+
+    // --- DATA ENGINE ---
+    function initData() {
+        classes.forEach(cls => {
+            // All classes get Books, Lectures, Chapter Tests
+            libraryData.push({ id: `bk-${cls}`, type: 'book', class: cls, name: `Class ${cls} NCERT Pack`, price: 0, tag: 'Free', img: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400' });
+            libraryData.push({ id: `lec-${cls}`, type: 'lecture', class: cls, name: `Class ${cls} Video Lectures`, price: 499, tag: 'Premium', img: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400' });
+            libraryData.push({ id: `ct-${cls}`, type: 'test', class: cls, name: `Class ${cls} Chapter Tests`, price: 199, tag: 'Practice', img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400' });
+
+            // Classes 10, 12, JEE, NEET get PYQs and Model Papers
+            if (['10', '12', 'jee', 'neet'].includes(cls)) {
+                libraryData.push({ id: `pyq-${cls}`, type: 'pyq', class: cls, name: `${cls} 10-Year Solved PYQs`, price: 299, tag: 'Solved', img: 'https://images.unsplash.com/photo-1454165833767-027ffea9e778?w=400' });
+                libraryData.push({ id: `mod-${cls}`, type: 'test', class: cls, name: `${cls} 2026 Model Test Series`, price: 599, tag: 'Test Series', img: 'https://images.unsplash.com/photo-1588072432836-e10032774350?w=400' });
             }
-        }
 
-        function checkout() {
-            if (cart.length === 0) {
-                alert("Your bag is empty!");
-                return;
+            // JEE/NEET get DPPs for every topic
+            if (['jee', 'neet'].includes(cls)) {
+                libraryData.push({ id: `dpp-${cls}`, type: 'dpp', class: cls, name: `${cls.toUpperCase()} Daily Practice (DPPs)`, price: 349, tag: 'Daily', img: 'https://images.unsplash.com/photo-1606326666430-2c43043ef34a?w=400' });
             }
-            if (confirm(`Proceed to pay for ${cart.length} items?`)) {
-                myLibrary = [...myLibrary, ...cart];
-                cart = [];
-                document.getElementById('cart-count').innerText = "0";
-                alert("Payment Successful! Materials added to your Dashboard.");
-                updateDashboard();
-                showView('dashboard-view');
-            }
+        });
+    }
+
+    // --- HOME PLANS RENDERING ---
+    function renderHomePlans() {
+        const grid = document.getElementById('home-plans-grid');
+        const plans = [
+            { id: '6', title: 'Foundation (6-9)', desc: 'Lectures + Chapter Tests' },
+            { id: '10', title: 'Board Master (10)', desc: 'Lectures + Tests + PYQs + Model Papers' },
+            { id: '11', title: 'Senior Prep (11)', desc: 'Lectures + Chapter Tests' },
+            { id: '12', title: 'Final Sprint (12)', desc: 'Full Board Prep + Test Series' },
+            { id: 'jee', title: 'Target JEE/NEET', desc: 'Lec + Topic DPPs + Advanced Mock Tests' }
+        ];
+
+        grid.innerHTML = plans.map(p => `
+            <div class="plan-card study-card cursor-pointer" onclick="quickAccess('${p.id}')">
+                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-6 font-black">${p.id.toUpperCase()}</div>
+                <h4 class="text-xl font-extrabold mb-2">${p.title}</h4>
+                <p class="text-slate-500 text-sm mb-6">${p.desc}</p>
+                <div class="flex items-center text-blue-600 font-bold text-sm">
+                    View Resources <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function quickAccess(clsId) {
+        currentSelectedClass = clsId;
+        openLibrary('book');
+    }
+
+    // --- VIEW CONTROLLER ---
+    function showView(viewId) {
+        document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
+        document.getElementById('view-' + viewId).classList.remove('hidden');
+        if(viewId === 'checkout') renderCart();
+    }
+
+    function openLibrary(type) {
+        currentViewType = type;
+        showView('library');
+        renderClassCarousel();
+        renderLibrary();
+        
+        // Update Tab UI
+        document.querySelectorAll('[id^="tab-"]').forEach(btn => btn.className = 'px-5 py-2 rounded-xl text-sm font-bold text-slate-400 transition');
+        document.getElementById('tab-' + type).className = 'px-5 py-2 rounded-xl text-sm font-bold bg-white text-blue-600 shadow-sm';
+    }
+
+    function renderClassCarousel() {
+        const carousel = document.getElementById('class-carousel');
+        carousel.innerHTML = classes.map(cls => `
+            <button onclick="filterByClass('${cls}')" 
+                class="class-tab snap-start px-8 py-4 rounded-2xl border font-bold text-sm whitespace-nowrap shadow-sm transition
+                ${currentSelectedClass === cls ? 'active-tab' : 'bg-white border-slate-200'}" 
+                data-class="${cls}">
+                ${cls.toUpperCase()}
+            </button>
+        `).join('');
+    }
+
+    function renderLibrary() {
+        const grid = document.getElementById('universal-grid');
+        const filtered = libraryData.filter(i => i.class === currentSelectedClass && i.type === currentViewType);
+        
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div class="col-span-full py-20 text-center text-slate-400 font-bold">This resource is coming soon for this class. Try Classes 10, 12, or JEE.</div>`;
+            return;
         }
 
-        function updateDashboard() {
-            const emptyState = document.getElementById('dashboard-empty');
-            const grid = document.getElementById('dashboard-grid');
-            
-            if (myLibrary.length > 0) {
-                emptyState.classList.add('hidden');
-                grid.innerHTML = myLibrary.map(item => `
-                    <div class="bg-white rounded-[2.5rem] p-4 border border-blue-100 shadow-sm">
-                        <div class="h-40 bg-slate-100 rounded-[1.5rem] mb-4 flex items-center justify-center text-blue-600">
-                            <i class="fa-solid fa-file-pdf text-4xl"></i>
-                        </div>
-                        <h4 class="font-bold text-slate-800 mb-4">${item.title}</h4>
-                        <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-blue-700 transition">
-                            Open Material
-                        </button>
-                    </div>
-                `).join('');
-            }
-        }
+        grid.innerHTML = filtered.map(item => `
+            <div class="study-card bg-white p-5 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                <div class="relative overflow-hidden rounded-[1.5rem] mb-4 aspect-square">
+                    <img src="${item.img}" class="w-full h-full object-cover">
+                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-[10px] font-black uppercase text-blue-600">${item.tag}</div>
+                </div>
+                <h4 class="font-bold text-slate-800 leading-tight">${item.name}</h4>
+                <div class="flex justify-between items-center mt-5 pt-4 border-t border-slate-50">
+                    <span class="font-black text-blue-600">${item.price === 0 ? 'FREE' : '₹' + item.price}</span>
+                    <button onclick="addToCart('${item.id}')" class="w-10 h-10 bg-slate-900 text-white rounded-xl hover:bg-blue-600 transition flex items-center justify-center">
+                        <i class="fas fa-plus text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
 
-        function showView(viewId) {
-            document.querySelectorAll('.view-section').forEach(v => v.classList.add('hidden-view'));
-            document.getElementById(viewId).classList.remove('hidden-view');
-            window.scrollTo(0,0);
-        }
+    function filterByClass(cls) {
+        currentSelectedClass = cls;
+        renderClassCarousel();
+        renderLibrary();
+    }
 
-        function setActiveClass(cls) {
-            activeClass = cls;
-            renderFilters();
-            renderCards();
-        }
+    function addToCart(id) {
+        const item = libraryData.find(i => i.id === id);
+        cart.push(item);
+        document.getElementById('cart-count').innerText = cart.length;
+        alert(`${item.name} added to bag!`);
+    }
 
-        // Init
-        renderFilters();
-        renderCards();
-    </script>
+    function renderCart() {
+        const container = document.getElementById('cart-items-container');
+        container.innerHTML = cart.length ? cart.map((item, idx) => `
+            <div class="bg-white p-6 rounded-3xl flex items-center justify-between border">
+                <div class="font-bold">${item.name} <span class="text-blue-600 text-xs ml-2">${item.class.toUpperCase()}</span></div>
+                <div class="font-black">₹${item.price}</div>
+            </div>
+        `).join('') : '<p class="text-slate-400">Bag is empty</p>';
+    }
 
-    <footer class="bg-slate-900 text-white mt-20 py-16 px-6 text-center">
-        <p class="text-slate-500 font-bold uppercase tracking-widest text-xs">© 2026 Gaurav Classes - Education Excellence</p>
-    </footer>
+    function handleAuth(e) {
+        e.preventDefault();
+        currentUser = { name: document.getElementById('reg-name').value };
+        document.getElementById('auth-buttons').classList.add('hidden');
+        document.getElementById('user-profile').classList.remove('hidden');
+        document.getElementById('user-display-name').innerText = "Hi, " + currentUser.name;
+        showView('dashboard');
+    }
+
+    function processOrder() {
+        if(!currentUser) return showView('auth');
+        alert("Purchase successful!");
+        cart = [];
+        document.getElementById('cart-count').innerText = 0;
+        showView('dashboard');
+    }
+
+    window.onload = () => { initData(); renderHomePlans(); };
+</script>
 
 </body>
 </html>
