@@ -18,6 +18,8 @@
         .study-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .active-tab { background: linear-gradient(135deg, #2563eb, #7c3aed) !important; color: white !important; border-color: transparent !important; }
+        .plan-card { border: 2px solid transparent; transition: all 0.3s; }
+        .plan-card:hover { border-color: var(--primary); background: white; }
         .fade-in { animation: fadeIn 0.6s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -68,11 +70,62 @@
                 <p class="text-slate-500 text-lg mb-10 leading-relaxed">High-quality NCERT materials, PYQs, and interactive tests designed for Classes 6-12, JEE, and NEET aspirants.</p>
                 <div class="flex flex-wrap gap-4">
                     <button onclick="openLibrary('book')" class="btn-primary text-white px-10 py-4 rounded-2xl font-bold shadow-xl">Get Started</button>
-                    <button onclick="showView('auth')" class="bg-white border border-slate-200 px-10 py-4 rounded-2xl font-bold hover:bg-slate-50 transition">Join Community</button>
+                    <button onclick="document.getElementById('academic-plans').scrollIntoView()" class="bg-white border border-slate-200 px-10 py-4 rounded-2xl font-bold hover:bg-slate-50 transition">View Plans</button>
                 </div>
             </div>
             <div class="hidden lg:block">
                 <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] shadow-2xl">
+            </div>
+        </div>
+
+        <div id="academic-plans" class="py-20 border-t border-slate-100">
+            <div class="text-center mb-16">
+                <h3 class="text-4xl font-black text-slate-900 mb-4">Choose Your Path</h3>
+                <p class="text-slate-500">Structured learning modules for every grade level.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="plan-card bg-slate-50 p-8 rounded-[2.5rem] flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-blue-600 shadow-sm mb-6"><i class="fas fa-shapes text-2xl"></i></div>
+                        <h4 class="text-2xl font-bold mb-2">Class 6 - 9</h4>
+                        <p class="text-slate-400 text-sm mb-6 uppercase font-black tracking-widest">Foundation Batch</p>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-center text-slate-600 text-sm font-semibold"><i class="fas fa-circle-check text-blue-500 mr-3"></i> Animated Topic Lectures</li>
+                            <li class="flex items-center text-slate-600 text-sm font-semibold"><i class="fas fa-circle-check text-blue-500 mr-3"></i> Chapter-wise Quiz</li>
+                            <li class="flex items-center text-slate-600 text-sm font-semibold"><i class="fas fa-circle-check text-blue-500 mr-3"></i> Daily Home Work</li>
+                        </ul>
+                    </div>
+                    <button onclick="filterByClass('6'); openLibrary('book')" class="w-full py-4 bg-white border border-slate-200 rounded-2xl font-bold hover:bg-slate-900 hover:text-white transition">Explore Plan</button>
+                </div>
+
+                <div class="plan-card bg-blue-600 p-8 rounded-[2.5rem] text-white flex flex-col justify-between shadow-2xl shadow-blue-500/20 transform lg:-translate-y-4">
+                    <div>
+                        <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-white mb-6"><i class="fas fa-star text-2xl"></i></div>
+                        <h4 class="text-2xl font-bold mb-2">Class 10 & 12</h4>
+                        <p class="text-blue-100 text-sm mb-6 uppercase font-black tracking-widest">Board Conqueror</p>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-center text-blue-50 text-sm font-semibold"><i class="fas fa-circle-check text-blue-200 mr-3"></i> Detailed One-Shot Lectures</li>
+                            <li class="flex items-center text-blue-50 text-sm font-semibold"><i class="fas fa-circle-check text-blue-200 mr-3"></i> 10+ Year PYQ Solutions</li>
+                            <li class="flex items-center text-blue-50 text-sm font-semibold"><i class="fas fa-circle-check text-blue-200 mr-3"></i> 5 Model Paper Test Series</li>
+                        </ul>
+                    </div>
+                    <button onclick="filterByClass('12'); openLibrary('pyq')" class="w-full py-4 bg-white text-blue-600 rounded-2xl font-bold shadow-lg">View Board Series</button>
+                </div>
+
+                <div class="plan-card bg-slate-50 p-8 rounded-[2.5rem] flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm mb-6"><i class="fas fa-atom text-2xl"></i></div>
+                        <h4 class="text-2xl font-bold mb-2">JEE / NEET</h4>
+                        <p class="text-slate-400 text-sm mb-6 uppercase font-black tracking-widest">Aspirant Batch</p>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-center text-slate-600 text-sm font-semibold"><i class="fas fa-circle-check text-indigo-500 mr-3"></i> Advanced Topic Lectures</li>
+                            <li class="flex items-center text-slate-600 text-sm font-semibold"><i class="fas fa-circle-check text-indigo-500 mr-3"></i> Topic-wise DPPs</li>
+                            <li class="flex items-center text-slate-600 text-sm font-semibold"><i class="fas fa-circle-check text-indigo-500 mr-3"></i> All India Mock Tests</li>
+                        </ul>
+                    </div>
+                    <button onclick="filterByClass('jee'); openLibrary('test')" class="w-full py-4 bg-white border border-slate-200 rounded-2xl font-bold hover:bg-slate-900 hover:text-white transition">Start Preparation</button>
+                </div>
             </div>
         </div>
     </section>
@@ -87,12 +140,14 @@
                 <button onclick="openLibrary('book')" id="tab-book" class="px-5 py-2 rounded-xl text-sm font-bold transition">Books</button>
                 <button onclick="openLibrary('pyq')" id="tab-pyq" class="px-5 py-2 rounded-xl text-sm font-bold transition">PYQs</button>
                 <button onclick="openLibrary('test')" id="tab-test" class="px-5 py-2 rounded-xl text-sm font-bold transition">Tests</button>
+                <button onclick="openLibrary('dpp')" id="tab-dpp" class="px-5 py-2 rounded-xl text-sm font-bold transition">DPP/Lectures</button>
             </div>
         </div>
 
         <div class="flex overflow-x-auto space-x-3 pb-8 no-scrollbar snap-x mb-8" id="class-carousel">
+            <button onclick="filterByClass('6')" class="class-tab snap-start px-8 py-4 rounded-2xl bg-white border border-slate-200 font-bold text-sm whitespace-nowrap shadow-sm" data-class="6">Class 6</button>
+            <button onclick="filterByClass('8')" class="class-tab snap-start px-8 py-4 rounded-2xl bg-white border border-slate-200 font-bold text-sm whitespace-nowrap shadow-sm" data-class="8">Class 8</button>
             <button onclick="filterByClass('10')" class="class-tab snap-start px-8 py-4 rounded-2xl bg-white border border-slate-200 font-bold text-sm whitespace-nowrap shadow-sm" data-class="10">Class 10</button>
-            <button onclick="filterByClass('11')" class="class-tab snap-start px-8 py-4 rounded-2xl bg-white border border-slate-200 font-bold text-sm whitespace-nowrap shadow-sm" data-class="11">Class 11</button>
             <button onclick="filterByClass('12')" class="class-tab snap-start px-8 py-4 rounded-2xl bg-white border border-slate-200 font-bold text-sm whitespace-nowrap shadow-sm active-tab" data-class="12">Class 12</button>
             <button onclick="filterByClass('jee')" class="class-tab snap-start px-8 py-4 rounded-2xl bg-white border border-slate-200 font-bold text-sm whitespace-nowrap shadow-sm" data-class="jee">JEE / NEET</button>
         </div>
@@ -103,11 +158,11 @@
     <section id="view-auth" class="fade-in hidden py-10">
         <div class="max-w-4xl mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-slate-100 flex flex-col md:flex-row">
             <div class="md:w-1/2 bg-blue-600 p-12 text-white flex flex-col justify-center">
-                <h3 class="text-3xl font-black mb-4">Start Learning.</h3>
+                <h3 class="text-3xl font-black mb-4 text-white">Start Learning.</h3>
                 <p class="text-blue-100 mb-8">Create your free student account to track progress and download resources.</p>
                 <div class="space-y-4">
-                    <div class="flex items-center space-x-3"><i class="fas fa-check-circle"></i><span>Unlock NCERT Solutions</span></div>
-                    <div class="flex items-center space-x-3"><i class="fas fa-check-circle"></i><span>Free Mock Tests</span></div>
+                    <div class="flex items-center space-x-3 text-white"><i class="fas fa-check-circle"></i><span>Unlock NCERT Solutions</span></div>
+                    <div class="flex items-center space-x-3 text-white"><i class="fas fa-check-circle"></i><span>Free Mock Tests</span></div>
                 </div>
             </div>
             <div class="md:w-1/2 p-12">
@@ -143,17 +198,17 @@
         <div class="grid lg:grid-cols-3 gap-8">
             <div class="lg:col-span-2 space-y-8">
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-slate-800">
                         <i class="fas fa-book-open text-blue-600 mb-3 text-xl"></i>
                         <p class="text-xs font-black text-slate-400 uppercase">Courses</p>
                         <p class="text-2xl font-black">04</p>
                     </div>
-                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-slate-800">
                         <i class="fas fa-clock text-orange-500 mb-3 text-xl"></i>
                         <p class="text-xs font-black text-slate-400 uppercase">Study Hours</p>
                         <p class="text-2xl font-black">12.5h</p>
                     </div>
-                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-slate-800">
                         <i class="fas fa-award text-emerald-500 mb-3 text-xl"></i>
                         <p class="text-xs font-black text-slate-400 uppercase">Tests Taken</p>
                         <p class="text-2xl font-black">08</p>
@@ -161,27 +216,17 @@
                 </div>
 
                 <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100">
-                    <h3 class="text-xl font-bold mb-6 flex items-center justify-between">
+                    <h3 class="text-xl font-bold mb-6 flex items-center justify-between text-slate-800">
                         <span>Continue Learning</span>
                         <button onclick="openLibrary('book')" class="text-blue-600 text-sm font-bold">Browse Library</button>
                     </h3>
                     <div class="space-y-4">
-                        <div class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition group">
+                        <div class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition group cursor-pointer">
                             <div class="flex items-center space-x-4">
                                 <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 font-black">Ph</div>
                                 <div>
-                                    <h4 class="font-bold">Physics Part II - Optics</h4>
+                                    <h4 class="font-bold text-slate-800">Physics Part II - Optics</h4>
                                     <p class="text-xs text-slate-400 font-bold uppercase">Chapter 9 • 65% Completed</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-play-circle text-2xl text-slate-300 group-hover:text-blue-600 transition"></i>
-                        </div>
-                        <div class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition group">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 font-black">Ma</div>
-                                <div>
-                                    <h4 class="font-bold">Calculus Essentials</h4>
-                                    <p class="text-xs text-slate-400 font-bold uppercase">Chapter 4 • 20% Completed</p>
                                 </div>
                             </div>
                             <i class="fas fa-play-circle text-2xl text-slate-300 group-hover:text-blue-600 transition"></i>
@@ -197,7 +242,7 @@
                     <button class="w-full bg-white text-slate-900 py-3 rounded-xl font-bold">View Plans</button>
                 </div>
                 <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100">
-                    <h3 class="font-bold mb-4 italic">Daily Vocab (SSC CGL)</h3>
+                    <h3 class="font-bold mb-4 italic text-slate-800">Daily Vocab (SSC CGL)</h3>
                     <div class="p-4 bg-blue-50 rounded-2xl border-l-4 border-blue-600">
                         <p class="font-black text-blue-800">Pragmatic</p>
                         <p class="text-sm text-blue-600 mt-1">Dealing with things sensibly and realistically.</p>
@@ -208,12 +253,11 @@
     </section>
 
     <section id="view-checkout" class="fade-in hidden">
-        <h2 class="text-4xl font-black mb-8">Your Learning Bag</h2>
+        <h2 class="text-4xl font-black mb-8 text-slate-900">Your Learning Bag</h2>
         <div class="grid lg:grid-cols-3 gap-12">
-            <div class="lg:col-span-2 space-y-4" id="cart-items-container">
-                </div>
+            <div class="lg:col-span-2 space-y-4" id="cart-items-container"></div>
             <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm h-fit">
-                <h3 class="text-xl font-black mb-6">Order Summary</h3>
+                <h3 class="text-xl font-black mb-6 text-slate-800">Order Summary</h3>
                 <div class="space-y-4 text-sm font-bold text-slate-600">
                     <div class="flex justify-between"><span>Subtotal</span><span id="subtotal">₹0</span></div>
                     <div class="flex justify-between"><span>Digital Access Fee</span><span class="text-emerald-500 font-black">FREE</span></div>
@@ -232,13 +276,22 @@
 <script>
     // --- DATABASE ---
     const libraryData = [
+        // Class 6 - 9 Foundation
+        { id: 101, type: 'book', class: '6', name: 'Science NCERT Class 6', price: 0, tag: 'Official', img: 'https://via.placeholder.com/300x400?text=Science+6' },
+        { id: 102, type: 'test', class: '8', name: 'Class 8 Half-Yearly Mock', price: 0, tag: 'New', img: 'https://via.placeholder.com/300x400?text=Test+8' },
+        
+        // Class 10 & 12 Board Prep
         { id: 1, type: 'book', class: '12', name: 'Physics NCERT P1', price: 0, tag: 'Official', img: 'https://via.placeholder.com/300x400?text=Physics+12' },
-        { id: 2, type: 'book', class: '12', name: 'Chemistry NCERT P1', price: 0, tag: 'Official', img: 'https://via.placeholder.com/300x400?text=Chemistry+12' },
-        { id: 3, type: 'book', class: 'jee', name: 'HC Verma Physics Vol 1', price: 450, tag: 'Reference', img: 'https://via.placeholder.com/300x400?text=HC+Verma' },
         { id: 4, type: 'pyq', class: '12', name: 'Physics Board 2025 Solved', price: 0, tag: 'Solved', img: 'https://via.placeholder.com/300x400?text=PYQ+12' },
+        { id: 10, type: 'test', class: '12', name: 'Model Paper Series (5 Sets)', price: 199, tag: 'Premium', img: 'https://via.placeholder.com/300x400?text=Model+12' },
+        { id: 6, type: 'book', class: '10', name: 'Maths NCERT Class 10', price: 0, tag: 'Official', img: 'https://via.placeholder.com/300x400?text=Maths+10' },
+        { id: 11, type: 'test', class: '10', name: 'Class 10 Board Mock Pack', price: 99, tag: 'Exam Ready', img: 'https://via.placeholder.com/300x400?text=Model+10' },
+        
+        // JEE / NEET Advanced
+        { id: 3, type: 'book', class: 'jee', name: 'HC Verma Physics Vol 1', price: 450, tag: 'Reference', img: 'https://via.placeholder.com/300x400?text=HC+Verma' },
         { id: 5, type: 'test', class: 'jee', name: 'Organic Chem Quiz', price: 0, tag: 'Mock', img: 'https://via.placeholder.com/300x400?text=JEE+Mock' },
-        { id: 6, type: 'book', class: '10', name: 'Maths NCERT', price: 0, tag: 'Official', img: 'https://via.placeholder.com/300x400?text=Maths+10' },
-        { id: 7, type: 'book', class: '12', name: 'Modern ABC Chemistry', price: 890, tag: 'Reference', img: 'https://via.placeholder.com/300x400?text=Modern+ABC' }
+        { id: 20, type: 'dpp', class: 'jee', name: 'Rotational Motion DPP + Lecture', price: 0, tag: 'Topic', img: 'https://via.placeholder.com/300x400?text=DPP+Physics' },
+        { id: 21, type: 'dpp', class: 'jee', name: 'Chemical Bonding Masterclass', price: 0, tag: 'High Yield', img: 'https://via.placeholder.com/300x400?text=Lecture+Chem' }
     ];
 
     let cart = [];
@@ -260,15 +313,16 @@
         const titles = {
             'book': { t: 'Digital Library', d: 'NCERT and Reference textbooks.' },
             'pyq': { t: 'Previous Years', d: 'Solved papers for Board & Competitions.' },
-            'test': { t: 'Mock Tests', d: 'Timed practice sessions for excellence.' }
+            'test': { t: 'Mock Tests', d: 'Timed practice sessions for excellence.' },
+            'dpp': { t: 'DPP & Topic Lectures', d: 'Daily practice and detailed topic breakdown.' }
         };
         document.getElementById('library-title').innerText = titles[type].t;
         document.getElementById('library-desc').innerText = titles[type].d;
         
         // Tab UI
-        ['book', 'pyq', 'test'].forEach(v => {
+        ['book', 'pyq', 'test', 'dpp'].forEach(v => {
             const el = document.getElementById('tab-' + v);
-            el.className = (v === type) ? 'px-5 py-2 rounded-xl text-sm font-bold bg-white text-blue-600 shadow-sm' : 'px-5 py-2 rounded-xl text-sm font-bold text-slate-400 hover:text-slate-600';
+            if(el) el.className = (v === type) ? 'px-5 py-2 rounded-xl text-sm font-bold bg-white text-blue-600 shadow-sm' : 'px-5 py-2 rounded-xl text-sm font-bold text-slate-400 hover:text-slate-600';
         });
 
         showView('library');
@@ -281,12 +335,12 @@
         const filtered = libraryData.filter(item => item.type === currentViewType && item.class === currentSelectedClass);
 
         if (filtered.length === 0) {
-            grid.innerHTML = `<div class="col-span-full py-20 text-center text-slate-400 font-bold">No items found for this selection.</div>`;
+            grid.innerHTML = `<div class="col-span-full py-20 text-center text-slate-400 font-bold">No items found for Class ${currentSelectedClass}. Try another category or class.</div>`;
             return;
         }
 
         filtered.forEach(item => {
-            const isTest = item.type === 'test';
+            const isTest = item.type === 'test' || item.type === 'dpp';
             grid.innerHTML += `
                 <div class="study-card bg-white p-5 rounded-[2.5rem] border border-slate-100 shadow-sm">
                     <div class="relative overflow-hidden rounded-[1.5rem] mb-4">
@@ -297,7 +351,7 @@
                     <div class="flex justify-between items-center mt-5 pt-4 border-t border-slate-50">
                         <span class="font-black text-blue-600">${item.price === 0 ? 'FREE' : '₹' + item.price}</span>
                         <button onclick="addToCart(${item.id})" class="w-10 h-10 bg-slate-900 text-white rounded-xl hover:bg-blue-600 transition flex items-center justify-center">
-                            <i class="fas ${isTest ? 'fa-play' : 'fa-plus'} text-xs"></i>
+                            <i class="fas ${isTest ? 'fa-play' : 'fa-plus'} text-xs text-white"></i>
                         </button>
                     </div>
                 </div>`;
@@ -312,11 +366,11 @@
         renderLibrary();
     }
 
-    // --- CART LOGIC ---
+    // --- CART & AUTH (REUSED FROM PREVIOUS) ---
     function addToCart(id) {
         const item = libraryData.find(i => i.id === id);
-        if (item.type === 'test') {
-            alert("Starting Mock Test: " + item.name);
+        if (item.type === 'test' || item.type === 'dpp') {
+            alert("Starting Activity: " + item.name);
             return;
         }
         cart.push(item);
@@ -329,71 +383,46 @@
         const subtotalEl = document.getElementById('subtotal');
         const totalEl = document.getElementById('total-price');
         container.innerHTML = '';
-        
         let total = 0;
         if(cart.length === 0) {
             container.innerHTML = `<div class="py-12 text-slate-400 font-bold">Your bag is empty.</div>`;
         } else {
             cart.forEach((item, index) => {
                 total += item.price;
-                container.innerHTML += `
-                    <div class="bg-white p-6 rounded-3xl flex items-center justify-between border border-slate-100">
-                        <div class="flex items-center space-x-4">
-                            <img src="${item.img}" class="w-16 h-20 rounded-lg object-cover">
-                            <div>
-                                <h4 class="font-bold text-slate-800">${item.name}</h4>
-                                <p class="text-xs text-slate-400 font-bold uppercase">Class ${item.class}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-6">
-                            <span class="font-black text-slate-900">${item.price === 0 ? 'FREE' : '₹'+item.price}</span>
-                            <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-600"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>`;
+                container.innerHTML += `<div class="bg-white p-6 rounded-3xl flex items-center justify-between border border-slate-100">
+                    <div class="flex items-center space-x-4">
+                        <img src="${item.img}" class="w-16 h-20 rounded-lg object-cover">
+                        <div><h4 class="font-bold text-slate-800">${item.name}</h4><p class="text-xs text-slate-400 font-bold uppercase">Class ${item.class}</p></div>
+                    </div>
+                    <div class="flex items-center space-x-6">
+                        <span class="font-black text-slate-900">${item.price === 0 ? 'FREE' : '₹'+item.price}</span>
+                        <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-600"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
             });
         }
         subtotalEl.innerText = '₹' + total;
         totalEl.innerText = '₹' + total;
     }
 
-    function removeFromCart(index) {
-        cart.splice(index, 1);
-        document.getElementById('cart-count').innerText = cart.length;
-        renderCart();
-    }
+    function removeFromCart(index) { cart.splice(index, 1); document.getElementById('cart-count').innerText = cart.length; renderCart(); }
 
-    // --- AUTH & DASHBOARD LOGIC ---
     function handleAuth(event) {
         event.preventDefault();
-        const name = document.getElementById('reg-name').value;
-        const goal = document.getElementById('reg-goal').value;
-
-        // Simulate Login
-        currentUser = { name, goal };
-        
-        // UI Transformation
+        currentUser = { name: document.getElementById('reg-name').value };
         document.getElementById('auth-buttons').classList.add('hidden');
         document.getElementById('user-profile').classList.remove('hidden');
-        document.getElementById('user-display-name').innerText = "Hi, " + name.split(' ')[0];
-        document.getElementById('dash-user-name').innerText = name;
-        
+        document.getElementById('user-display-name').innerText = "Hi, " + currentUser.name.split(' ')[0];
+        document.getElementById('dash-user-name').innerText = currentUser.name;
         showView('dashboard');
     }
 
     function processOrder() {
-        if(!currentUser) {
-            alert("Please login/register to complete checkout.");
-            showView('auth');
-            return;
-        }
-        alert("Success! Your materials are now available in your dashboard.");
-        cart = [];
-        document.getElementById('cart-count').innerText = 0;
-        showView('dashboard');
+        if(!currentUser) { alert("Please login first."); showView('auth'); return; }
+        alert("Order processed!"); cart = []; document.getElementById('cart-count').innerText = 0; showView('dashboard');
     }
 
     window.onload = () => { renderLibrary(); };
 </script>
-
 </body>
 </html>
