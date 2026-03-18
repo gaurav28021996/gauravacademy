@@ -3,198 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaurav Classes | Intelligence 2.0</title>
+    <title>Gaurav Classes | Digital Learning Ecosystem</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --glass: rgba(255, 255, 255, 0.7);
-            --border: rgba(255, 255, 255, 0.3);
-            --primary: #6366f1;
-            --secondary: #a855f7;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #0f172a; /* Deep dark space blue */
-            color: #f8fafc;
-            overflow-x: hidden;
-        }
-
-        /* Futuristic Mesh Gradient Background */
-        .mesh-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            background: 
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
-                radial-gradient(at 50% 100%, rgba(79, 70, 229, 0.1) 0px, transparent 50%);
-        }
-
-        .glass {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .bento-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .bento-card:hover {
-            background: rgba(255, 255, 255, 0.07);
-            border-color: var(--primary);
-            transform: translateY(-5px) scale(1.01);
-            box-shadow: 0 20px 40px -20px rgba(99, 102, 241, 0.5);
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #818cf8, #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        .neo-btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .neo-btn:hover {
-            filter: brightness(1.1);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
-        }
-
-        .shimmer {
-            position: relative; overflow: hidden;
-        }
-        .shimmer::after {
-            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: rotate(45deg); animation: shimmer 3s infinite;
-        }
-        @keyframes shimmer { 0% { transform: translateX(-100%) rotate(45deg); } 100% { transform: translateX(100%) rotate(45deg); } }
+        :root { --primary: #2563eb; --accent: #7c3aed; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; background-color: #f8fafc; color: #1e293b; }
+        .glass-header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--accent)); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4); }
+        .study-card { transition: all 0.4s ease; }
+        .study-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08); }
+        .active-tab { background: linear-gradient(135deg, #2563eb, #7c3aed) !important; color: white !important; }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
-</head>
-<body>
-    <div class="mesh-bg"></div>
-
-    <nav class="sticky top-0 z-50 glass border-b border-white/5 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="showView('home')">
-                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                    <i data-lucide="zap" class="text-white w-6 h-6"></i>
-                </div>
-                <h1 class="text-xl font-bold tracking-tight gradient-text">GAURAV CLASSES</h1>
-            </div>
-
-            <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-400">
-                <button onclick="showView('home')" class="hover:text-white transition">Discovery</button>
-                <button onclick="showView('library')" class="hover:text-white transition">Archive</button>
-                <button onclick="showAdmin()" class="hover:text-white transition">Console</button>
-            </div>
-
-            <div id="auth-zone">
-                <button onclick="showView('auth')" class="neo-btn px-6 py-2 rounded-full text-sm font-bold text-white">Initialize</button>
-            </div>
-        </div>
-    </nav>
-
-    <main class="max-w-7xl mx-auto px-6 py-12">
-        
-        <section id="view-home" class="fade-in space-y-20">
-            <div class="text-center space-y-6">
-                <span class="px-4 py-1 rounded-full border border-indigo-500/30 text-indigo-400 text-[10px] font-black tracking-widest uppercase bg-indigo-500/5">System Version 2026.4</span>
-                <h2 class="text-6xl md:text-8xl font-black leading-tight tracking-tighter">
-                    Education for the <br><span class="gradient-text">Next Generation.</span>
-                </h2>
-                <p class="text-slate-400 max-w-2xl mx-auto text-lg">Predictive learning algorithms and premium resources for UP, CBSE, and ICSE excellence.</p>
-                <div class="flex justify-center space-x-4 pt-6">
-                    <button onclick="showView('library')" class="neo-btn px-10 py-4 rounded-2xl font-bold">Access Library</button>
-                    <button class="glass px-10 py-4 rounded-2xl font-bold border-white/10">View Roadmap</button>
-                </div>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bento-card p-8 rounded-[2rem] space-y-4">
-                    <i data-lucide="book-open" class="text-indigo-400 w-8 h-8"></i>
-                    <h3 class="text-xl font-bold">Smart Archive</h3>
-                    <p class="text-slate-500 text-sm">Every NCERT chapter and advanced reference book synced to your dashboard.</p>
-                </div>
-                <div class="bento-card p-8 rounded-[2rem] space-y-4">
-                    <i data-lucide="monitor-play" class="text-purple-400 w-8 h-8"></i>
-                    <h3 class="text-xl font-bold">Live Streams</h3>
-                    <p class="text-slate-500 text-sm">Ultra-low latency sessions with Gaurav sir. Interactive and immersive.</p>
-                </div>
-                <div class="bento-card p-8 rounded-[2rem] space-y-4">
-                    <i data-lucide="bar-chart-3" class="text-emerald-400 w-8 h-8"></i>
-                    <h3 class="text-xl font-bold">AI Analytics</h3>
-                    <p class="text-slate-500 text-sm">Real-time progress tracking and heatmaps of your syllabus coverage.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="view-library" class="hidden fade-in space-y-8">
-            <div class="flex justify-between items-end">
-                <div>
-                    <h2 class="text-4xl font-bold tracking-tighter">RESOURCE <span class="text-slate-500">ARCHIVE</span></h2>
-                    <p class="text-slate-500">Searchable cloud database of study materials.</p>
-                </div>
-                <div class="flex bg-white/5 p-1 rounded-xl border border-white/10">
-                    <button onclick="filterType('book')" class="px-6 py-2 rounded-lg text-xs font-bold hover:bg-white/5 transition">DOCS</button>
-                    <button onclick="filterType('lecture')" class="px-6 py-2 rounded-lg text-xs font-bold hover:bg-white/5 transition">VIDEO</button>
-                </div>
-            </div>
-            <div id="library-grid" class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                </div>
-        </section>
-
-        <section id="view-admin" class="hidden fade-in space-y-8">
-            <div class="glass p-8 rounded-[2.5rem] border-indigo-500/20 shadow-2xl">
-                <div class="flex justify-between mb-10">
-                    <h2 class="text-2xl font-black tracking-widest uppercase italic">Admin<span class="text-indigo-500">_Terminal</span></h2>
-                    <button onclick="showView('home')" class="text-slate-500 hover:text-white">CLOSE_SESSION</button>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-12">
-                    <div class="space-y-6">
-                        <h3 class="text-sm font-black text-indigo-400 uppercase tracking-widest">Push New Material</h3>
-                        <div class="space-y-4">
-                            <input id="adm-title" type="text" placeholder="Entry Title" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-indigo-500 transition">
-                            <select id="adm-class" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none">
-                                <option value="10">Class 10</option>
-                                <option value="12">Class 12</option>
-                                <option value="jee">JEE/NEET</option>
-                            </select>
-                            <input id="adm-img" type="text" placeholder="Image URL (Unsplash/Firebase)" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none">
-                            <button onclick="pushToFirebase()" class="w-full neo-btn py-4 rounded-xl font-bold uppercase tracking-widest">Execute Upload</button>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-black/40 rounded-3xl p-6 border border-white/5">
-                        <h3 class="text-sm font-black text-slate-500 uppercase tracking-widest mb-4">Network Activity</h3>
-                        <div id="admin-log" class="text-[10px] font-mono space-y-2 opacity-60">
-                            <p>> System initialized...</p>
-                            <p>> Syncing with Gaurav Classes Cloud...</p>
-                            <p>> Ready for deployment.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyApT8enq5xt47R9DHoNpZJQ61-oFAn7TCk",
@@ -207,74 +38,189 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        
+        // Expose to global window for HTML onclick events
+        window.db = db;
 
-        // Global Sync
-        onSnapshot(collection(db, "library"), (snap) => {
-            const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            renderLibrary(data);
-            log(`Synced ${data.length} records from Firebase.`);
+        // Sync Library Real-time
+        onSnapshot(collection(db, "library"), (snapshot) => {
+            window.libraryData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            if (typeof renderLibrary === "function") renderLibrary();
+            console.log("Firebase Synced:", window.libraryData.length, "items");
         });
 
-        // Push Function
-        window.pushToFirebase = async () => {
-            const title = document.getElementById('adm-title').value;
-            const cls = document.getElementById('adm-class').value;
-            const img = document.getElementById('adm-img').value;
-
-            if(!title) return alert("Title Required");
-
-            log(`Attempting to push: ${title}...`);
-            await addDoc(collection(db, "library"), {
-                name: title,
-                class: cls,
-                img: img || 'https://images.unsplash.com/photo-1614850523296-d8c1af93d400?w=800',
-                type: 'book',
-                createdAt: serverTimestamp()
-            });
-            log(`Success! Entry published.`);
-            document.getElementById('adm-title').value = '';
-        };
-
-        function log(msg) {
-            const logger = document.getElementById('admin-log');
-            logger.innerHTML += `<p>> ${msg}</p>`;
-            logger.scrollTop = logger.scrollHeight;
-        }
+        // Initialization
+        window.addEventListener('load', () => {
+            if (typeof initData === "function") initData();
+            if (typeof renderHomePlans === "function") renderHomePlans();
+            if (typeof checkAuth === "function") checkAuth();
+        });
     </script>
+</head>
+<body>
 
-    <script>
-        // UI Controls
-        function showView(id) {
-            document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
-            document.getElementById('view-' + id).classList.remove('hidden');
-            window.scrollTo(0,0);
-        }
+<header class="sticky top-0 z-[100] glass-header px-4 md:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-3 cursor-pointer group" onclick="showView('home')">
+            <div class="w-11 h-11 btn-primary rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:rotate-6 transition-transform">
+                <i class="fas fa-graduation-cap text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-extrabold tracking-tight">Gaurav Classes</h1>
+                <span class="text-[10px] font-bold text-blue-600 uppercase tracking-tighter">Campus 2.0</span>
+            </div>
+        </div>
 
-        function showAdmin() {
-            const pass = prompt("Enter Terminal Access Key:");
-            if(pass === "gaurav2026") {
-                showView('admin');
-            } else {
-                alert("Unauthorized Access Attempt Detected.");
-            }
-        }
+        <nav class="hidden lg:flex items-center space-x-1">
+            <button onclick="showView('home')" class="px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-100">Home</button>
+            <button onclick="openLibrary('book')" class="px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-100">Library</button>
+            <button onclick="openLibrary('pyq')" class="px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-100">PYQs</button>
+        </nav>
 
-        function renderLibrary(data) {
-            const grid = document.getElementById('library-grid');
-            grid.innerHTML = data.map(item => `
-                <div class="bento-card p-4 rounded-[2rem] group">
-                    <div class="relative overflow-hidden rounded-[1.5rem] mb-4">
-                        <img src="${item.img}" class="w-full aspect-square object-cover group-hover:scale-110 transition duration-700">
-                        <div class="absolute top-3 left-3 px-3 py-1 bg-black/50 backdrop-blur rounded-full text-[8px] font-bold tracking-widest uppercase">CLASS ${item.class}</div>
-                    </div>
-                    <h4 class="font-bold text-sm mb-4 truncate">${item.name}</h4>
-                    <button class="w-full py-2 bg-white/5 hover:bg-indigo-600 rounded-xl text-[10px] font-black tracking-widest transition">DOWNLOAD_SECURE</button>
+        <div class="flex items-center space-x-3">
+            <div id="auth-buttons">
+                <button onclick="showView('auth')" class="btn-primary text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg">Login</button>
+            </div>
+            <div id="user-profile" class="hidden flex items-center space-x-3">
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="showView('dashboard')">
+                    <span id="user-display-name" class="text-sm font-bold text-slate-700 hidden md:block">Hi, Student</span>
+                    <img id="user-avatar" src="" class="w-10 h-10 rounded-xl border-2 border-blue-100">
                 </div>
-            `).join('');
-        }
+                <button onclick="handleLogout()" class="p-2.5 text-slate-400 hover:text-red-500 transition"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
+        </div>
+    </div>
+</header>
 
-        // Initialize Icons
-        lucide.createIcons();
-    </script>
+<main class="max-w-7xl mx-auto px-6 py-8">
+    <section id="view-home" class="fade-in">
+        <div class="py-20 text-center lg:text-left grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-6xl font-extrabold text-slate-900 leading-tight mb-6">Master Your <br><span class="text-blue-600">Future</span>.</h2>
+                <p class="text-slate-500 text-lg mb-10">Integrated learning for Boards, JEE, and NEET.</p>
+                <div id="home-plans-grid" class="grid md:grid-cols-2 gap-4"></div>
+            </div>
+            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800" class="rounded-[3rem] shadow-2xl hidden lg:block">
+        </div>
+    </section>
+
+    <section id="view-library" class="fade-in hidden">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-black">Digital Library</h2>
+            <div class="flex bg-slate-100 p-1 rounded-xl" id="library-tabs">
+                <button onclick="openLibrary('book')" id="tab-book" class="px-4 py-2 rounded-lg text-sm font-bold">Books</button>
+                <button onclick="openLibrary('lecture')" id="tab-lecture" class="px-4 py-2 rounded-lg text-sm font-bold">Lectures</button>
+            </div>
+        </div>
+        <div id="universal-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+    </section>
+
+    <section id="view-auth" class="fade-in hidden py-10">
+        <div class="max-w-md mx-auto bg-white p-8 rounded-[2rem] shadow-xl border">
+            <h3 class="text-2xl font-black mb-6">Student Login</h3>
+            <form onsubmit="handleAuth(event)" class="space-y-4">
+                <input type="text" id="reg-name" placeholder="Full Name" required class="w-full p-4 bg-slate-50 rounded-xl border outline-none">
+                <input type="email" id="reg-email" placeholder="Email" required class="w-full p-4 bg-slate-50 rounded-xl border outline-none">
+                <button type="submit" class="w-full btn-primary text-white py-4 rounded-xl font-bold">Enter Campus</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="view-dashboard" class="fade-in hidden">
+        <h2 class="text-3xl font-black mb-2">Welcome, <span id="dash-user-name" class="text-blue-600">Student</span></h2>
+        <p class="text-slate-500 mb-8">Class <span id="dash-user-class">10</span> Student Profile</p>
+        <div id="dashboard-material-list" class="grid gap-4"></div>
+    </section>
+</main>
+
+<script>
+    const classes = ['6', '7', '8', '9', '10', '11', '12', 'jee', 'neet'];
+    window.libraryData = [];
+    let currentUser = null;
+    let currentViewType = 'book';
+    let currentSelectedClass = '10';
+
+    // UI Controller
+    function showView(viewId) {
+        document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
+        document.getElementById('view-' + viewId).classList.remove('hidden');
+        window.scrollTo(0,0);
+    }
+
+    function openLibrary(type) {
+        currentViewType = type;
+        showView('library');
+        renderLibrary();
+    }
+
+    // Rendering Logic
+    function renderLibrary() {
+        const grid = document.getElementById('universal-grid');
+        const filtered = window.libraryData.filter(i => i.type === currentViewType);
+        
+        grid.innerHTML = filtered.map(item => `
+            <div class="study-card bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm">
+                <img src="${item.img || 'https://via.placeholder.com/400'}" class="w-full aspect-video object-cover rounded-2xl mb-4">
+                <h4 class="font-bold text-slate-800">${item.name}</h4>
+                <div class="flex justify-between items-center mt-4">
+                    <span class="text-blue-600 font-black">${item.price == 0 ? 'FREE' : '₹'+item.price}</span>
+                    <button class="bg-slate-900 text-white px-4 py-2 rounded-lg text-xs font-bold">Open</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderHomePlans() {
+        const grid = document.getElementById('home-plans-grid');
+        const plans = [
+            { id: '10', title: 'Class 10 Board' },
+            { id: '12', title: 'Class 12 Board' },
+            { id: 'jee', title: 'JEE / NEET' }
+        ];
+        grid.innerHTML = plans.map(p => `
+            <div onclick="showView('library')" class="p-6 bg-white border rounded-2xl cursor-pointer hover:border-blue-500 transition">
+                <h4 class="font-bold">${p.title}</h4>
+                <p class="text-xs text-slate-400">View Materials →</p>
+            </div>
+        `).join('');
+    }
+
+    // Auth Engine
+    function checkAuth() {
+        const saved = localStorage.getItem('gaurav_classes_user');
+        if (saved) {
+            currentUser = JSON.parse(saved);
+            updateUI();
+        }
+    }
+
+    function handleAuth(e) {
+        e.preventDefault();
+        currentUser = {
+            name: document.getElementById('reg-name').value,
+            email: document.getElementById('reg-email').value,
+            class: '10'
+        };
+        localStorage.setItem('gaurav_classes_user', JSON.stringify(currentUser));
+        updateUI();
+        showView('dashboard');
+    }
+
+    function updateUI() {
+        if (!currentUser) return;
+        document.getElementById('auth-buttons').classList.add('hidden');
+        document.getElementById('user-profile').classList.remove('hidden');
+        document.getElementById('user-display-name').innerText = "Hi, " + currentUser.name.split(' ')[0];
+        document.getElementById('dash-user-name').innerText = currentUser.name;
+        document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${currentUser.name}&background=2563eb&color=fff`;
+    }
+
+    function handleLogout() {
+        if (confirm("Logout?")) {
+            localStorage.removeItem('gaurav_classes_user');
+            location.reload();
+        }
+    }
+</script>
 </body>
 </html>
