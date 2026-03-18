@@ -6,289 +6,564 @@
     <title>Gaurav Classes | Nexus 2.0</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
         :root {
-            --primary: #6366f1;
-            --secondary: #a855f7;
-            --bg-dark: #0f172a;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --accent-cyan: #22d3ee;
+            --accent-indigo: #6366f1;
+            --accent-orange: #f97316;
+            --glass: rgba(30, 41, 59, 0.55);
+            --border: rgba(148, 163, 184, 0.12);
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-dark);
+            font-family: 'Syne', sans-serif;
+            background-color: var(--bg-primary);
             color: #f8fafc;
+            overflow-x: hidden;
         }
 
-        /* Futuristic Background Mesh */
+        h1, h2, h3, .font-heading { font-family: 'Orbitron', sans-serif; }
+
+        /* Mesh Background */
         .mesh-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-                        radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.1) 0%, transparent 40%);
+            background: 
+                radial-gradient(at 0% 0%, rgba(34, 211, 238, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.15) 0px, transparent 50%);
         }
 
-        .glass {
-            background: rgba(30, 41, 59, 0.4);
+        .glass-card {
+            background: var(--glass);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
         }
 
-        .bento-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        .glass-card:hover {
+            transform: scale(1.015);
+            box-shadow: 0 0 25px rgba(34, 211, 238, 0.15);
         }
 
-        .bento-item:hover {
-            border-color: var(--primary);
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #818cf8, #c084fc);
+        /* Shimmer Animation */
+        .shimmer-text {
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-indigo), var(--accent-cyan));
+            background-size: 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: shimmer 2.5s linear infinite;
         }
 
-        /* Shimmer Effect for Buttons */
-        .btn-shimmer {
-            position: relative; overflow: hidden;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        @keyframes shimmer {
+            0% { background-position: 0%; }
+            100% { background-position: 300%; }
         }
-        .btn-shimmer::after {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
-            transform: rotate(45deg); animation: shimmer 3s infinite;
+
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
         }
-        @keyframes shimmer { 0% { transform: translateX(-100%) rotate(45deg); } 100% { transform: translateX(100%) rotate(45deg); } }
+
+        @media (max-width: 1024px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 640px) { .bento-grid { grid-template-columns: 1fr; } }
+
+        /* Heatmap Cells */
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(13, 1fr);
+            gap: 4px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-secondary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-indigo); }
+
+        .terminal-bg { background: #050810; font-family: 'JetBrains Mono', monospace; }
+        
+        input, select {
+            background: rgba(255,255,255,0.03) !important;
+            border: 1px solid var(--border) !important;
+            color: white !important;
+        }
     </style>
 </head>
-<body class="antialiased">
+<body>
     <div class="mesh-bg"></div>
 
-    <nav class="sticky top-0 z-50 glass px-6 py-4 flex justify-between items-center mx-4 my-2 rounded-3xl">
-        <div class="flex items-center gap-3 cursor-pointer" onclick="showView('home')">
-            <div class="p-2 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-500/40">
-                <i data-lucide="shield-check" class="text-white w-6 h-6"></i>
+    <header class="sticky top-0 z-[100] px-6 py-4 glass-card mx-4 mt-4 rounded-2xl flex justify-between items-center">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="router.navigate('home')">
+            <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                <i data-lucide="blocks" class="text-white w-6 h-6"></i>
             </div>
-            <h1 class="text-xl font-bold tracking-tighter gradient-text uppercase">Nexus 2.0</h1>
+            <span class="font-heading font-black tracking-tighter text-xl">NEXUS <span class="text-cyan-400">2.0</span></span>
         </div>
 
-        <div id="nav-links" class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest text-slate-400">
-            <button onclick="showView('home')" class="hover:text-white transition">Home</button>
-            <button onclick="showView('library')" class="hover:text-white transition">Archive</button>
-            <button onclick="enterConsole()" class="hover:text-white transition">Console</button>
-        </div>
+        <nav id="main-nav" class="hidden md:flex gap-8 items-center text-xs font-bold uppercase tracking-widest text-slate-400">
+            </nav>
 
-        <div id="auth-status">
-            <button onclick="showView('auth')" class="btn-shimmer px-6 py-2.5 rounded-full text-xs font-bold uppercase text-white">Initialize</button>
-        </div>
-    </nav>
-
-    <main class="max-w-7xl mx-auto px-6 py-12">
-        
-        <section id="view-home" class="fade-in space-y-24">
-            <div class="text-center space-y-8 pt-12">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-widest">
-                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-                    2026 Educational Engine
-                </div>
-                <h2 class="text-6xl md:text-8xl font-black tracking-tight leading-[0.9]">
-                    Master Your <br> <span class="gradient-text">Digital Future.</span>
-                </h2>
-                <p class="text-slate-400 max-w-xl mx-auto text-lg leading-relaxed">
-                    Integrated learning for Board Exams, JEE, and NEET with real-time archive synchronization.
-                </p>
-                <div class="flex justify-center gap-4">
-                    <button onclick="showView('library')" class="btn-shimmer px-10 py-4 rounded-2xl font-bold">Launch Library</button>
-                    <button class="glass px-10 py-4 rounded-2xl font-bold">Dashboard</button>
-                </div>
+        <div id="user-zone">
             </div>
+    </header>
 
-            <div class="grid md:grid-cols-4 grid-rows-2 gap-4 h-[500px]">
-                <div class="bento-item md:col-span-2 row-span-2 p-8 rounded-[2.5rem] flex flex-col justify-end">
-                    <i data-lucide="zap" class="text-indigo-400 mb-4"></i>
-                    <h3 class="text-3xl font-bold mb-2">Real-time Progress</h3>
-                    <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden">
-                        <div class="bg-indigo-500 h-full w-[75%]" id="progress-bar"></div>
-                    </div>
-                </div>
-                <div class="bento-item p-8 rounded-[2.5rem]">
-                    <h4 class="text-slate-500 text-xs font-bold uppercase mb-4">Countdown</h4>
-                    <p class="text-3xl font-black">42 Days</p>
-                    <span class="text-[10px] text-indigo-400">BOARD EXAMS 2026</span>
-                </div>
-                <div class="bento-item p-8 rounded-[2.5rem]">
-                    <i data-lucide="users" class="text-purple-400 mb-2"></i>
-                    <p class="text-2xl font-bold">500+</p>
-                    <span class="text-xs text-slate-500">Active Students</span>
-                </div>
-                <div class="bento-item md:col-span-2 p-8 rounded-[2.5rem] flex items-center justify-between">
-                    <div>
-                        <h4 class="font-bold">Latest Archive Entry</h4>
-                        <p class="text-xs text-slate-500" id="latest-material-name">Syncing...</p>
-                    </div>
-                    <i data-lucide="arrow-right-circle" class="text-slate-700"></i>
-                </div>
-            </div>
-        </section>
-
-        <section id="view-library" class="hidden fade-in space-y-12">
-            <div class="flex flex-col md:flex-row justify-between items-end gap-6">
-                <div>
-                    <h2 class="text-5xl font-black tracking-tighter">THE <span class="text-slate-600">ARCHIVE</span></h2>
-                    <p class="text-slate-500 mt-2 font-medium">Filtering Class 10 - Science & Maths Resources</p>
-                </div>
-                <div class="flex glass p-1 rounded-2xl">
-                    <button class="px-6 py-2 rounded-xl text-xs font-bold bg-indigo-600">ALL</button>
-                    <button class="px-6 py-2 rounded-xl text-xs font-bold hover:bg-white/5 transition">PDFs</button>
-                    <button class="px-6 py-2 rounded-xl text-xs font-bold hover:bg-white/5 transition">VIDEO</button>
-                </div>
-            </div>
-            
-            <div id="library-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                </div>
-        </section>
-
-        <section id="view-admin" class="hidden fade-in">
-            <div class="max-w-4xl mx-auto glass p-10 rounded-[3rem] border-indigo-500/20 shadow-2xl">
-                <div class="flex justify-between items-center mb-12">
-                    <h2 class="text-2xl font-mono font-bold tracking-widest text-indigo-400">ADMIN_TERMINAL_v2.0</h2>
-                    <button onclick="showView('home')" class="text-slate-600 hover:text-white transition uppercase text-[10px] font-bold">Logout_Session</button>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-12">
-                    <div class="space-y-6">
-                        <label class="block text-xs font-bold text-slate-500 uppercase">Material Metadata</label>
-                        <input id="adm-name" type="text" placeholder="Entry Title (e.g., Ohm's Law Notes)" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-indigo-500 transition">
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <select id="adm-class" class="bg-white/5 border border-white/10 p-4 rounded-2xl outline-none">
-                                <option value="10">Class 10</option>
-                                <option value="11">Class 11</option>
-                                <option value="12">Class 12</option>
-                                <option value="jee">JEE/NEET</option>
-                            </select>
-                            <select id="adm-type" class="bg-white/5 border border-white/10 p-4 rounded-2xl outline-none">
-                                <option value="PDF">PDF Doc</option>
-                                <option value="Video">Video Lec</option>
-                            </select>
-                        </div>
-
-                        <input id="adm-file-url" type="text" placeholder="Source URL or File ID" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none">
-                        <button onclick="pushToArchive()" class="w-full btn-shimmer py-4 rounded-2xl font-black uppercase tracking-widest text-sm">Deploy to Cloud</button>
-                    </div>
-
-                    <div class="bg-black/40 rounded-3xl p-6 font-mono text-[10px] space-y-2 border border-white/5 overflow-y-auto h-[300px]" id="terminal-log">
-                        <p class="text-emerald-500">> SYSTEM INITIALIZED...</p>
-                        <p class="text-slate-500">> CONNECTING TO GAURAV-CLASSES-DB...</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
+    <main id="app-root" class="max-w-7xl mx-auto px-6 py-12">
+        </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-        // CONFIGURATION (Using your actual credentials)
+        // ── REPLACE WITH YOUR FIREBASE CONFIG ──
         const firebaseConfig = {
-            apiKey: "AIzaSyApT8enq5xt47R9DHoNpZJQ61-oFAn7TCk",
-            authDomain: "gaurav-classes.firebaseapp.com",
-            projectId: "gaurav-classes",
-            storageBucket: "gaurav-classes.firebasestorage.app",
-            messagingSenderId: "144373758597",
-            appId: "1:144373758597:web:bea3cc425ebaa4b477c7ec"
+            apiKey: "AIzaSy...",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "...",
+            appId: "..."
         };
+
+        // ── REPLACE WITH YOUR FIREBASE UID ──
+        const ADMIN_UID = "PLACE_YOUR_ADMIN_UID_HERE";
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
-        // SYNC ARCHIVE IN REAL-TIME
-        const libraryRef = collection(db, "library");
-        const q = query(libraryRef, orderBy("createdAt", "desc"));
+        let currentUser = null;
+        let userData = null;
 
-        onSnapshot(q, (snapshot) => {
-            const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            renderLibrary(data);
-            if(data.length > 0) {
-                document.getElementById('latest-material-name').innerText = data[0].name;
-            }
-            logUpdate(`Synchronized ${data.length} entries.`);
-        });
+        // State Manager
+        const state = {
+            currentView: 'home',
+            library: [],
+            filter: 'All'
+        };
 
-        // PUSH FUNCTION
-        window.pushToArchive = async () => {
-            const name = document.getElementById('adm-name').value;
-            const cls = document.getElementById('adm-class').value;
-            const type = document.getElementById('adm-type').value;
-            const url = document.getElementById('adm-file-url').value;
-
-            if(!name || !url) return alert("Missing Metadata");
-
-            logUpdate(`Attempting upload: ${name}`);
-            try {
-                await addDoc(collection(db, "library"), {
-                    name,
-                    class: cls,
-                    type,
-                    fileUrl: url,
-                    createdAt: serverTimestamp()
-                });
-                logUpdate(`SUCCESS: Entry deployed.`);
-                document.getElementById('adm-name').value = '';
-                document.getElementById('adm-file-url').value = '';
-            } catch (e) {
-                logUpdate(`ERROR: Deployment failed.`);
+        // UI Router
+        const router = {
+            navigate: (view) => {
+                state.currentView = view;
+                render();
+                window.scrollTo(0, 0);
             }
         };
 
-        function logUpdate(msg) {
-            const log = document.getElementById('terminal-log');
-            const time = new Date().toLocaleTimeString();
-            log.innerHTML += `<p class="text-slate-400">[${time}] > ${msg}</p>`;
-            log.scrollTop = log.scrollHeight;
-        }
-    </script>
+        // ── VIEW TEMPLATES ──
 
-    <script>
-        // VIEW CONTROLLER
-        function showView(id) {
-            document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
-            document.getElementById('view-' + id).classList.remove('hidden');
-            window.scrollTo(0,0);
-        }
-
-        function enterConsole() {
-            const key = prompt("ADMIN_KEY:");
-            if(key === "gaurav2026") showView('admin');
-            else alert("ACCESS_DENIED");
-        }
-
-        function renderLibrary(items) {
-            const grid = document.getElementById('library-grid');
-            grid.innerHTML = items.map(item => `
-                <div class="bento-item p-6 rounded-[2rem] space-y-4 group">
-                    <div class="w-full aspect-video bg-indigo-500/10 rounded-2xl flex items-center justify-center overflow-hidden">
-                        <i data-lucide="${item.type === 'PDF' ? 'file-text' : 'play'}" class="text-indigo-400 w-8 h-8 group-hover:scale-125 transition-transform duration-500"></i>
+        const HomeView = () => `
+            <section class="space-y-20 py-10">
+                <div class="text-center space-y-8 max-w-4xl mx-auto">
+                    <div class="inline-block px-4 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-400 text-[10px] font-bold tracking-[0.2em] uppercase">
+                        Unified Learning Ecosystem
                     </div>
-                    <div>
-                        <span class="text-[8px] font-black tracking-widest text-indigo-500 uppercase">CLASS ${item.class}</span>
-                        <h4 class="font-bold text-slate-200 truncate">${item.name}</h4>
+                    <h1 class="text-6xl md:text-8xl font-black tracking-tight leading-none">
+                        MASTER YOUR <br> <span class="shimmer-text">SYLLABUS</span>
+                    </h1>
+                    <p class="text-slate-400 text-lg md:text-xl font-medium max-w-2xl mx-auto">
+                        High-fidelity resources for UP Board, CBSE, ICSE, and Competitive Aspirants. Managed by Gaurav Sir.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-4 pt-6">
+                        <button onclick="router.navigate('library')" class="px-10 py-4 bg-indigo-600 rounded-xl font-bold hover:bg-indigo-500 transition shadow-xl shadow-indigo-500/20">Open Library</button>
+                        <button onclick="router.navigate('dashboard')" class="px-10 py-4 glass-card rounded-xl font-bold">My Dashboard</button>
                     </div>
-                    <button onclick="window.open('${item.fileUrl}')" class="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest transition">Access_File</button>
                 </div>
-            `).join('');
-            lucide.createIcons();
-        }
 
-        // Initialize Icons
-        window.onload = () => lucide.createIcons();
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="glass-card p-8 rounded-3xl space-y-4">
+                        <i data-lucide="cpu" class="text-cyan-400 w-10 h-10"></i>
+                        <h3 class="text-xl font-bold">Smart Sync</h3>
+                        <p class="text-slate-500 text-sm">Notes and videos update in real-time as Gaurav Sir uploads them.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-3xl space-y-4">
+                        <i data-lucide="flame" class="text-orange-500 w-10 h-10"></i>
+                        <h3 class="text-xl font-bold">JEE/NEET Prep</h3>
+                        <p class="text-slate-500 text-sm">Advanced modules curated for top-tier competitive engineering and medical exams.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-3xl space-y-4">
+                        <i data-lucide="globe" class="text-indigo-400 w-10 h-10"></i>
+                        <h3 class="text-xl font-bold">Global Access</h3>
+                        <p class="text-slate-500 text-sm">Your dashboard, your progress, available on any device, anywhere.</p>
+                    </div>
+                </div>
+            </section>
+        `;
+
+        const LibraryView = () => {
+            const filtered = state.filter === 'All' ? state.library : state.library.filter(i => i.type === state.filter);
+            return `
+                <div class="space-y-12">
+                    <div class="flex flex-col md:flex-row justify-between items-end gap-6">
+                        <div>
+                            <h2 class="text-4xl font-black tracking-tighter uppercase">Smart <span class="text-indigo-500">Archive</span></h2>
+                            <p class="text-slate-500 font-medium">Synchronized database of Class 6-12 resources.</p>
+                        </div>
+                        <div class="flex bg-slate-900/50 p-1 rounded-xl border border-white/5">
+                            ${['All', 'PDF', 'Video', 'Test'].map(f => `
+                                <button onclick="setFilter('${f}')" class="px-6 py-2 rounded-lg text-[10px] font-black tracking-widest uppercase transition ${state.filter === f ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-300'}">${f}</button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        ${filtered.map(item => `
+                            <div class="glass-card p-5 rounded-[2rem] group flex flex-col justify-between h-full">
+                                <div class="space-y-4">
+                                    <div class="w-full aspect-video rounded-2xl bg-slate-800/50 flex items-center justify-center">
+                                        <i data-lucide="${item.type === 'PDF' ? 'file-text' : item.type === 'Video' ? 'play-circle' : 'clipboard-list'}" 
+                                           class="w-12 h-12 ${item.type === 'PDF' ? 'text-cyan-400' : 'text-indigo-400'} opacity-40 group-hover:opacity-100 transition"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex gap-2 mb-2">
+                                            <span class="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-[8px] font-bold text-slate-400 uppercase">Class ${item.class}</span>
+                                            <span class="px-2 py-0.5 rounded-md bg-indigo-500/10 border border-indigo-500/20 text-[8px] font-bold text-indigo-400 uppercase">${item.type}</span>
+                                        </div>
+                                        <h4 class="font-bold text-slate-200 leading-tight">${item.name}</h4>
+                                    </div>
+                                </div>
+                                <a href="${item.fileUrl}" target="_blank" class="mt-6 w-full py-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-tighter hover:bg-indigo-600 hover:border-indigo-600 transition">
+                                    Access Resource <i data-lucide="external-link" class="w-3 h-3"></i>
+                                </a>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        };
+
+        const DashboardView = () => {
+            if (!currentUser) return AuthView();
+            const cells = Array.from({length: 91}, () => Math.random());
+            return `
+                <div class="space-y-10">
+                    <h2 class="text-3xl font-black uppercase tracking-tighter">Student <span class="text-cyan-400">Terminal</span></h2>
+                    
+                    <div class="bento-grid">
+                        <div class="glass-card p-8 rounded-[2.5rem] flex items-center gap-6 md:col-span-2">
+                            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center text-3xl font-black">
+                                ${userData?.fullName?.charAt(0) || 'U'}
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold">${userData?.fullName || 'Academic User'}</h3>
+                                <p class="text-slate-500 text-sm mb-2">${userData?.email}</p>
+                                <span class="px-3 py-1 rounded-full bg-indigo-500 text-[10px] font-black uppercase tracking-widest">Class ${userData?.assignedClass}</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-8 rounded-[2.5rem] flex flex-col justify-center text-center">
+                            <h4 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Finals Countdown</h4>
+                            <p id="countdown-timer" class="text-3xl font-heading font-black tracking-tighter text-indigo-400">00:00:00:00</p>
+                        </div>
+
+                        <div class="glass-card p-8 rounded-[2.5rem] md:col-span-2">
+                            <h4 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Syllabus Coverage Heatmap</h4>
+                            <div class="heatmap-grid">
+                                ${cells.map(op => `<div class="aspect-square rounded-[2px] bg-cyan-500" style="opacity: ${op * 0.8 + 0.1}"></div>`).join('')}
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-8 rounded-[2.5rem] flex flex-col justify-center">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-xs font-black text-slate-500 uppercase">Resource Analytics</span>
+                                <i data-lucide="bar-chart-3" class="w-4 h-4 text-slate-600"></i>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex justify-between text-sm"><span class="text-slate-400">PDFs Accessed</span><span class="font-bold">12</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-slate-400">Lectures Viewed</span><span class="font-bold">08</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-slate-400">Tests Mocked</span><span class="font-bold">03</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+        const AdminView = () => `
+            <div class="max-w-4xl mx-auto space-y-10">
+                <div class="flex justify-between items-end">
+                    <h2 class="text-3xl font-black uppercase tracking-tighter text-orange-500 underline underline-offset-8">Gaurav Command Center</h2>
+                    <span class="text-[10px] font-mono text-slate-600">ROOT_ACCESS: GRANTED</span>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="glass-card p-8 rounded-[2.5rem] space-y-6">
+                        <h3 class="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Push New Resource</h3>
+                        
+                        <div class="space-y-4">
+                            <input type="text" id="adm-title" placeholder="Resource Title" class="w-full p-4 rounded-xl outline-none focus:ring-2 ring-indigo-500/20 transition">
+                            <select id="adm-class" class="w-full p-4 rounded-xl outline-none">
+                                <option value="10">Class 10</option>
+                                <option value="11">Class 11</option>
+                                <option value="12">Class 12</option>
+                                <option value="JEE">JEE / NEET</option>
+                            </select>
+                            
+                            <div class="relative group">
+                                <input type="file" id="adm-file" class="hidden" onchange="window.handleFileSelect(this)">
+                                <label for="adm-file" class="flex flex-col items-center justify-center w-full p-8 border-2 border-dashed border-white/10 rounded-2xl cursor-pointer group-hover:bg-white/5 transition">
+                                    <i data-lucide="upload-cloud" class="w-8 h-8 text-slate-500 mb-2"></i>
+                                    <span id="file-label" class="text-[10px] font-bold text-slate-500 uppercase">Select Material</span>
+                                </label>
+                            </div>
+
+                            <div id="upload-progress-container" class="hidden space-y-2">
+                                <div class="flex justify-between text-[10px] font-black uppercase">
+                                    <span class="text-cyan-400">Uploading to Storage</span>
+                                    <span id="progress-val">0%</span>
+                                </div>
+                                <div class="w-full h-1 bg-slate-800 rounded-full overflow-hidden">
+                                    <div id="progress-bar" class="h-full bg-cyan-400 w-0 transition-all duration-300"></div>
+                                </div>
+                            </div>
+
+                            <button id="btn-deploy" onclick="deployResource()" class="w-full py-4 bg-orange-600 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-orange-500 transition shadow-xl shadow-orange-500/20">Execute Cloud Deploy</button>
+                        </div>
+                    </div>
+
+                    <div class="terminal-bg p-6 rounded-[2.5rem] border border-white/5 h-[450px] flex flex-col">
+                        <div class="flex items-center gap-2 mb-4 border-b border-white/5 pb-2">
+                            <div class="flex gap-1">
+                                <div class="w-2 h-2 rounded-full bg-red-500/50"></div>
+                                <div class="w-2 h-2 rounded-full bg-yellow-500/50"></div>
+                                <div class="w-2 h-2 rounded-full bg-green-500/50"></div>
+                            </div>
+                            <span class="text-[9px] font-mono text-slate-600 uppercase tracking-widest">Network Traffic Console</span>
+                        </div>
+                        <div id="network-log" class="flex-grow overflow-y-auto text-[10px] space-y-1 font-mono text-slate-400">
+                            <div>[${new Date().toLocaleTimeString()}] > System Initialized.</div>
+                            <div>[${new Date().toLocaleTimeString()}] > Awaiting instructions...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const AuthView = () => `
+            <div class="max-w-md mx-auto py-10">
+                <div class="glass-card p-10 rounded-[3rem] space-y-8">
+                    <div class="text-center">
+                        <h2 id="auth-title" class="text-2xl font-black uppercase tracking-tighter">Student Login</h2>
+                        <p class="text-slate-500 text-xs mt-1 uppercase tracking-widest font-bold">Access your Nexus account</p>
+                    </div>
+
+                    <div id="auth-error" class="hidden p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-bold uppercase text-center"></div>
+
+                    <div class="space-y-4">
+                        <div id="register-fields" class="hidden space-y-4">
+                            <input type="text" id="auth-name" placeholder="Full Name" class="w-full p-4 rounded-xl outline-none">
+                            <select id="auth-class" class="w-full p-4 rounded-xl outline-none">
+                                <option value="">Select Your Class</option>
+                                <option value="6">Class 6</option><option value="7">Class 7</option>
+                                <option value="8">Class 8</option><option value="9">Class 9</option>
+                                <option value="10">Class 10</option><option value="11">Class 11</option>
+                                <option value="12">Class 12</option><option value="JEE">JEE / NEET</option>
+                            </select>
+                        </div>
+                        <input type="email" id="auth-email" placeholder="Email Address" class="w-full p-4 rounded-xl outline-none">
+                        <input type="password" id="auth-pass" placeholder="Password" class="w-full p-4 rounded-xl outline-none">
+                        
+                        <button id="btn-auth" onclick="handleAuth()" class="w-full py-4 bg-indigo-600 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-indigo-500 transition shadow-xl shadow-indigo-500/20">Connect to Nexus</button>
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="toggleAuthMode()" id="auth-toggle" class="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-cyan-400 transition">Create New Student Account</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // ── CORE LOGIC ──
+
+        window.render = async () => {
+            const root = document.getElementById('app-root');
+            const nav = document.getElementById('main-nav');
+            const userZone = document.getElementById('user-zone');
+
+            // Render Nav
+            let navLinks = `<button onclick="router.navigate('home')" class="hover:text-cyan-400 transition">Home</button>`;
+            navLinks += `<button onclick="router.navigate('library')" class="hover:text-cyan-400 transition">Archive</button>`;
+            if (currentUser) {
+                navLinks += `<button onclick="router.navigate('dashboard')" class="hover:text-cyan-400 transition">Dashboard</button>`;
+                if (currentUser.uid === ADMIN_UID) {
+                    navLinks += `<button onclick="router.navigate('admin')" class="text-orange-500 hover:text-orange-400 transition">Console</button>`;
+                }
+            }
+            nav.innerHTML = navLinks;
+
+            // Render User Zone
+            userZone.innerHTML = currentUser 
+                ? `<button onclick="handleLogout()" class="px-6 py-2 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-white/5 transition">Exit Session</button>`
+                : `<button onclick="router.navigate('auth')" class="px-6 py-2 bg-white/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-white/20 transition">Initialize</button>`;
+
+            // Render View
+            switch(state.currentView) {
+                case 'home': root.innerHTML = HomeView(); break;
+                case 'library': root.innerHTML = LibraryView(); break;
+                case 'dashboard': root.innerHTML = DashboardView(); break;
+                case 'admin': root.innerHTML = currentUser?.uid === ADMIN_UID ? AdminView() : HomeView(); break;
+                case 'auth': root.innerHTML = AuthView(); break;
+                default: root.innerHTML = HomeView();
+            }
+
+            lucide.createIcons();
+            initTimers();
+        };
+
+        // Auth Logic
+        let isLogin = true;
+        window.toggleAuthMode = () => {
+            isLogin = !isLogin;
+            document.getElementById('register-fields').classList.toggle('hidden', isLogin);
+            document.getElementById('auth-title').innerText = isLogin ? 'Student Login' : 'Student Registry';
+            document.getElementById('auth-toggle').innerText = isLogin ? 'Create New Student Account' : 'Return to Login';
+            document.getElementById('btn-auth').innerText = isLogin ? 'Connect to Nexus' : 'Establish Profile';
+        };
+
+        window.handleAuth = async () => {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-pass').value;
+            const errEl = document.getElementById('auth-error');
+
+            try {
+                if (isLogin) {
+                    await signInWithEmailAndPassword(auth, email, pass);
+                } else {
+                    const name = document.getElementById('auth-name').value;
+                    const cls = document.getElementById('auth-class').value;
+                    if (!name || !cls) throw new Error("Missing Registry Data");
+                    
+                    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+                    await setDoc(doc(db, "users", cred.user.uid), {
+                        fullName: name,
+                        email: email,
+                        assignedClass: cls,
+                        joinedDate: serverTimestamp()
+                    });
+                }
+                router.navigate('dashboard');
+            } catch (err) {
+                errEl.innerText = err.message;
+                errEl.classList.remove('hidden');
+            }
+        };
+
+        window.handleLogout = () => signOut(auth).then(() => router.navigate('home'));
+
+        // Admin Upload Logic
+        let selectedFile = null;
+        window.handleFileSelect = (input) => {
+            selectedFile = input.files[0];
+            if (selectedFile) {
+                document.getElementById('file-label').innerText = selectedFile.name;
+                logAdmin(`File Buffered: ${selectedFile.name} (${(selectedFile.size / 1024 / 1024).toFixed(2)} MB)`);
+            }
+        };
+
+        window.deployResource = async () => {
+            const title = document.getElementById('adm-title').value;
+            const targetClass = document.getElementById('adm-class').value;
+            const btn = document.getElementById('btn-deploy');
+
+            if (!title || !selectedFile) return logAdmin("ERROR: Missing Title or File.", "text-red-500");
+
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+            document.getElementById('upload-progress-container').classList.remove('hidden');
+
+            const type = selectedFile.type === 'application/pdf' ? 'PDF' : selectedFile.type.startsWith('video/') ? 'Video' : 'Test';
+            const storageRef = ref(storage, `study-materials/${Date.now()}_${selectedFile.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+
+            uploadTask.on('state_changed', 
+                (snap) => {
+                    const p = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+                    document.getElementById('progress-bar').style.width = p + '%';
+                    document.getElementById('progress-val').innerText = p + '%';
+                },
+                (err) => {
+                    logAdmin(`STORAGE_ERROR: ${err.message}`, "text-red-500");
+                    btn.disabled = false;
+                },
+                async () => {
+                    const url = await getDownloadURL(uploadTask.snapshot.ref);
+                    await addDoc(collection(db, "library"), {
+                        name: title,
+                        class: targetClass,
+                        type: type,
+                        fileUrl: url,
+                        createdAt: serverTimestamp()
+                    });
+                    logAdmin(`DATABASE_SYNC: SUCCESS. ${title} is now live.`, "text-emerald-500");
+                    router.navigate('library');
+                }
+            );
+        };
+
+        const logAdmin = (msg, color = 'text-slate-400') => {
+            const logEl = document.getElementById('network-log');
+            if (logEl) {
+                logEl.innerHTML = `<div class="${color}">[${new Date().toLocaleTimeString()}] > ${msg}</div>` + logEl.innerHTML;
+            }
+        };
+
+        window.setFilter = (f) => {
+            state.filter = f;
+            render();
+        };
+
+        // Utility: Timers
+        const initTimers = () => {
+            const counter = document.getElementById('countdown-timer');
+            if (!counter) return;
+
+            const target = new Date("March 1, 2026 00:00:00").getTime();
+            const itv = setInterval(() => {
+                const now = new Date().getTime();
+                const diff = target - now;
+                if (diff < 0) {
+                    clearInterval(itv);
+                    counter.innerText = "EXAMS COMMENCED";
+                    return;
+                }
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+                counter.innerText = `${d.toString().padStart(2,'0')}D:${h.toString().padStart(2,'0')}H:${m.toString().padStart(2,'0')}M:${s.toString().padStart(2,'0')}S`;
+            }, 1000);
+        };
+
+        // Global Listeners
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            if (user) {
+                const docSnap = await getDoc(doc(db, "users", user.uid));
+                userData = docSnap.exists() ? docSnap.data() : null;
+            } else {
+                userData = null;
+            }
+            render();
+        });
+
+        // Real-time Library Sync
+        onSnapshot(query(collection(db, "library"), orderBy("createdAt", "desc")), (snap) => {
+            state.library = snap.docs.map(d => d.data());
+            if (state.currentView === 'library') render();
+        });
+
+        window.router = router;
+        render();
+
     </script>
 </body>
 </html>
