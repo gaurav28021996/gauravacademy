@@ -1,668 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script type="module">
-  // 1. Import only the functions you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-
-  // 2. Your Configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyApT8enq5xt47R9DHoNpZJQ61-oFAn7TCk",
-    authDomain: "gaurav-classes.firebaseapp.com",
-    projectId: "gaurav-classes",
-    storageBucket: "gaurav-classes.firebasestorage.app",
-    messagingSenderId: "144373758597",
-    appId: "1:144373758597:web:bea3cc425ebaa4b477c7ec",
-    measurementId: "G-PSG1RRSB46"
-  };
-
-  // 3. Initialize Services
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
-  const analytics = getAnalytics(app);
-
-  // 4. Optimized Real-time Content Loader
-  // This replaces fetchLibraryFromFirebase()
-  const libraryRef = collection(db, "library");
-  
-  onSnapshot(libraryRef, (snapshot) => {
-      const libraryData = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-      }));
-      
-      // Call your function to update the UI
-      if (typeof renderLibrary === "function") {
-          renderLibrary(libraryData); 
-      }
-      console.log("Library synced in real-time:", libraryData.length, "items");
-  });
-
-  // 5. Global Access (Optional)
-  // If your other scripts need 'db' or 'auth', attach them to window
-  window.db = db;
-  window.auth = auth;
-  window.adminUpload = async (newItem) => {
-      try {
-          await addDoc(collection(db, "library"), {
-              ...newItem,
-              createdAt: serverTimestamp()
-          });
-          return true;
-      } catch (e) {
-          console.error("Upload failed", e);
-          return false;
-      }
-  };
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaurav Classes | Digital Learning Ecosystem</title>
+    <title>Gaurav Classes | Intelligence 2.0</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        :root { --primary: #2563eb; --accent: #7c3aed; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; background-color: #f8fafc; color: #1e293b; }
-        .glass-header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--accent)); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4); }
-        .study-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .study-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .active-tab { background: linear-gradient(135deg, #2563eb, #7c3aed) !important; color: white !important; border-color: transparent !important; }
-        .fade-in { animation: fadeIn 0.6s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .plan-card { background: white; border: 1px solid #e2e8f0; border-radius: 2rem; padding: 2rem; transition: all 0.3s ease; }
-        .plan-card:hover { border-color: #2563eb; background: #f0f7ff; }
+        :root {
+            --glass: rgba(255, 255, 255, 0.7);
+            --border: rgba(255, 255, 255, 0.3);
+            --primary: #6366f1;
+            --secondary: #a855f7;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0f172a; /* Deep dark space blue */
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Futuristic Mesh Gradient Background */
+        .mesh-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(79, 70, 229, 0.1) 0px, transparent 50%);
+        }
+
+        .glass {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bento-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bento-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--primary);
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 20px 40px -20px rgba(99, 102, 241, 0.5);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .neo-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .neo-btn:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
+        }
+
+        .shimmer {
+            position: relative; overflow: hidden;
+        }
+        .shimmer::after {
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg); animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer { 0% { transform: translateX(-100%) rotate(45deg); } 100% { transform: translateX(100%) rotate(45deg); } }
     </style>
 </head>
 <body>
+    <div class="mesh-bg"></div>
 
-<header class="sticky top-0 z-[100] glass-header px-4 md:px-8 py-3">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <div class="flex items-center space-x-3 cursor-pointer group" onclick="showView('home')">
-            <div class="w-11 h-11 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:rotate-6 transition-transform">
-                <i class="fas fa-graduation-cap text-xl"></i>
-            </div>
-            <div>
-                <h1 class="text-xl font-extrabold tracking-tight">Gaurav Classes</h1>
-                <span class="text-[10px] font-bold text-blue-600 uppercase tracking-tighter">Campus 2.0</span>
-            </div>
-        </div>
-
-        <nav class="hidden lg:flex items-center space-x-1">
-            <button onclick="showView('home')" class="px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-100 transition">Home</button>
-            <button onclick="openLibrary('book')" class="px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-100 transition">Library</button>
-            <button onclick="openLibrary('pyq')" class="px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-100 transition">PYQs</button>
-        </nav>
-
-        <div class="flex items-center space-x-3">
-            <button onclick="showView('checkout')" class="relative p-2.5 rounded-xl hover:bg-slate-100 transition">
-                <i class="fa-solid fa-bag-shopping text-slate-700"></i>
-                <span id="cart-count" class="absolute top-1 right-1 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">0</span>
-            </button>
-            <div id="auth-buttons">
-                <button onclick="showView('auth')" class="btn-primary text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg">Login / Register</button>
-            </div>
-          <div id="user-profile" class="hidden flex items-center space-x-3">
-    <div class="flex items-center space-x-3 cursor-pointer" onclick="showView('dashboard')">
-        <span id="user-display-name" class="text-sm font-bold text-slate-700 hidden md:block">Hi, Student</span>
-        <img id="user-avatar" src="https://ui-avatars.com/api/?name=Student&background=2563eb&color=fff" class="w-10 h-10 rounded-xl border-2 border-blue-100">
-    </div>
-    <button onclick="handleLogout()" class="ml-2 p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition" title="Logout">
-        <i class="fa-solid fa-right-from-bracket"></i>
-    </button>
-</div>
-        </div>
-    </div>
-</header>
-
-<main class="max-w-7xl mx-auto px-6 py-8">
-
-    <section id="view-home" class="fade-in">
-        <div class="grid lg:grid-cols-2 gap-12 items-center py-10">
-            <div>
-                <span class="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-6 inline-block">2026 Academic Session</span>
-                <h2 class="text-6xl md:text-7xl font-extrabold text-slate-900 leading-tight mb-6">Master Your <br><span class="text-blue-600">Future</span>.</h2>
-                <p class="text-slate-500 text-lg mb-10 leading-relaxed">Integrated learning for Boards, JEE, and NEET. Personalized plans for every grade.</p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="#study-plans" class="btn-primary text-white px-10 py-4 rounded-2xl font-bold shadow-xl">Explore Plans</a>
+    <nav class="sticky top-0 z-50 glass border-b border-white/5 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="showView('home')">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <i data-lucide="zap" class="text-white w-6 h-6"></i>
                 </div>
-            </div>
-            <div class="hidden lg:block">
-                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] shadow-2xl">
-            </div>
-        </div>
-
-        <div id="study-plans" class="pt-20 pb-10">
-            <h3 class="text-3xl font-black mb-2 text-center">Choose Your <span class="text-blue-600">Plan</span></h3>
-            <p class="text-center text-slate-500 mb-12">Click a card to see available resources in the library.</p>
-            
-            <div class="grid md:grid-cols-3 gap-6" id="home-plans-grid">
-                </div>
-        </div>
-    </section>
-
-    <section id="view-library" class="fade-in hidden">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
-            <div>
-                <h2 id="library-title" class="text-4xl font-extrabold text-slate-900">Digital Library</h2>
-                <p id="library-desc" class="text-slate-500 mt-2">Filter by resource type.</p>
-            </div>
-            <div class="flex bg-slate-100 p-1.5 rounded-2xl overflow-x-auto no-scrollbar">
-                <button onclick="openLibrary('book')" id="tab-book" class="px-5 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap">Books</button>
-                <button onclick="openLibrary('lecture')" id="tab-lecture" class="px-5 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap">Lectures</button>
-                <button onclick="openLibrary('pyq')" id="tab-pyq" class="px-5 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap">PYQs</button>
-                <button onclick="openLibrary('test')" id="tab-test" class="px-5 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap">Tests</button>
-                <button onclick="openLibrary('dpp')" id="tab-dpp" class="px-5 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap">DPPs</button>
-            </div>
-        </div>
-
-        <div class="flex overflow-x-auto space-x-3 pb-8 no-scrollbar snap-x mb-8" id="class-carousel"></div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" id="universal-grid"></div>
-    </section>
-
-    <section id="view-auth" class="fade-in hidden py-10">
-        <div class="max-w-md mx-auto bg-white p-10 rounded-[3rem] shadow-xl border">
-            <h3 class="text-2xl font-black mb-6">Login to Gaurav Classes</h3>
-            <form onsubmit="handleAuth(event)" class="space-y-4">
-                <input type="text" id="reg-name" placeholder="Full Name" required class="w-full p-4 bg-slate-50 rounded-2xl outline-none border focus:border-blue-500">
-                <input type="email" id="reg-email" placeholder="Email" required class="w-full p-4 bg-slate-50 rounded-2xl outline-none border focus:border-blue-500">
-                <button type="submit" class="w-full btn-primary text-white py-4 rounded-2xl font-bold">Access Dashboard</button>
-            </form>
-        </div>
-    </section>
-
-    <section id="view-dashboard" class="fade-in hidden">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
-        <div>
-            <h2 class="text-4xl font-black text-slate-900">Welcome, <span id="dash-user-name" class="text-blue-600">Student</span>!</h2>
-            <p class="text-slate-500 font-medium">Class: <span id="dash-user-class" class="font-bold text-slate-700">Not Selected</span> | Session 2026</p>
-        </div>
-        <div class="flex space-x-2 bg-slate-100 p-1.5 rounded-2xl">
-            <button onclick="switchDashTab('overview')" id="dash-tab-overview" class="px-5 py-2 rounded-xl text-sm font-bold bg-white text-blue-600 shadow-sm transition">Overview</button>
-            <button onclick="switchDashTab('schedule')" id="dash-tab-schedule" class="px-5 py-2 rounded-xl text-sm font-bold text-slate-500 transition">My Schedule</button>
-        </div>
-    </div>
-
-    <div id="dash-content-overview" class="space-y-10">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border-4 border-blue-500 text-blue-600 font-black mb-4">75%</div>
-                <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Physics</p>
-            </div>
-            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border-4 border-emerald-500 text-emerald-600 font-black mb-4">40%</div>
-                <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Maths</p>
-            </div>
-            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border-4 border-orange-500 text-orange-600 font-black mb-4">12%</div>
-                <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Chemistry</p>
-            </div>
-            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border-4 border-purple-500 text-purple-600 font-black mb-4">0%</div>
-                <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Test Series</p>
-            </div>
-        </div>
-
-        <div class="grid lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 space-y-6">
-                <h3 class="text-xl font-extrabold flex items-center"><i class="fas fa-folder-open mr-3 text-blue-600"></i>My Learning Materials</h3>
-                <div id="dashboard-material-list" class="space-y-4">
-                    </div>
+                <h1 class="text-xl font-bold tracking-tight gradient-text">GAURAV CLASSES</h1>
             </div>
 
-            <div class="space-y-6">
-                <div class="bg-slate-900 p-8 rounded-[2.5rem] text-white">
-                    <h3 class="font-black text-lg mb-4 italic text-blue-400">Next Big Exam</h3>
-                    <p class="text-2xl font-bold mb-1">Board Finals 2026</p>
-                    <p class="text-slate-400 text-sm mb-6">Countdown: 42 Days Left</p>
-                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                        <div class="bg-blue-500 h-full w-4/5"></div>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-[2.5rem] border border-slate-100">
-                    <h4 class="font-bold mb-4">Recent Notifications</h4>
-                    <div class="space-y-4 text-sm">
-                        <div class="flex items-start space-x-3">
-                            <div class="w-2 h-2 mt-1.5 rounded-full bg-blue-600"></div>
-                            <p class="text-slate-600">New <b>PYQ Solved Paper</b> added for Class 10 Physics.</p>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <div class="w-2 h-2 mt-1.5 rounded-full bg-emerald-500"></div>
-                            <p class="text-slate-600">Your mock test results are now available.</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-400">
+                <button onclick="showView('home')" class="hover:text-white transition">Discovery</button>
+                <button onclick="showView('library')" class="hover:text-white transition">Archive</button>
+                <button onclick="showAdmin()" class="hover:text-white transition">Console</button>
+            </div>
+
+            <div id="auth-zone">
+                <button onclick="showView('auth')" class="neo-btn px-6 py-2 rounded-full text-sm font-bold text-white">Initialize</button>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <div id="dash-content-schedule" class="hidden animate-in fade-in zoom-in duration-300">
-        <div class="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-slate-50 border-b border-slate-100">
-                        <th class="p-6 text-xs font-black text-slate-400 uppercase">Day</th>
-                        <th class="p-6 text-xs font-black text-slate-400 uppercase">08:00 AM - 10:00 AM</th>
-                        <th class="p-6 text-xs font-black text-slate-400 uppercase">02:00 PM - 04:00 PM</th>
-                        <th class="p-6 text-xs font-black text-slate-400 uppercase">07:00 PM - 09:00 PM</th>
-                    </tr>
-                </thead>
-                <tbody class="text-sm font-bold text-slate-700" id="schedule-table-body">
-                    </tbody>
-            </table>
-        </div>
-    </div>
-    </section>
-
-    <section id="view-checkout" class="fade-in hidden">
-        <h2 class="text-4xl font-black mb-8">Checkout Bag</h2>
-        <div id="cart-items-container" class="space-y-4"></div>
-        <button onclick="processOrder()" class="mt-8 btn-primary text-white px-8 py-4 rounded-2xl font-bold">Complete Purchase</button>
-    </section>
-   <section id="view-admin-panel" class="fade-in hidden py-10">
-    <div class="flex justify-between items-end mb-8">
-        <div>
-            <h2 class="text-4xl font-black text-slate-900">Admin <span class="text-indigo-600">Console</span></h2>
-            <p class="text-slate-500">Managing Gaurav Classes Ecosystem</p>
-        </div>
-        <button onclick="showView('home')" class="px-6 py-3 bg-slate-100 rounded-2xl font-bold text-sm hover:bg-slate-200 transition">Exit Admin</button>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <div class="bg-indigo-600 p-8 rounded-[2.5rem] text-white shadow-xl shadow-indigo-200">
-            <p class="text-xs font-black uppercase opacity-70 tracking-widest mb-2">Total Students</p>
-            <h3 id="admin-total-students" class="text-4xl font-black">0</h3>
-        </div>
-        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
-            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Active Content</p>
-            <h3 id="admin-total-content" class="text-4xl font-black text-slate-900">0</h3>
-        </div>
-        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
-            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Revenue (Mock Tests)</p>
-            <h3 class="text-4xl font-black text-slate-900">₹0</h3>
-        </div>
-    </div>
-
-    <div class="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden">
-        <div class="p-8 border-b border-slate-50 flex justify-between items-center">
-            <h4 class="font-black text-xl">Student Database</h4>
-            <input type="text" placeholder="Search email..." class="px-4 py-2 bg-slate-50 rounded-xl border text-sm outline-none focus:border-indigo-500">
-        </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead>
-                    <tr class="bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest">
-                        <th class="p-6">Student Name</th>
-                        <th class="p-6">Email Address</th>
-                        <th class="p-6">Class</th>
-                        <th class="p-6">Syllabus Progress</th>
-                        <th class="p-6">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-student-list" class="text-sm font-bold text-slate-700">
-                    </tbody>
-            </table>
-        </div>
-    </div>
-</section>
-
-</main>
-
-<script>
-    const classes = ['6', '7', '8', '9', '10', '11', '12', 'jee', 'neet'];
-    let libraryData = [];
-    let cart = [];
-    let currentUser = null;
-    let currentViewType = 'book';
-    let currentSelectedClass = '10';
-
-    // --- DATA ENGINE ---
-    function initData() {
-        classes.forEach(cls => {
-            // All classes get Books, Lectures, Chapter Tests
-            libraryData.push({ id: `bk-${cls}`, type: 'book', class: cls, name: `Class ${cls} NCERT Pack`, price: 0, tag: 'Free', img: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400' });
-            libraryData.push({ id: `lec-${cls}`, type: 'lecture', class: cls, name: `Class ${cls} Video Lectures`, price: 499, tag: 'Premium', img: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400' });
-            libraryData.push({ id: `ct-${cls}`, type: 'test', class: cls, name: `Class ${cls} Chapter Tests`, price: 199, tag: 'Practice', img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400' });
-
-            // Classes 10, 12, JEE, NEET get PYQs and Model Papers
-            if (['10', '12', 'jee', 'neet'].includes(cls)) {
-                libraryData.push({ id: `pyq-${cls}`, type: 'pyq', class: cls, name: `${cls} 10-Year Solved PYQs`, price: 299, tag: 'Solved', img: 'https://images.unsplash.com/photo-1454165833767-027ffea9e778?w=400' });
-                libraryData.push({ id: `mod-${cls}`, type: 'test', class: cls, name: `${cls} 2026 Model Test Series`, price: 599, tag: 'Test Series', img: 'https://images.unsplash.com/photo-1588072432836-e10032774350?w=400' });
-            }
-
-            // JEE/NEET get DPPs for every topic
-            if (['jee', 'neet'].includes(cls)) {
-                libraryData.push({ id: `dpp-${cls}`, type: 'dpp', class: cls, name: `${cls.toUpperCase()} Daily Practice (DPPs)`, price: 349, tag: 'Daily', img: 'https://images.unsplash.com/photo-1606326666430-2c43043ef34a?w=400' });
-            }
-        });
-    }
-
-    // --- HOME PLANS RENDERING ---
-    function renderHomePlans() {
-        const grid = document.getElementById('home-plans-grid');
-        const plans = [
-            { id: '6', title: 'Foundation (6-9)', desc: 'Lectures + Chapter Tests' },
-            { id: '10', title: 'Board Master (10)', desc: 'Lectures + Tests + PYQs + Model Papers' },
-            { id: '11', title: 'Senior Prep (11)', desc: 'Lectures + Chapter Tests' },
-            { id: '12', title: 'Final Sprint (12)', desc: 'Full Board Prep + Test Series' },
-            { id: 'jee', title: 'Target JEE/NEET', desc: 'Lec + Topic DPPs + Advanced Mock Tests' }
-        ];
-
-        grid.innerHTML = plans.map(p => `
-            <div class="plan-card study-card cursor-pointer" onclick="quickAccess('${p.id}')">
-                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-6 font-black">${p.id.toUpperCase()}</div>
-                <h4 class="text-xl font-extrabold mb-2">${p.title}</h4>
-                <p class="text-slate-500 text-sm mb-6">${p.desc}</p>
-                <div class="flex items-center text-blue-600 font-bold text-sm">
-                    View Resources <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function quickAccess(clsId) {
-        currentSelectedClass = clsId;
-        openLibrary('book');
-    }
-
-    // --- VIEW CONTROLLER ---
-    function showView(viewId) {
-        document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
-        document.getElementById('view-' + viewId).classList.remove('hidden');
-        if(viewId === 'checkout') renderCart();
-    }
-
-    function openLibrary(type) {
-        currentViewType = type;
-        showView('library');
-        renderClassCarousel();
-        renderLibrary();
+    <main class="max-w-7xl mx-auto px-6 py-12">
         
-        // Update Tab UI
-        document.querySelectorAll('[id^="tab-"]').forEach(btn => btn.className = 'px-5 py-2 rounded-xl text-sm font-bold text-slate-400 transition');
-        document.getElementById('tab-' + type).className = 'px-5 py-2 rounded-xl text-sm font-bold bg-white text-blue-600 shadow-sm';
-    }
+        <section id="view-home" class="fade-in space-y-20">
+            <div class="text-center space-y-6">
+                <span class="px-4 py-1 rounded-full border border-indigo-500/30 text-indigo-400 text-[10px] font-black tracking-widest uppercase bg-indigo-500/5">System Version 2026.4</span>
+                <h2 class="text-6xl md:text-8xl font-black leading-tight tracking-tighter">
+                    Education for the <br><span class="gradient-text">Next Generation.</span>
+                </h2>
+                <p class="text-slate-400 max-w-2xl mx-auto text-lg">Predictive learning algorithms and premium resources for UP, CBSE, and ICSE excellence.</p>
+                <div class="flex justify-center space-x-4 pt-6">
+                    <button onclick="showView('library')" class="neo-btn px-10 py-4 rounded-2xl font-bold">Access Library</button>
+                    <button class="glass px-10 py-4 rounded-2xl font-bold border-white/10">View Roadmap</button>
+                </div>
+            </div>
 
-    function renderClassCarousel() {
-        const carousel = document.getElementById('class-carousel');
-        carousel.innerHTML = classes.map(cls => `
-            <button onclick="filterByClass('${cls}')" 
-                class="class-tab snap-start px-8 py-4 rounded-2xl border font-bold text-sm whitespace-nowrap shadow-sm transition
-                ${currentSelectedClass === cls ? 'active-tab' : 'bg-white border-slate-200'}" 
-                data-class="${cls}">
-                ${cls.toUpperCase()}
-            </button>
-        `).join('');
-    }
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bento-card p-8 rounded-[2rem] space-y-4">
+                    <i data-lucide="book-open" class="text-indigo-400 w-8 h-8"></i>
+                    <h3 class="text-xl font-bold">Smart Archive</h3>
+                    <p class="text-slate-500 text-sm">Every NCERT chapter and advanced reference book synced to your dashboard.</p>
+                </div>
+                <div class="bento-card p-8 rounded-[2rem] space-y-4">
+                    <i data-lucide="monitor-play" class="text-purple-400 w-8 h-8"></i>
+                    <h3 class="text-xl font-bold">Live Streams</h3>
+                    <p class="text-slate-500 text-sm">Ultra-low latency sessions with Gaurav sir. Interactive and immersive.</p>
+                </div>
+                <div class="bento-card p-8 rounded-[2rem] space-y-4">
+                    <i data-lucide="bar-chart-3" class="text-emerald-400 w-8 h-8"></i>
+                    <h3 class="text-xl font-bold">AI Analytics</h3>
+                    <p class="text-slate-500 text-sm">Real-time progress tracking and heatmaps of your syllabus coverage.</p>
+                </div>
+            </div>
+        </section>
 
-   function fetchLibraryFromFirebase() {
-    // Listen for changes in the 'library' collection
-    db.collection("library").onSnapshot((snapshot) => {
-        libraryData = []; // Clear old local data
-        snapshot.forEach((doc) => {
-            libraryData.push({ id: doc.id, ...doc.data() });
+        <section id="view-library" class="hidden fade-in space-y-8">
+            <div class="flex justify-between items-end">
+                <div>
+                    <h2 class="text-4xl font-bold tracking-tighter">RESOURCE <span class="text-slate-500">ARCHIVE</span></h2>
+                    <p class="text-slate-500">Searchable cloud database of study materials.</p>
+                </div>
+                <div class="flex bg-white/5 p-1 rounded-xl border border-white/10">
+                    <button onclick="filterType('book')" class="px-6 py-2 rounded-lg text-xs font-bold hover:bg-white/5 transition">DOCS</button>
+                    <button onclick="filterType('lecture')" class="px-6 py-2 rounded-lg text-xs font-bold hover:bg-white/5 transition">VIDEO</button>
+                </div>
+            </div>
+            <div id="library-grid" class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                </div>
+        </section>
+
+        <section id="view-admin" class="hidden fade-in space-y-8">
+            <div class="glass p-8 rounded-[2.5rem] border-indigo-500/20 shadow-2xl">
+                <div class="flex justify-between mb-10">
+                    <h2 class="text-2xl font-black tracking-widest uppercase italic">Admin<span class="text-indigo-500">_Terminal</span></h2>
+                    <button onclick="showView('home')" class="text-slate-500 hover:text-white">CLOSE_SESSION</button>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="space-y-6">
+                        <h3 class="text-sm font-black text-indigo-400 uppercase tracking-widest">Push New Material</h3>
+                        <div class="space-y-4">
+                            <input id="adm-title" type="text" placeholder="Entry Title" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-indigo-500 transition">
+                            <select id="adm-class" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none">
+                                <option value="10">Class 10</option>
+                                <option value="12">Class 12</option>
+                                <option value="jee">JEE/NEET</option>
+                            </select>
+                            <input id="adm-img" type="text" placeholder="Image URL (Unsplash/Firebase)" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none">
+                            <button onclick="pushToFirebase()" class="w-full neo-btn py-4 rounded-xl font-bold uppercase tracking-widest">Execute Upload</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-black/40 rounded-3xl p-6 border border-white/5">
+                        <h3 class="text-sm font-black text-slate-500 uppercase tracking-widest mb-4">Network Activity</h3>
+                        <div id="admin-log" class="text-[10px] font-mono space-y-2 opacity-60">
+                            <p>> System initialized...</p>
+                            <p>> Syncing with Gaurav Classes Cloud...</p>
+                            <p>> Ready for deployment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyApT8enq5xt47R9DHoNpZJQ61-oFAn7TCk",
+            authDomain: "gaurav-classes.firebaseapp.com",
+            projectId: "gaurav-classes",
+            storageBucket: "gaurav-classes.firebasestorage.app",
+            messagingSenderId: "144373758597",
+            appId: "1:144373758597:web:bea3cc425ebaa4b477c7ec"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Global Sync
+        onSnapshot(collection(db, "library"), (snap) => {
+            const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderLibrary(data);
+            log(`Synced ${data.length} records from Firebase.`);
         });
-        renderLibrary(); // Re-render the UI with fresh data
-    });
-}
 
-        grid.innerHTML = filtered.map(item => `
-            <div class="study-card bg-white p-5 rounded-[2.5rem] border border-slate-100 shadow-sm">
-                <div class="relative overflow-hidden rounded-[1.5rem] mb-4 aspect-square">
-                    <img src="${item.img}" class="w-full h-full object-cover">
-                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-[10px] font-black uppercase text-blue-600">${item.tag}</div>
-                </div>
-                <h4 class="font-bold text-slate-800 leading-tight">${item.name}</h4>
-                <div class="flex justify-between items-center mt-5 pt-4 border-t border-slate-50">
-                    <span class="font-black text-blue-600">${item.price === 0 ? 'FREE' : '₹' + item.price}</span>
-                    <button onclick="addToCart('${item.id}')" class="w-10 h-10 bg-slate-900 text-white rounded-xl hover:bg-blue-600 transition flex items-center justify-center">
-                        <i class="fas fa-plus text-xs"></i>
-                    </button>
-                </div>
-            </div>
-        `).join('');
-    }
+        // Push Function
+        window.pushToFirebase = async () => {
+            const title = document.getElementById('adm-title').value;
+            const cls = document.getElementById('adm-class').value;
+            const img = document.getElementById('adm-img').value;
 
-    function filterByClass(cls) {
-        currentSelectedClass = cls;
-        renderClassCarousel();
-        renderLibrary();
-    }
+            if(!title) return alert("Title Required");
 
-    function addToCart(id) {
-        const item = libraryData.find(i => i.id === id);
-        cart.push(item);
-        document.getElementById('cart-count').innerText = cart.length;
-        alert(`${item.name} added to bag!`);
-    }
+            log(`Attempting to push: ${title}...`);
+            await addDoc(collection(db, "library"), {
+                name: title,
+                class: cls,
+                img: img || 'https://images.unsplash.com/photo-1614850523296-d8c1af93d400?w=800',
+                type: 'book',
+                createdAt: serverTimestamp()
+            });
+            log(`Success! Entry published.`);
+            document.getElementById('adm-title').value = '';
+        };
 
-    function renderCart() {
-        const container = document.getElementById('cart-items-container');
-        container.innerHTML = cart.length ? cart.map((item, idx) => `
-            <div class="bg-white p-6 rounded-3xl flex items-center justify-between border">
-                <div class="font-bold">${item.name} <span class="text-blue-600 text-xs ml-2">${item.class.toUpperCase()}</span></div>
-                <div class="font-black">₹${item.price}</div>
-            </div>
-        `).join('') : '<p class="text-slate-400">Bag is empty</p>';
-    }
+        function log(msg) {
+            const logger = document.getElementById('admin-log');
+            logger.innerHTML += `<p>> ${msg}</p>`;
+            logger.scrollTop = logger.scrollHeight;
+        }
+    </script>
 
-    function handleAuth(e) {
-        e.preventDefault();
-        currentUser = { name: document.getElementById('reg-name').value };
-        document.getElementById('auth-buttons').classList.add('hidden');
-        document.getElementById('user-profile').classList.remove('hidden');
-        document.getElementById('user-display-name').innerText = "Hi, " + currentUser.name;
-        showView('dashboard');
-    }
+    <script>
+        // UI Controls
+        function showView(id) {
+            document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
+            document.getElementById('view-' + id).classList.remove('hidden');
+            window.scrollTo(0,0);
+        }
 
-    function processOrder() {
-        if(!currentUser) return showView('auth');
-        alert("Purchase successful!");
-        cart = [];
-        document.getElementById('cart-count').innerText = 0;
-        showView('dashboard');
-    }
-
-    window.onload = () => { initData(); renderHomePlans(); };
-    function switchDashTab(tab) {
-        // Toggle Buttons
-        ['overview', 'schedule'].forEach(t => {
-            const btn = document.getElementById('dash-tab-' + t);
-            const content = document.getElementById('dash-content-' + t);
-            if (t === tab) {
-                btn.className = 'px-5 py-2 rounded-xl text-sm font-bold bg-white text-blue-600 shadow-sm transition';
-                content.classList.remove('hidden');
+        function showAdmin() {
+            const pass = prompt("Enter Terminal Access Key:");
+            if(pass === "gaurav2026") {
+                showView('admin');
             } else {
-                btn.className = 'px-5 py-2 rounded-xl text-sm font-bold text-slate-500 transition';
-                content.classList.add('hidden');
+                alert("Unauthorized Access Attempt Detected.");
             }
-        });
-        if (tab === 'schedule') renderSchedule();
-    }
+        }
 
-    // --- UPDATED AUTH ENGINE ---
-
-// 1. Run this immediately when the page loads
-window.onload = () => {
-    initData();
-    renderHomePlans();
-    checkAuth(); // Check if user is already logged in
-};
-
-function checkAuth() {
-    const savedUser = localStorage.getItem('gaurav_classes_user');
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        updateUIForLoggedInUser();
-        // Optionally redirect to dashboard if they are on the home/auth page
-        // showView('dashboard'); 
-    }
-}
-
-function handleAuth(event) {
-    event.preventDefault();
-    const name = document.getElementById('reg-name').value;
-    const email = document.getElementById('reg-email').value;
-    
-    // Create user object (defaulting to Class 10 for now)
-    currentUser = { 
-        name: name, 
-        email: email, 
-        class: '10',
-        loginDate: new Date().toISOString()
-    };
-
-    // SAVE TO LOCAL STORAGE
-    localStorage.setItem('gaurav_classes_user', JSON.stringify(currentUser));
-    
-    updateUIForLoggedInUser();
-    showView('dashboard');
-}
-
-function updateUIForLoggedInUser() {
-    if (!currentUser) return;
-
-    // UI Transformation
-    document.getElementById('auth-buttons').classList.add('hidden');
-    document.getElementById('user-profile').classList.remove('hidden');
-    
-    const firstName = currentUser.name.split(' ')[0];
-    document.getElementById('user-display-name').innerText = "Hi, " + firstName;
-    document.getElementById('dash-user-name').innerText = currentUser.name;
-    document.getElementById('dash-user-class').innerText = "Class " + currentUser.class;
-    
-    // Update Avatar
-    document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${currentUser.name}&background=2563eb&color=fff`;
-
-    populateDashboardMaterials();
-}
-
-function handleLogout() {
-    if (confirm("Are you sure you want to logout?")) {
-        // CLEAR LOCAL STORAGE
-        localStorage.removeItem('gaurav_classes_user');
-        currentUser = null;
-
-        // Reset UI
-        document.getElementById('auth-buttons').classList.remove('hidden');
-        document.getElementById('user-profile').classList.add('hidden');
-        
-        // Redirect to Home
-        showView('home');
-        alert("Logged out successfully.");
-    }
-}
-    function populateDashboardMaterials() {
-        const container = document.getElementById('dashboard-material-list');
-        const userMaterials = libraryData.filter(i => i.class === currentUser.class).slice(0, 4);
-        
-        container.innerHTML = userMaterials.map(item => `
-            <div class="group flex items-center justify-between p-4 bg-white hover:bg-blue-50 border border-slate-100 rounded-3xl transition cursor-pointer">
-                <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-500 group-hover:bg-blue-600 group-hover:text-white transition">
-                        <i class="fas ${item.type === 'lecture' ? 'fa-play' : 'fa-file-pdf'}"></i>
+        function renderLibrary(data) {
+            const grid = document.getElementById('library-grid');
+            grid.innerHTML = data.map(item => `
+                <div class="bento-card p-4 rounded-[2rem] group">
+                    <div class="relative overflow-hidden rounded-[1.5rem] mb-4">
+                        <img src="${item.img}" class="w-full aspect-square object-cover group-hover:scale-110 transition duration-700">
+                        <div class="absolute top-3 left-3 px-3 py-1 bg-black/50 backdrop-blur rounded-full text-[8px] font-bold tracking-widest uppercase">CLASS ${item.class}</div>
                     </div>
-                    <div>
-                        <h4 class="font-bold text-slate-800">${item.name}</h4>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">${item.type} • ${item.tag}</p>
-                    </div>
+                    <h4 class="font-bold text-sm mb-4 truncate">${item.name}</h4>
+                    <button class="w-full py-2 bg-white/5 hover:bg-indigo-600 rounded-xl text-[10px] font-black tracking-widest transition">DOWNLOAD_SECURE</button>
                 </div>
-                <button class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold hover:bg-slate-900 hover:text-white transition">Open</button>
-            </div>
-        `).join('');
-    }
+            `).join('');
+        }
 
-    function renderSchedule() {
-        const table = document.getElementById('schedule-table-body');
-        const routine = [
-            { day: 'Monday', m: 'Physics Lecture', a: 'Math Practice', e: 'Revision' },
-            { day: 'Tuesday', m: 'Chemistry Lec', a: 'Biology/Math', e: 'Mock Test' },
-            { day: 'Wednesday', m: 'English/Hindi', a: 'PYQ Solving', e: 'Physics Rev' },
-            { day: 'Thursday', m: 'Math Lecture', a: 'Physics Lab/DPP', e: 'Chem Practice' },
-            { day: 'Friday', m: 'Biology Lec', a: 'Formula Rev', e: 'Weekly Quiz' }
-        ];
-
-        table.innerHTML = routine.map(r => `
-            <tr class="border-b border-slate-50 hover:bg-slate-50 transition">
-                <td class="p-6 font-black text-blue-600">${r.day}</td>
-                <td class="p-6">${r.m}</td>
-                <td class="p-6">${r.a}</td>
-                <td class="p-6"><span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-lg">${r.e}</span></td>
-            </tr>
-        `).join('');
-    }
-   // --- ADMIN ENGINE ---
-
-async function openAdminPanel() {
-    // SECURITY: Only allow Gaurav (Admin) to see this
-    if (!currentUser || currentUser.email !== "gauravchaudhary28021996@gmail.com") {
-        alert("Access Denied: Admin privileges required.");
-        return;
-    }
-
-    showView('admin-panel');
-    loadAdminStats();
-    loadStudentDatabase();
-}
-
-// 1. Load Statistics
-async function loadAdminStats() {
-    const studentsSnap = await db.collection("users").get();
-    const contentSnap = await db.collection("library").get();
-    
-    document.getElementById('admin-total-students').innerText = studentsSnap.size;
-    document.getElementById('admin-total-content').innerText = contentSnap.size;
-}
-
-// 2. Load Student Table
-function loadStudentDatabase() {
-    const list = document.getElementById('admin-student-list');
-    
-    // Listen to users collection
-    db.collection("users").onSnapshot((snapshot) => {
-        list.innerHTML = "";
-        snapshot.forEach((doc) => {
-            const student = doc.data();
-            // Progress logic: Assuming you save progress as a percentage in Firebase
-            const progress = student.overallProgress || 0; 
-            
-            list.innerHTML += `
-                <tr class="border-b border-slate-50 hover:bg-slate-50 transition">
-                    <td class="p-6 flex items-center space-x-3">
-                        <img src="https://ui-avatars.com/api/?name=${student.name}&background=random" class="w-8 h-8 rounded-lg">
-                        <span>${student.name}</span>
-                    </td>
-                    <td class="p-6 text-slate-500 font-medium">${student.email}</td>
-                    <td class="p-6"><span class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-xs">Class ${student.class}</span></td>
-                    <td class="p-6">
-                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden max-w-[100px]">
-                            <div class="bg-emerald-500 h-full" style="width: ${progress}%"></div>
-                        </div>
-                        <span class="text-[10px] text-slate-400 mt-1 inline-block">${progress}% Completed</span>
-                    </td>
-                    <td class="p-6">
-                        <button onclick="viewStudentDetails('${doc.id}')" class="text-indigo-600 hover:underline">View Log</button>
-                    </td>
-                </tr>
-            `;
-        });
-    });
-}
-
-async function viewStudentDetails(studentId) {
-    // This could open a modal showing every chapter that specific student has finished
-    console.log("Fetching logs for student:", studentId);
-}
-</script>
-
+        // Initialize Icons
+        lucide.createIcons();
+    </script>
 </body>
 </html>
