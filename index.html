@@ -8,18 +8,18 @@
 <script>
   // Your web app's Firebase configuration (Paste your config here)
   const firebaseConfig = {
-    apiKey: "AIzaSy...",
+    apiKey: "AIzaSyApT8enq5xt47R9DHoNpZJQ61-oFAn7TCk",
     authDomain: "gaurav-classes.firebaseapp.com",
     projectId: "gaurav-classes",
-    storageBucket: "gaurav-classes.appspot.com",
-    messagingSenderId: "...",
-    appId: "..."
+    storageBucket: "gaurav-classes.firebasestorage.app",
+    messagingSenderId: "144373758597",
+    appId: "1:144373758597:web:bea3cc425ebaa4b477c7ec",
+    measurementId: "G-PSG1RRSB46"
   };
 
   // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  const auth = firebase.auth();
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -230,6 +230,52 @@
         <div id="cart-items-container" class="space-y-4"></div>
         <button onclick="processOrder()" class="mt-8 btn-primary text-white px-8 py-4 rounded-2xl font-bold">Complete Purchase</button>
     </section>
+   <section id="view-admin-panel" class="fade-in hidden py-10">
+    <div class="flex justify-between items-end mb-8">
+        <div>
+            <h2 class="text-4xl font-black text-slate-900">Admin <span class="text-indigo-600">Console</span></h2>
+            <p class="text-slate-500">Managing Gaurav Classes Ecosystem</p>
+        </div>
+        <button onclick="showView('home')" class="px-6 py-3 bg-slate-100 rounded-2xl font-bold text-sm hover:bg-slate-200 transition">Exit Admin</button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="bg-indigo-600 p-8 rounded-[2.5rem] text-white shadow-xl shadow-indigo-200">
+            <p class="text-xs font-black uppercase opacity-70 tracking-widest mb-2">Total Students</p>
+            <h3 id="admin-total-students" class="text-4xl font-black">0</h3>
+        </div>
+        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Active Content</p>
+            <h3 id="admin-total-content" class="text-4xl font-black text-slate-900">0</h3>
+        </div>
+        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Revenue (Mock Tests)</p>
+            <h3 class="text-4xl font-black text-slate-900">₹0</h3>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden">
+        <div class="p-8 border-b border-slate-50 flex justify-between items-center">
+            <h4 class="font-black text-xl">Student Database</h4>
+            <input type="text" placeholder="Search email..." class="px-4 py-2 bg-slate-50 rounded-xl border text-sm outline-none focus:border-indigo-500">
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest">
+                        <th class="p-6">Student Name</th>
+                        <th class="p-6">Email Address</th>
+                        <th class="p-6">Class</th>
+                        <th class="p-6">Syllabus Progress</th>
+                        <th class="p-6">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-student-list" class="text-sm font-bold text-slate-700">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
 </main>
 
@@ -516,6 +562,68 @@ function handleLogout() {
             </tr>
         `).join('');
     }
+   // --- ADMIN ENGINE ---
+
+async function openAdminPanel() {
+    // SECURITY: Only allow Gaurav (Admin) to see this
+    if (!currentUser || currentUser.email !== "gauravchaudhary28021996@gmail.com") {
+        alert("Access Denied: Admin privileges required.");
+        return;
+    }
+
+    showView('admin-panel');
+    loadAdminStats();
+    loadStudentDatabase();
+}
+
+// 1. Load Statistics
+async function loadAdminStats() {
+    const studentsSnap = await db.collection("users").get();
+    const contentSnap = await db.collection("library").get();
+    
+    document.getElementById('admin-total-students').innerText = studentsSnap.size;
+    document.getElementById('admin-total-content').innerText = contentSnap.size;
+}
+
+// 2. Load Student Table
+function loadStudentDatabase() {
+    const list = document.getElementById('admin-student-list');
+    
+    // Listen to users collection
+    db.collection("users").onSnapshot((snapshot) => {
+        list.innerHTML = "";
+        snapshot.forEach((doc) => {
+            const student = doc.data();
+            // Progress logic: Assuming you save progress as a percentage in Firebase
+            const progress = student.overallProgress || 0; 
+            
+            list.innerHTML += `
+                <tr class="border-b border-slate-50 hover:bg-slate-50 transition">
+                    <td class="p-6 flex items-center space-x-3">
+                        <img src="https://ui-avatars.com/api/?name=${student.name}&background=random" class="w-8 h-8 rounded-lg">
+                        <span>${student.name}</span>
+                    </td>
+                    <td class="p-6 text-slate-500 font-medium">${student.email}</td>
+                    <td class="p-6"><span class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-xs">Class ${student.class}</span></td>
+                    <td class="p-6">
+                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden max-w-[100px]">
+                            <div class="bg-emerald-500 h-full" style="width: ${progress}%"></div>
+                        </div>
+                        <span class="text-[10px] text-slate-400 mt-1 inline-block">${progress}% Completed</span>
+                    </td>
+                    <td class="p-6">
+                        <button onclick="viewStudentDetails('${doc.id}')" class="text-indigo-600 hover:underline">View Log</button>
+                    </td>
+                </tr>
+            `;
+        });
+    });
+}
+
+async function viewStudentDetails(studentId) {
+    // This could open a modal showing every chapter that specific student has finished
+    console.log("Fetching logs for student:", studentId);
+}
 </script>
 
 </body>
