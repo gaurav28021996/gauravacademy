@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+<script>
+  // Your web app's Firebase configuration (Paste your config here)
+  const firebaseConfig = {
+    apiKey: "AIzaSy...",
+    authDomain: "gaurav-classes.firebaseapp.com",
+    projectId: "gaurav-classes",
+    storageBucket: "gaurav-classes.appspot.com",
+    messagingSenderId: "...",
+    appId: "..."
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gaurav Classes | Digital Learning Ecosystem</title>
@@ -300,14 +320,16 @@
         `).join('');
     }
 
-    function renderLibrary() {
-        const grid = document.getElementById('universal-grid');
-        const filtered = libraryData.filter(i => i.class === currentSelectedClass && i.type === currentViewType);
-        
-        if (filtered.length === 0) {
-            grid.innerHTML = `<div class="col-span-full py-20 text-center text-slate-400 font-bold">This resource is coming soon for this class. Try Classes 10, 12, or JEE.</div>`;
-            return;
-        }
+   function fetchLibraryFromFirebase() {
+    // Listen for changes in the 'library' collection
+    db.collection("library").onSnapshot((snapshot) => {
+        libraryData = []; // Clear old local data
+        snapshot.forEach((doc) => {
+            libraryData.push({ id: doc.id, ...doc.data() });
+        });
+        renderLibrary(); // Re-render the UI with fresh data
+    });
+}
 
         grid.innerHTML = filtered.map(item => `
             <div class="study-card bg-white p-5 rounded-[2.5rem] border border-slate-100 shadow-sm">
