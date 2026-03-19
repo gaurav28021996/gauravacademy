@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaurav Classes | Modern Learning</title>
+    <title>Gaurav Classes | Premium LMS</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -13,61 +13,35 @@
         :root {
             --primary: #4f46e5;
             --primary-light: #eef2ff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
             --bg-body: #f8fafc;
             --card-bg: #ffffff;
             --border: #e2e8f0;
         }
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--bg-body); 
-            color: var(--text-main);
-            scroll-behavior: smooth;
-        }
-
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: #1e293b; }
         h1, h2, h3, .font-heading { font-family: 'Outfit', sans-serif; }
 
-        .nav-blur {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-        }
-
+        .nav-blur { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+        
         .card-shadow {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
         }
 
-        .card-shadow:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border-color: var(--primary);
+        .class-btn {
+            @apply px-4 py-2 rounded-xl text-xs font-bold transition-all border border-slate-200 text-slate-500 hover:border-indigo-600;
+        }
+        .class-btn.active {
+            @apply bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-100;
         }
 
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            transition: all 0.2s;
-        }
+        .btn-primary { background: var(--primary); color: white; transition: all 0.2s; }
+        .btn-primary:hover { background: #4338ca; transform: translateY(-1px); }
 
-        .btn-primary:hover {
-            background: #4338ca;
-            transform: scale(1.02);
-        }
-
-        .ai-gradient {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .progress-bar { height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s ease; }
     </style>
 </head>
 <body>
@@ -85,210 +59,218 @@
                 <button onclick="router.navigate('courses')" class="hover:text-indigo-600 transition">Courses</button>
                 <button onclick="router.navigate('books')" class="hover:text-indigo-600 transition">Books</button>
                 <button onclick="router.navigate('tests')" class="hover:text-indigo-600 transition">Test Series</button>
-                <button onclick="router.navigate('solver')" class="flex items-center gap-2 text-indigo-600 bg-indigo-50 px-4 py-2 rounded-full hover:bg-indigo-100 transition">
-                    <i data-lucide="sparkles" class="w-4 h-4"></i> AI Solver
-                </button>
+                <button onclick="router.navigate('solver')" class="text-indigo-600 font-bold">AI Solver</button>
             </div>
 
-            <div id="auth-zone">
-                <button onclick="router.navigate('auth')" class="btn-primary px-6 py-2.5 rounded-full text-sm font-bold shadow-md">Get Started</button>
+            <div class="flex items-center gap-4">
+                <button onclick="router.navigate('dashboard')" class="text-slate-600 hover:text-indigo-600 transition"><i data-lucide="layout-dashboard"></i></button>
+                <button onclick="router.navigate('auth')" class="btn-primary px-6 py-2.5 rounded-full text-sm font-bold">Sign In</button>
             </div>
         </div>
     </nav>
 
-    <main id="app-root" class="max-w-7xl mx-auto px-6 py-12 min-h-[calc(100vh-80px)]">
-        </main>
+    <main id="app-root" class="max-w-7xl mx-auto px-6 py-12 min-h-screen"></main>
 
     <script type="module">
-        // --- Router Logic ---
+        let selectedClass = "10";
+        let checkoutItem = { name: "Full Board Mastery", price: "2499", type: "Course" };
+
         window.router = {
-            navigate: (view) => {
+            navigate: (view, data = null) => {
                 const root = document.getElementById('app-root');
-                window.scrollTo(0,0);
+                if (data) checkoutItem = data;
                 
-                if(view === 'home') root.innerHTML = HomeView();
-                if(view === 'courses') root.innerHTML = CoursesView();
-                if(view === 'books') root.innerHTML = BooksView();
-                if(view === 'tests') root.innerHTML = TestsView();
-                if(view === 'solver') root.innerHTML = SolverView();
-                if(view === 'auth') root.innerHTML = AuthView();
+                const views = {
+                    home: HomeView,
+                    courses: CoursesView,
+                    books: BooksView,
+                    tests: TestsView,
+                    solver: SolverView,
+                    dashboard: DashboardView,
+                    checkout: CheckoutView,
+                    auth: AuthView
+                };
                 
+                root.innerHTML = views[view]();
                 lucide.createIcons();
+                window.scrollTo(0,0);
             }
         };
 
-        // --- Views ---
+        const ClassToggle = (target) => `
+            <div class="flex flex-wrap gap-2 mb-8">
+                ${["9", "10", "11", "12", "JEE", "NEET"].map(c => `
+                    <button onclick="updateClass('${c}', '${target}')" class="class-btn ${selectedClass === c ? 'active' : ''}">${c}</button>
+                `).join('')}
+            </div>
+        `;
 
-        const HomeView = () => `
-            <div class="flex flex-col md:flex-row items-center gap-12 py-12">
-                <div class="flex-1 space-y-8">
-                    <span class="bg-indigo-100 text-indigo-700 px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wide">New: 2026 Batch Open</span>
-                    <h1 class="text-5xl md:text-7xl font-extrabold text-slate-900 leading-[1.1]">The Smart Way to <span class="text-indigo-600">Excel</span> in Exams.</h1>
-                    <p class="text-lg text-slate-600 leading-relaxed max-w-lg">High-quality coaching for CBSE, UP Board, JEE, and NEET. Personalized study plans and AI-driven doubt clearance.</p>
-                    <div class="flex gap-4">
-                        <button onclick="router.navigate('courses')" class="btn-primary px-8 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-200">Explore Courses</button>
-                        <button onclick="router.navigate('tests')" class="bg-white border-2 border-slate-200 px-8 py-4 rounded-2xl font-bold text-lg hover:border-indigo-600 hover:text-indigo-600 transition">Try Test Series</button>
+        const HomeView = () => `<div class="py-20 text-center space-y-6">
+            <h1 class="text-6xl font-extrabold text-slate-900">Your Future, <span class="text-indigo-600">Simplified.</span></h1>
+            <p class="text-slate-500 max-w-xl mx-auto text-lg">Premium study materials, live tests, and AI doubt clearing for ambitious students.</p>
+            <button onclick="router.navigate('courses')" class="btn-primary px-10 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-100">Browse Courses</button>
+        </div>`;
+
+        const DashboardView = () => `
+            <div class="space-y-10">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-3xl font-bold">Welcome back, <span class="text-indigo-600">Student</span></h2>
+                    <span class="text-sm font-bold text-slate-400">Class ${selectedClass} Profile</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="card-shadow p-6 rounded-3xl bg-indigo-600 text-white">
+                        <p class="text-xs font-bold uppercase opacity-80 mb-1">Overall Progress</p>
+                        <h3 class="text-3xl font-bold mb-4">74%</h3>
+                        <div class="progress-bar bg-white/20"><div class="progress-fill bg-white" style="width: 74%"></div></div>
+                    </div>
+                    <div class="card-shadow p-6 rounded-3xl">
+                        <p class="text-xs font-bold uppercase text-slate-400 mb-1">Tests Completed</p>
+                        <h3 class="text-3xl font-bold text-slate-800">12 / 20</h3>
+                    </div>
+                    <div class="card-shadow p-6 rounded-3xl">
+                        <p class="text-xs font-bold uppercase text-slate-400 mb-1">Active Books</p>
+                        <h3 class="text-3xl font-bold text-slate-800">04</h3>
                     </div>
                 </div>
-                <div class="flex-1 w-full h-[400px] bg-slate-200 rounded-[3rem] overflow-hidden shadow-2xl relative">
-                    <div class="absolute inset-0 flex items-center justify-center text-slate-400">
-                        <i data-lucide="image" class="w-12 h-12"></i>
-                        <span class="ml-2 font-bold uppercase tracking-widest">Banner Image</span>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
+                    <div class="card-shadow p-8 rounded-[2.5rem]">
+                        <h3 class="font-bold text-xl mb-6">Recent Activity</h3>
+                        <div class="space-y-4">
+                            ${[1,2,3].map(() => `<div class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50">
+                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm"><i data-lucide="check-circle" class="text-emerald-500 w-5 h-5"></i></div>
+                                <div><p class="text-sm font-bold">Maths Chapter 4 Quiz</p><p class="text-xs text-slate-400">Completed 2 hours ago</p></div>
+                            </div>`).join('')}
+                        </div>
+                    </div>
+                    <div class="card-shadow p-8 rounded-[2.5rem]">
+                        <h3 class="font-bold text-xl mb-6">Continue Learning</h3>
+                        <div class="p-6 rounded-3xl border-2 border-indigo-50 border-dashed text-center">
+                            <p class="text-slate-500 text-sm mb-4">You have a pending Physics Mock Test.</p>
+                            <button onclick="router.navigate('tests')" class="btn-primary px-6 py-2.5 rounded-xl text-sm font-bold">Resume Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const CheckoutView = () => `
+            <div class="max-w-4xl mx-auto py-10">
+                <h2 class="text-3xl font-bold mb-10 text-center">Complete <span class="text-indigo-600">Order</span></h2>
+                <div class="flex flex-col md:flex-row gap-8">
+                    <div class="flex-1 card-shadow p-8 rounded-[2.5rem] space-y-6">
+                        <h3 class="font-bold text-lg">Billing Details</h3>
+                        <div class="space-y-4">
+                            <input type="text" placeholder="Full Name" class="w-full p-4 bg-slate-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-0">
+                            <input type="email" placeholder="Email" class="w-full p-4 bg-slate-50 rounded-xl outline-none border-0">
+                            <div class="p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50 flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="credit-card" class="text-indigo-600"></i>
+                                    <span class="font-bold text-sm">UPI / QR Payment</span>
+                                </div>
+                                <div class="w-4 h-4 rounded-full bg-indigo-600"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-80 space-y-6">
+                        <div class="card-shadow p-6 rounded-3xl bg-slate-900 text-white">
+                            <h3 class="font-bold mb-4 opacity-60 uppercase text-xs tracking-widest">Order Summary</h3>
+                            <div class="flex justify-between mb-2"><span>${checkoutItem.name}</span><span class="font-bold">₹${checkoutItem.price}</span></div>
+                            <div class="flex justify-between mb-6 text-emerald-400 text-sm"><span>GST (Inc.)</span><span>₹0</span></div>
+                            <div class="border-t border-white/10 pt-4 flex justify-between items-center">
+                                <span class="font-bold">Total</span>
+                                <span class="text-2xl font-black text-indigo-400">₹${checkoutItem.price}</span>
+                            </div>
+                        </div>
+                        <button onclick="alert('Proceeding to Secure Gateway...')" class="w-full btn-primary py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-100">Pay Now</button>
                     </div>
                 </div>
             </div>
         `;
 
         const TestsView = () => `
-            <div class="space-y-12">
-                <div class="border-b pb-8">
-                    <h2 class="text-3xl font-bold mb-2">Academic <span class="text-indigo-600">Test Series</span></h2>
-                    <p class="text-slate-500">Real-time exam simulation for Classes 6-12 & Competitive Exams.</p>
+            <div class="space-y-8">
+                <div class="flex justify-between items-end">
+                    <h2 class="text-3xl font-bold">Test <span class="text-indigo-600">Series</span></h2>
+                    ${ClassToggle('tests')}
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="space-y-6">
-                        <h3 class="flex items-center gap-2 font-bold text-slate-800 uppercase text-sm tracking-widest"><i data-lucide="layers" class="w-4 h-4"></i> Chapter Tests</h3>
-                        ${renderTestItem("Physics: Motion", "25 Qs", "₹49")}
-                        ${renderTestItem("Maths: Sets", "30 Qs", "₹49")}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="card-shadow p-6 rounded-3xl">
+                        <h4 class="font-bold text-slate-400 uppercase text-[10px] tracking-widest mb-4">Chapter Tests</h4>
+                        ${renderTestItem("Optics Mastery", "Class " + selectedClass, "49")}
                     </div>
-                    <div class="space-y-6">
-                        <h3 class="flex items-center gap-2 font-bold text-slate-800 uppercase text-sm tracking-widest"><i data-lucide="file-text" class="w-4 h-4"></i> Model Papers</h3>
-                        ${renderTestItem("Annual Mock 2026", "80 Marks", "₹149")}
-                        ${renderTestItem("Mid-term Special", "40 Marks", "₹99")}
+                    <div class="card-shadow p-6 rounded-3xl">
+                        <h4 class="font-bold text-slate-400 uppercase text-[10px] tracking-widest mb-4">Model Papers</h4>
+                        ${renderTestItem("Final Mock A", "Full Syllabus", "149")}
                     </div>
-                    <div class="space-y-6">
-                        <h3 class="flex items-center gap-2 font-bold text-slate-800 uppercase text-sm tracking-widest"><i data-lucide="history" class="w-4 h-4"></i> PYQs</h3>
-                        ${renderTestItem("Solved PYQ 2024", "Full Sol.", "₹79")}
-                        ${renderTestItem("10 Year Bundle", "Maths/Sci", "₹299")}
-                    </div>
-                </div>
-            </div>
-        `;
-
-        const SolverView = () => `
-            <div class="max-w-3xl mx-auto space-y-8 py-10">
-                <div class="text-center space-y-4">
-                    <div class="w-16 h-16 ai-gradient rounded-3xl mx-auto flex items-center justify-center shadow-xl shadow-indigo-200">
-                        <i data-lucide="cpu" class="text-white w-8 h-8"></i>
-                    </div>
-                    <h2 class="text-4xl font-extrabold">Instant <span class="text-indigo-600">AI Solver</span></h2>
-                    <p class="text-slate-500">Solve any Math or Science problem instantly.</p>
-                </div>
-
-                <div class="bg-white p-8 rounded-[2rem] border-2 border-slate-100 shadow-xl space-y-6">
-                    <textarea class="w-full h-48 p-6 rounded-2xl bg-slate-50 border-0 focus:ring-2 focus:ring-indigo-500 text-lg outline-none" placeholder="Type your question here..."></textarea>
-                    <div class="flex gap-4">
-                        <button class="flex-1 py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-black transition">
-                            <i data-lucide="upload" class="w-5 h-5"></i> Upload Image
-                        </button>
-                        <button class="flex-1 py-4 btn-primary rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-100">
-                            Get Solution
-                        </button>
+                    <div class="card-shadow p-6 rounded-3xl">
+                        <h4 class="font-bold text-slate-400 uppercase text-[10px] tracking-widest mb-4">PYQs</h4>
+                        ${renderTestItem("Solved 2024", "Archive", "99")}
                     </div>
                 </div>
             </div>
         `;
 
         const BooksView = () => `
-            <div class="space-y-12">
+            <div class="space-y-8">
                 <div class="flex justify-between items-end">
-                    <h2 class="text-3xl font-bold">Digital <span class="text-indigo-600">Library</span></h2>
-                    <div class="flex bg-slate-200 p-1 rounded-xl">
-                        <button class="px-4 py-2 bg-white rounded-lg text-sm font-bold shadow-sm">NCERT</button>
-                        <button class="px-4 py-2 text-sm font-bold text-slate-600">Exclusive</button>
-                    </div>
+                    <h2 class="text-3xl font-bold">Nexus <span class="text-indigo-600">Library</span></h2>
+                    ${ClassToggle('books')}
                 </div>
-
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-                    ${renderBook("Maths Class 10", "NCERT Official", "Free")}
-                    ${renderBook("Physics Class 12", "NCERT Official", "Free")}
-                    ${renderBook("Concept Mastery", "Gaurav Sir", "₹499")}
-                    ${renderBook("Shortcut Tricks", "Gaurav Sir", "₹199")}
-                    ${renderBook("Biology 11", "NCERT Official", "Free")}
-                </div>
-            </div>
-        `;
-
-        const AuthView = () => `
-            <div class="max-w-md mx-auto py-12">
-                <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-2xl space-y-8">
-                    <div class="text-center space-y-2">
-                        <h2 class="text-3xl font-extrabold">Welcome <span class="text-indigo-600">Back</span></h2>
-                        <p class="text-slate-500 text-sm">Sign in to your student dashboard</p>
-                    </div>
-                    <div class="space-y-4">
-                        <input type="email" placeholder="Email Address" class="w-full">
-                        <input type="password" placeholder="Password" class="w-full">
-                        <button class="w-full btn-primary py-4 rounded-2xl font-bold shadow-lg shadow-indigo-100">Login to Academy</button>
-                        <p class="text-center text-sm font-bold text-slate-500 cursor-pointer">Don't have an account? <span class="text-indigo-600">Register</span></p>
-                    </div>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+                    ${[1,2,3,4,5].map(i => `
+                        <div class="group cursor-pointer" onclick="router.navigate('checkout', {name: 'Class ${selectedClass} Module ${i}', price: '299'})">
+                            <div class="aspect-[3/4] bg-slate-100 rounded-2xl mb-3 flex items-center justify-center border-2 border-transparent group-hover:border-indigo-600 transition">
+                                <i data-lucide="book" class="text-slate-300 w-10 h-10"></i>
+                            </div>
+                            <h4 class="font-bold text-sm">Subject Material ${i}</h4>
+                            <p class="text-indigo-600 font-black text-sm">₹299</p>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
         `;
 
-        const CoursesView = () => `
-            <div class="space-y-12">
-                <div class="text-center max-w-2xl mx-auto space-y-4">
-                    <h2 class="text-4xl font-extrabold">Learning <span class="text-indigo-600">Programs</span></h2>
-                    <p class="text-slate-500">Structured courses designed for success in board exams and beyond.</p>
+        const CoursesView = () => `<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            ${[{n:'Foundation', p:'4999'}, {n:'Target Batch', p:'7999'}, {n:'Revision Crash', p:'1999'}].map(c => `
+                <div class="card-shadow p-8 rounded-[2.5rem] space-y-6">
+                    <h3 class="text-2xl font-bold">${c.n}</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">Complete syllabus coverage with live doubt sessions and handwritten notes.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-black text-indigo-600">₹${c.p}</span>
+                        <button onclick="router.navigate('checkout', {name: '${c.n}', price: '${c.p}'})" class="btn-primary px-6 py-2.5 rounded-xl font-bold text-sm">Enroll</button>
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    ${renderCourse("Foundation Batch", "Class 6 to 10", "Maths & Science Focus", "indigo")}
-                    ${renderCourse("Master PCBM", "Class 11 & 12", "Advanced Curriculum", "orange")}
-                    ${renderCourse("Ranker's Batch", "JEE & NEET", "Competitive Edge", "rose")}
-                </div>
-            </div>
-        `;
+            `).join('')}
+        </div>`;
 
-        // --- Render Helpers ---
+        const SolverView = () => `<div class="max-w-2xl mx-auto py-12 text-center space-y-6">
+            <h2 class="text-4xl font-bold">AI Doubt <span class="text-indigo-600">Solver</span></h2>
+            <textarea class="w-full h-40 p-6 rounded-3xl bg-slate-50 border-2 border-slate-100 outline-none focus:border-indigo-600 transition" placeholder="Paste your question..."></textarea>
+            <button class="btn-primary w-full py-4 rounded-2xl font-bold shadow-lg shadow-indigo-100">Solve with AI</button>
+        </div>`;
+
+        const AuthView = () => `<div class="max-w-md mx-auto py-12 card-shadow p-10 rounded-[3rem] space-y-6">
+            <h2 class="text-2xl font-bold text-center">Login to <span class="text-indigo-600">Study</span></h2>
+            <input type="text" placeholder="Student ID" class="w-full p-4 bg-slate-50 rounded-2xl border-0">
+            <button onclick="router.navigate('dashboard')" class="btn-primary w-full py-4 rounded-2xl font-bold">Access Dashboard</button>
+        </div>`;
 
         function renderTestItem(title, info, price) {
             return `
-                <div class="bg-white p-5 rounded-2xl border border-slate-100 flex justify-between items-center hover:border-indigo-200 transition group cursor-pointer">
-                    <div class="space-y-1">
-                        <h4 class="font-bold text-slate-800">${title}</h4>
-                        <p class="text-xs text-slate-400 font-bold uppercase">${info}</p>
-                    </div>
-                    <button class="bg-slate-100 text-slate-900 group-hover:bg-indigo-600 group-hover:text-white px-4 py-2 rounded-xl text-sm font-black transition">
-                        ${price}
-                    </button>
+                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl mb-3 hover:bg-white border border-transparent hover:border-indigo-100 transition cursor-pointer" onclick="router.navigate('checkout', {name: '${title}', price: '${price}'})">
+                    <div><h5 class="font-bold text-sm">${title}</h5><p class="text-[10px] text-slate-400 font-bold uppercase">${info}</p></div>
+                    <span class="text-indigo-600 font-bold text-xs">₹${price}</span>
                 </div>
             `;
         }
 
-        function renderBook(title, author, price) {
-            return `
-                <div class="space-y-4 group cursor-pointer">
-                    <div class="aspect-[3/4] bg-slate-100 rounded-2xl flex items-center justify-center border-2 border-transparent group-hover:border-indigo-600 transition overflow-hidden">
-                        <i data-lucide="book-open" class="text-slate-300 w-12 h-12"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm">${title}</h4>
-                        <p class="text-xs text-slate-500 mb-2">${author}</p>
-                        <span class="text-sm font-black text-indigo-600">${price}</span>
-                    </div>
-                </div>
-            `;
-        }
+        window.updateClass = (c, view) => {
+            selectedClass = c;
+            router.navigate(view);
+        };
 
-        function renderCourse(title, grade, sub, color) {
-            return `
-                <div class="card-shadow p-8 rounded-[2.5rem] space-y-6">
-                    <div class="w-14 h-14 bg-${color}-100 rounded-2xl flex items-center justify-center">
-                        <i data-lucide="layers" class="text-${color}-600 w-7 h-7"></i>
-                    </div>
-                    <div>
-                        <span class="text-xs font-black uppercase text-${color}-600 tracking-widest">${grade}</span>
-                        <h3 class="text-2xl font-bold mt-1">${title}</h3>
-                        <p class="text-slate-500 mt-2">${sub}</p>
-                    </div>
-                    <button class="w-full py-4 border-2 border-slate-100 rounded-2xl font-bold hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition">View Details</button>
-                </div>
-            `;
-        }
-
-        // --- Init ---
         router.navigate('home');
     </script>
 </body>
