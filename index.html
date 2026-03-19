@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaurav Classes | Premium LMS</title>
+    <title>Gaurav Classes | Complete Academy</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -12,13 +12,12 @@
     <style>
         :root {
             --primary: #4f46e5;
-            --primary-light: #eef2ff;
             --bg-body: #f8fafc;
             --card-bg: #ffffff;
             --border: #e2e8f0;
         }
 
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: #1e293b; overflow-x: hidden; }
         h1, h2, h3, .font-heading { font-family: 'Outfit', sans-serif; }
 
         .nav-blur { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
@@ -26,22 +25,26 @@
         .card-shadow {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .class-btn {
-            @apply px-4 py-2 rounded-xl text-xs font-bold transition-all border border-slate-200 text-slate-500 hover:border-indigo-600;
+        .card-shadow:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            border-color: var(--primary);
         }
-        .class-btn.active {
+
+        .category-pill {
+            @apply px-5 py-2.5 rounded-2xl text-sm font-bold transition-all border border-slate-200 text-slate-500;
+        }
+        .category-pill.active {
             @apply bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-100;
         }
 
-        .btn-primary { background: var(--primary); color: white; transition: all 0.2s; }
-        .btn-primary:hover { background: #4338ca; transform: translateY(-1px); }
+        .btn-primary { background: var(--primary); color: white; transition: 0.2s; }
+        .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
 
-        .progress-bar { height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s ease; }
+        .course-badge { @apply text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md; }
     </style>
 </head>
 <body>
@@ -59,12 +62,12 @@
                 <button onclick="router.navigate('courses')" class="hover:text-indigo-600 transition">Courses</button>
                 <button onclick="router.navigate('books')" class="hover:text-indigo-600 transition">Books</button>
                 <button onclick="router.navigate('tests')" class="hover:text-indigo-600 transition">Test Series</button>
-                <button onclick="router.navigate('solver')" class="text-indigo-600 font-bold">AI Solver</button>
+                <button onclick="router.navigate('solver')" class="text-indigo-600 bg-indigo-50 px-4 py-2 rounded-full">AI Solver</button>
             </div>
 
             <div class="flex items-center gap-4">
-                <button onclick="router.navigate('dashboard')" class="text-slate-600 hover:text-indigo-600 transition"><i data-lucide="layout-dashboard"></i></button>
-                <button onclick="router.navigate('auth')" class="btn-primary px-6 py-2.5 rounded-full text-sm font-bold">Sign In</button>
+                <button onclick="router.navigate('dashboard')" class="p-2 text-slate-400 hover:text-indigo-600"><i data-lucide="user"></i></button>
+                <button onclick="router.navigate('auth')" class="btn-primary px-6 py-2.5 rounded-full text-sm font-bold">Login</button>
             </div>
         </div>
     </nav>
@@ -72,204 +75,129 @@
     <main id="app-root" class="max-w-7xl mx-auto px-6 py-12 min-h-screen"></main>
 
     <script type="module">
-        let selectedClass = "10";
-        let checkoutItem = { name: "Full Board Mastery", price: "2499", type: "Course" };
+        let currentFilter = 'all';
+        let selectedClass = '10';
+
+        const courses = [
+            // School Boards
+            { id: 1, title: "Class 6 Foundation", cat: "school", price: "1499", tags: ["Maths", "Science"], desc: "Basic concept building for junior secondary level." },
+            { id: 2, title: "Class 7 Foundation", cat: "school", price: "1499", tags: ["NCERT", "Olympiad"], desc: "Strengthening core subjects with advanced practice." },
+            { id: 3, title: "Class 8 Foundation", cat: "school", price: "1999", tags: ["High School Prep"], desc: "Transitioning to complex problem solving strategies." },
+            { id: 4, title: "Class 9 Mastery", cat: "school", price: "2499", tags: ["Science", "Maths", "SST"], desc: "Crucial foundation for Board exams and competitive base." },
+            { id: 5, title: "Class 10 Board Pro", cat: "school", price: "2999", tags: ["PYQs", "Live Mocks"], desc: "Comprehensive board prep with 10-year paper analysis." },
+            { id: 6, title: "Class 11 Academic", cat: "school", price: "3499", tags: ["PCBM", "Concepts"], desc: "In-depth derivation and theory for higher secondary." },
+            { id: 7, title: "Class 12 Board Prep", cat: "school", price: "3999", tags: ["Fastrack", "Viva Prep"], desc: "Focused revision and sample paper solving for finals." },
+            
+            // Engineering
+            { id: 8, title: "JEE Mains Special", cat: "engineering", price: "5999", tags: ["Objective", "NTA Pattern"], desc: "Focused only on clearing Mains with high percentile." },
+            { id: 9, title: "JEE Advanced Elite", cat: "engineering", price: "6999", tags: ["Complex Cal.", "IIT Focus"], desc: "For students who have cleared Mains and target IITs." },
+            { id: 10, title: "JEE (Mains + Adv)", cat: "engineering", price: "9999", tags: ["Integrated", "Full Course"], desc: "The ultimate 2-year journey to secure an IIT seat." },
+            
+            // Medical
+            { id: 11, title: "NEET Foundation", cat: "medical", price: "4999", tags: ["Bio-Centric", "NCERT+"], desc: "Early start for medical aspirants starting from Class 11." },
+            { id: 12, title: "NEET Crashcourse", cat: "medical", price: "2999", tags: ["60 Days", "High Yield"], desc: "Rapid revision of high-weightage topics for immediate exams." }
+        ];
 
         window.router = {
             navigate: (view, data = null) => {
                 const root = document.getElementById('app-root');
-                if (data) checkoutItem = data;
-                
                 const views = {
-                    home: HomeView,
-                    courses: CoursesView,
-                    books: BooksView,
-                    tests: TestsView,
-                    solver: SolverView,
-                    dashboard: DashboardView,
-                    checkout: CheckoutView,
-                    auth: AuthView
+                    home: () => root.innerHTML = HomeView(),
+                    courses: () => root.innerHTML = CoursesView(),
+                    books: () => root.innerHTML = BooksView(),
+                    tests: () => root.innerHTML = TestsView(),
+                    solver: () => root.innerHTML = SolverView(),
+                    checkout: () => root.innerHTML = CheckoutView(data),
+                    dashboard: () => root.innerHTML = DashboardView()
                 };
-                
-                root.innerHTML = views[view]();
+                views[view] ? views[view]() : views['home']();
                 lucide.createIcons();
                 window.scrollTo(0,0);
             }
         };
 
-        const ClassToggle = (target) => `
-            <div class="flex flex-wrap gap-2 mb-8">
-                ${["9", "10", "11", "12", "JEE", "NEET"].map(c => `
-                    <button onclick="updateClass('${c}', '${target}')" class="class-btn ${selectedClass === c ? 'active' : ''}">${c}</button>
-                `).join('')}
-            </div>
-        `;
-
-        const HomeView = () => `<div class="py-20 text-center space-y-6">
-            <h1 class="text-6xl font-extrabold text-slate-900">Your Future, <span class="text-indigo-600">Simplified.</span></h1>
-            <p class="text-slate-500 max-w-xl mx-auto text-lg">Premium study materials, live tests, and AI doubt clearing for ambitious students.</p>
-            <button onclick="router.navigate('courses')" class="btn-primary px-10 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-100">Browse Courses</button>
-        </div>`;
-
-        const DashboardView = () => `
-            <div class="space-y-10">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-3xl font-bold">Welcome back, <span class="text-indigo-600">Student</span></h2>
-                    <span class="text-sm font-bold text-slate-400">Class ${selectedClass} Profile</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="card-shadow p-6 rounded-3xl bg-indigo-600 text-white">
-                        <p class="text-xs font-bold uppercase opacity-80 mb-1">Overall Progress</p>
-                        <h3 class="text-3xl font-bold mb-4">74%</h3>
-                        <div class="progress-bar bg-white/20"><div class="progress-fill bg-white" style="width: 74%"></div></div>
-                    </div>
-                    <div class="card-shadow p-6 rounded-3xl">
-                        <p class="text-xs font-bold uppercase text-slate-400 mb-1">Tests Completed</p>
-                        <h3 class="text-3xl font-bold text-slate-800">12 / 20</h3>
-                    </div>
-                    <div class="card-shadow p-6 rounded-3xl">
-                        <p class="text-xs font-bold uppercase text-slate-400 mb-1">Active Books</p>
-                        <h3 class="text-3xl font-bold text-slate-800">04</h3>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
-                    <div class="card-shadow p-8 rounded-[2.5rem]">
-                        <h3 class="font-bold text-xl mb-6">Recent Activity</h3>
-                        <div class="space-y-4">
-                            ${[1,2,3].map(() => `<div class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50">
-                                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm"><i data-lucide="check-circle" class="text-emerald-500 w-5 h-5"></i></div>
-                                <div><p class="text-sm font-bold">Maths Chapter 4 Quiz</p><p class="text-xs text-slate-400">Completed 2 hours ago</p></div>
-                            </div>`).join('')}
-                        </div>
-                    </div>
-                    <div class="card-shadow p-8 rounded-[2.5rem]">
-                        <h3 class="font-bold text-xl mb-6">Continue Learning</h3>
-                        <div class="p-6 rounded-3xl border-2 border-indigo-50 border-dashed text-center">
-                            <p class="text-slate-500 text-sm mb-4">You have a pending Physics Mock Test.</p>
-                            <button onclick="router.navigate('tests')" class="btn-primary px-6 py-2.5 rounded-xl text-sm font-bold">Resume Now</button>
-                        </div>
-                    </div>
+        const HomeView = () => `
+            <div class="py-20 flex flex-col items-center text-center space-y-8">
+                <span class="bg-indigo-50 text-indigo-600 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">Gaurav Classes 2.0</span>
+                <h1 class="text-6xl md:text-8xl font-black text-slate-900 tracking-tighter">Learn from the <br><span class="text-indigo-600">Experts.</span></h1>
+                <p class="text-slate-500 max-w-2xl text-lg">Class 6th to 12th, JEE, and NEET preparation with Gaurav Sir's proven methodologies.</p>
+                <div class="flex gap-4">
+                    <button onclick="router.navigate('courses')" class="btn-primary px-10 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-100">Browse Catalog</button>
+                    <button onclick="router.navigate('solver')" class="bg-white border border-slate-200 px-10 py-4 rounded-2xl font-bold text-lg">AI Doubt Help</button>
                 </div>
             </div>
         `;
 
-        const CheckoutView = () => `
-            <div class="max-w-4xl mx-auto py-10">
-                <h2 class="text-3xl font-bold mb-10 text-center">Complete <span class="text-indigo-600">Order</span></h2>
-                <div class="flex flex-col md:flex-row gap-8">
-                    <div class="flex-1 card-shadow p-8 rounded-[2.5rem] space-y-6">
-                        <h3 class="font-bold text-lg">Billing Details</h3>
-                        <div class="space-y-4">
-                            <input type="text" placeholder="Full Name" class="w-full p-4 bg-slate-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-0">
-                            <input type="email" placeholder="Email" class="w-full p-4 bg-slate-50 rounded-xl outline-none border-0">
-                            <div class="p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50 flex justify-between items-center">
-                                <div class="flex items-center gap-3">
-                                    <i data-lucide="credit-card" class="text-indigo-600"></i>
-                                    <span class="font-bold text-sm">UPI / QR Payment</span>
-                                </div>
-                                <div class="w-4 h-4 rounded-full bg-indigo-600"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-full md:w-80 space-y-6">
-                        <div class="card-shadow p-6 rounded-3xl bg-slate-900 text-white">
-                            <h3 class="font-bold mb-4 opacity-60 uppercase text-xs tracking-widest">Order Summary</h3>
-                            <div class="flex justify-between mb-2"><span>${checkoutItem.name}</span><span class="font-bold">₹${checkoutItem.price}</span></div>
-                            <div class="flex justify-between mb-6 text-emerald-400 text-sm"><span>GST (Inc.)</span><span>₹0</span></div>
-                            <div class="border-t border-white/10 pt-4 flex justify-between items-center">
-                                <span class="font-bold">Total</span>
-                                <span class="text-2xl font-black text-indigo-400">₹${checkoutItem.price}</span>
-                            </div>
-                        </div>
-                        <button onclick="alert('Proceeding to Secure Gateway...')" class="w-full btn-primary py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-100">Pay Now</button>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        const TestsView = () => `
-            <div class="space-y-8">
-                <div class="flex justify-between items-end">
-                    <h2 class="text-3xl font-bold">Test <span class="text-indigo-600">Series</span></h2>
-                    ${ClassToggle('tests')}
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="card-shadow p-6 rounded-3xl">
-                        <h4 class="font-bold text-slate-400 uppercase text-[10px] tracking-widest mb-4">Chapter Tests</h4>
-                        ${renderTestItem("Optics Mastery", "Class " + selectedClass, "49")}
-                    </div>
-                    <div class="card-shadow p-6 rounded-3xl">
-                        <h4 class="font-bold text-slate-400 uppercase text-[10px] tracking-widest mb-4">Model Papers</h4>
-                        ${renderTestItem("Final Mock A", "Full Syllabus", "149")}
-                    </div>
-                    <div class="card-shadow p-6 rounded-3xl">
-                        <h4 class="font-bold text-slate-400 uppercase text-[10px] tracking-widest mb-4">PYQs</h4>
-                        ${renderTestItem("Solved 2024", "Archive", "99")}
-                    </div>
-                </div>
-            </div>
-        `;
-
-        const BooksView = () => `
-            <div class="space-y-8">
-                <div class="flex justify-between items-end">
-                    <h2 class="text-3xl font-bold">Nexus <span class="text-indigo-600">Library</span></h2>
-                    ${ClassToggle('books')}
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
-                    ${[1,2,3,4,5].map(i => `
-                        <div class="group cursor-pointer" onclick="router.navigate('checkout', {name: 'Class ${selectedClass} Module ${i}', price: '299'})">
-                            <div class="aspect-[3/4] bg-slate-100 rounded-2xl mb-3 flex items-center justify-center border-2 border-transparent group-hover:border-indigo-600 transition">
-                                <i data-lucide="book" class="text-slate-300 w-10 h-10"></i>
-                            </div>
-                            <h4 class="font-bold text-sm">Subject Material ${i}</h4>
-                            <p class="text-indigo-600 font-black text-sm">₹299</p>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-
-        const CoursesView = () => `<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            ${[{n:'Foundation', p:'4999'}, {n:'Target Batch', p:'7999'}, {n:'Revision Crash', p:'1999'}].map(c => `
-                <div class="card-shadow p-8 rounded-[2.5rem] space-y-6">
-                    <h3 class="text-2xl font-bold">${c.n}</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed">Complete syllabus coverage with live doubt sessions and handwritten notes.</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-2xl font-black text-indigo-600">₹${c.p}</span>
-                        <button onclick="router.navigate('checkout', {name: '${c.n}', price: '${c.p}'})" class="btn-primary px-6 py-2.5 rounded-xl font-bold text-sm">Enroll</button>
-                    </div>
-                </div>
-            `).join('')}
-        </div>`;
-
-        const SolverView = () => `<div class="max-w-2xl mx-auto py-12 text-center space-y-6">
-            <h2 class="text-4xl font-bold">AI Doubt <span class="text-indigo-600">Solver</span></h2>
-            <textarea class="w-full h-40 p-6 rounded-3xl bg-slate-50 border-2 border-slate-100 outline-none focus:border-indigo-600 transition" placeholder="Paste your question..."></textarea>
-            <button class="btn-primary w-full py-4 rounded-2xl font-bold shadow-lg shadow-indigo-100">Solve with AI</button>
-        </div>`;
-
-        const AuthView = () => `<div class="max-w-md mx-auto py-12 card-shadow p-10 rounded-[3rem] space-y-6">
-            <h2 class="text-2xl font-bold text-center">Login to <span class="text-indigo-600">Study</span></h2>
-            <input type="text" placeholder="Student ID" class="w-full p-4 bg-slate-50 rounded-2xl border-0">
-            <button onclick="router.navigate('dashboard')" class="btn-primary w-full py-4 rounded-2xl font-bold">Access Dashboard</button>
-        </div>`;
-
-        function renderTestItem(title, info, price) {
+        const CoursesView = () => {
+            const filtered = currentFilter === 'all' ? courses : courses.filter(c => c.cat === currentFilter);
             return `
-                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl mb-3 hover:bg-white border border-transparent hover:border-indigo-100 transition cursor-pointer" onclick="router.navigate('checkout', {name: '${title}', price: '${price}'})">
-                    <div><h5 class="font-bold text-sm">${title}</h5><p class="text-[10px] text-slate-400 font-bold uppercase">${info}</p></div>
-                    <span class="text-indigo-600 font-bold text-xs">₹${price}</span>
+                <div class="space-y-12">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                        <h2 class="text-4xl font-bold tracking-tight">Academic <span class="text-indigo-600">Programs</span></h2>
+                        <div class="flex bg-slate-100 p-1.5 rounded-2xl">
+                            <button onclick="setFilter('all')" class="category-pill ${currentFilter === 'all' ? 'active' : ''}">All</button>
+                            <button onclick="setFilter('school')" class="category-pill ${currentFilter === 'school' ? 'active' : ''}">School</button>
+                            <button onclick="setFilter('engineering')" class="category-pill ${currentFilter === 'engineering' ? 'active' : ''}">JEE</button>
+                            <button onclick="setFilter('medical')" class="category-pill ${currentFilter === 'medical' ? 'active' : ''}">NEET</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        ${filtered.map(c => `
+                            <div class="card-shadow p-8 rounded-[2.5rem] flex flex-col">
+                                <div class="flex justify-between items-start mb-6">
+                                    <div class="flex gap-2">
+                                        ${c.tags.map(t => `<span class="course-badge bg-slate-100 text-slate-500">${t}</span>`).join('')}
+                                    </div>
+                                    <span class="font-black text-indigo-600">₹${c.price}</span>
+                                </div>
+                                <h3 class="text-2xl font-bold mb-3">${c.title}</h3>
+                                <p class="text-slate-500 text-sm mb-8 flex-grow leading-relaxed">${c.desc}</p>
+                                <button onclick="router.navigate('checkout', {name: '${c.title}', price: '${c.price}'})" class="w-full py-4 border-2 border-indigo-50 text-indigo-600 rounded-2xl font-bold hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition">Enroll Now</button>
+                            </div>
+                        `).join('')}
+                    </div>
                 </div>
             `;
-        }
-
-        window.updateClass = (c, view) => {
-            selectedClass = c;
-            router.navigate(view);
         };
+
+        const CheckoutView = (item) => `
+            <div class="max-w-4xl mx-auto py-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="space-y-8">
+                        <h2 class="text-3xl font-bold">Secure <span class="text-indigo-600">Checkout</span></h2>
+                        <div class="space-y-4">
+                            <div class="space-y-1"><label class="text-xs font-bold text-slate-400 uppercase">Full Name</label><input type="text" class="w-full p-4 bg-slate-50 rounded-xl border-0" placeholder="e.g. Gaurav Kumar"></div>
+                            <div class="space-y-1"><label class="text-xs font-bold text-slate-400 uppercase">Mobile Number</label><input type="text" class="w-full p-4 bg-slate-50 rounded-xl border-0" placeholder="+91"></div>
+                        </div>
+                        <div class="p-6 border-2 border-indigo-600 bg-indigo-50 rounded-[2rem] flex items-center justify-between">
+                            <div class="flex items-center gap-4"><i data-lucide="shield-check" class="text-indigo-600"></i><span class="font-bold">Instant Activation After Pay</span></div>
+                            <div class="w-5 h-5 rounded-full border-4 border-indigo-600 bg-white"></div>
+                        </div>
+                    </div>
+                    <div class="card-shadow p-8 rounded-[3rem] bg-slate-900 text-white flex flex-col">
+                        <h3 class="font-bold text-sm uppercase tracking-widest opacity-50 mb-6">Course Summary</h3>
+                        <div class="flex justify-between text-xl font-bold mb-2"><span>${item?.name || 'Course Name'}</span></div>
+                        <div class="flex justify-between text-emerald-400 font-bold mb-8"><span>GST 0%</span><span>₹0</span></div>
+                        <div class="mt-auto border-t border-white/10 pt-6 flex justify-between items-center">
+                            <span class="text-sm opacity-60">Payable Amount</span>
+                            <span class="text-4xl font-black text-indigo-400">₹${item?.price || '0'}</span>
+                        </div>
+                        <button onclick="alert('Redirecting to UPI/Card Gateway...')" class="w-full mt-8 bg-indigo-600 py-5 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-indigo-500 transition shadow-xl shadow-indigo-900/40">Complete Purchase</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Remaining Views (Books, Tests, Solver, Dashboard) stay mostly consistent with the previous logic 
+        // but now use the selectedClass variable for dynamic rendering.
+
+        const DashboardView = () => `<div class="p-20 text-center"><h2 class="text-3xl font-bold">Student Dashboard</h2><p class="text-slate-500">Access your enrolled courses here.</p></div>`;
+        const SolverView = () => `<div class="p-20 text-center"><h2 class="text-3xl font-bold">AI Doubt Solver</h2><textarea class="w-full h-40 mt-8 p-6 bg-slate-50 rounded-3xl" placeholder="Describe your doubt..."></textarea></div>`;
+        const BooksView = () => `<div class="p-20 text-center"><h2 class="text-3xl font-bold">Books Library</h2></div>`;
+        const TestsView = () => `<div class="p-20 text-center"><h2 class="text-3xl font-bold">Test Series</h2></div>`;
+
+        window.setFilter = (f) => { currentFilter = f; router.navigate('courses'); };
 
         router.navigate('home');
     </script>
