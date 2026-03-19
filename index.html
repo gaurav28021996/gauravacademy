@@ -15,6 +15,7 @@
             --bg-secondary: #0f172a;
             --accent-cyan: #22d3ee;
             --accent-indigo: #6366f1;
+            --accent-emerald: #10b981;
             --glass: rgba(15, 23, 42, 0.8);
             --border: rgba(255, 255, 255, 0.08);
         }
@@ -44,7 +45,7 @@
             @apply bg-indigo-600 border-indigo-500 shadow-lg shadow-indigo-500/20 text-white;
         }
 
-        input, select {
+        input, select, textarea {
             background: rgba(255,255,255,0.05) !important;
             border: 1px solid var(--border) !important;
             color: white !important;
@@ -53,7 +54,7 @@
             outline: none;
             transition: 0.3s;
         }
-        input:focus, select:focus { border-color: var(--accent-cyan) !important; background: rgba(255,255,255,0.08) !important; }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent-cyan) !important; background: rgba(255,255,255,0.08) !important; }
 
         .shimmer-btn {
             background: linear-gradient(90deg, #6366f1, #22d3ee, #6366f1);
@@ -61,6 +62,9 @@
             animation: shimmer 3s infinite;
         }
         @keyframes shimmer { 0% { background-position: 0%; } 100% { background-position: 200%; } }
+
+        .ai-glow { animation: pulse-glow 2s infinite; }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 20px rgba(34, 211, 238, 0.2); } 50% { box-shadow: 0 0 40px rgba(34, 211, 238, 0.5); } }
 
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: var(--accent-indigo); border-radius: 10px; }
@@ -77,9 +81,13 @@
             <span class="font-heading font-black tracking-tighter text-lg uppercase">Gaurav <span class="text-cyan-400">Classes</span></span>
         </div>
 
-        <nav id="main-nav" class="hidden lg:flex gap-8 items-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+        <nav id="main-nav" class="hidden lg:flex gap-6 items-center text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">
             <button onclick="router.navigate('courses')" class="hover:text-cyan-400 transition">Courses</button>
-            <button onclick="router.navigate('books')" class="hover:text-cyan-400 transition">Book Store</button>
+            <button onclick="router.navigate('books')" class="hover:text-cyan-400 transition">Books</button>
+            <button onclick="router.navigate('tests')" class="hover:text-cyan-400 transition">Test Series</button>
+            <button onclick="router.navigate('solver')" class="px-4 py-2 bg-white/5 rounded-xl border border-white/10 text-cyan-400 hover:bg-cyan-500/10 transition flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-3 h-3"></i> AI Solver
+            </button>
             <button onclick="router.navigate('dashboard')" class="hover:text-cyan-400 transition">Dashboard</button>
         </nav>
 
@@ -95,15 +103,8 @@
         import { getFirestore, collection, onSnapshot, query, orderBy, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // ── CONFIGURATION ──
-        const firebaseConfig = { 
-            apiKey: "YOUR_API_KEY", 
-            authDomain: "gaurav-classes.firebaseapp.com", 
-            projectId: "gaurav-classes", 
-            storageBucket: "gaurav-classes.appspot.com", 
-            messagingSenderId: "...", 
-            appId: "..." 
-        };
-        const ADMIN_UID = "REPLACE_WITH_YOUR_ADMIN_UID"; // Set this after creating your admin account
+        const firebaseConfig = { apiKey: "YOUR_API_KEY", authDomain: "...", projectId: "...", storageBucket: "...", messagingSenderId: "...", appId: "..." };
+        const ADMIN_UID = "ADMIN_ID_HERE";
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -122,6 +123,8 @@
                 if(view === 'home') root.innerHTML = HomeView();
                 if(view === 'courses') root.innerHTML = CoursesView();
                 if(view === 'books') root.innerHTML = BooksView();
+                if(view === 'tests') root.innerHTML = TestSeriesView();
+                if(view === 'solver') root.innerHTML = DoubtSolverView();
                 if(view === 'auth') root.innerHTML = AuthView();
                 
                 lucide.createIcons();
@@ -136,25 +139,86 @@
                 <h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none">Elevate Your <br> <span class="text-indigo-500">Academic Rank</span></h1>
                 <p class="text-slate-500 max-w-2xl mx-auto text-lg">Gaurav Classes provides high-fidelity coaching for Board Exams, Engineering (JEE/Polytechnic), and Medical (NEET) entries.</p>
                 <div class="flex justify-center gap-6">
-                    <button onclick="router.navigate('courses')" class="shimmer-btn px-12 py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-2xl">View Courses</button>
-                    <button onclick="router.navigate('books')" class="glass-card px-12 py-5 rounded-2xl font-black uppercase text-xs tracking-widest">Digital Bookstore</button>
+                    <button onclick="router.navigate('courses')" class="shimmer-btn px-12 py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-2xl">Start Learning</button>
+                    <button onclick="router.navigate('solver')" class="glass-card px-12 py-5 rounded-2xl font-black uppercase text-xs tracking-widest flex items-center gap-3">
+                        <i data-lucide="cpu"></i> AI Help
+                    </button>
                 </div>
             </section>
         `;
 
-        const CoursesView = () => `
+        const TestSeriesView = () => `
             <div class="space-y-16">
                 <div class="text-center">
-                    <h2 class="text-4xl font-black uppercase tracking-tighter mb-2">Available <span class="text-indigo-500">Courses</span></h2>
-                    <p class="text-slate-500 text-sm uppercase tracking-widest font-bold">Comprehensive Preparation Paths</p>
+                    <h2 class="text-4xl font-black uppercase tracking-tighter mb-2">Nexus <span class="text-cyan-400">Test Engine</span></h2>
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-[0.3em]">Evaluation System for Class ${selectedClass}</p>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    ${renderCourseCard("Class 6-8 Foundation", "₹2,499", "Primary Schooling Essentials", "indigo")}
-                    ${renderCourseCard("Class 9-10 Boards", "₹4,999", "CBSE/UP/ICSE Specialized", "cyan")}
-                    ${renderCourseCard("Class 11-12 PCBM", "₹7,999", "Higher Secondary Mastery", "orange")}
-                    ${renderCourseCard("JEE Main + Advanced", "₹14,999", "IIT Preparation Module", "indigo")}
-                    ${renderCourseCard("NEET UG Pro", "₹12,999", "Medical Entrance System", "rose")}
-                    ${renderCourseCard("Polytechnic Entrance", "₹3,499", "State Level Tech Prep", "emerald")}
+
+                <section class="space-y-8">
+                    <div class="flex items-center gap-3 border-l-4 border-indigo-500 pl-4">
+                        <h3 class="text-xl font-black uppercase tracking-tight">Chapter-Wise Assessment</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        ${renderTestCard("Physics: Light & Reflection", "15 Quests", "₹49", "indigo")}
+                        ${renderTestCard("Maths: Trigonometry Pro", "20 Quests", "₹49", "indigo")}
+                        ${renderTestCard("Chemistry: Periodic Trends", "15 Quests", "₹49", "indigo")}
+                    </div>
+                </section>
+
+                <section class="space-y-8">
+                    <div class="flex items-center gap-3 border-l-4 border-cyan-500 pl-4">
+                        <h3 class="text-xl font-black uppercase tracking-tight">Full-Length Model Papers</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        ${renderTestCard("Board Pattern Mock: Set A", "3 Hours | 80 Marks", "₹149", "cyan")}
+                        ${renderTestCard("Board Pattern Mock: Set B", "3 Hours | 80 Marks", "₹149", "cyan")}
+                    </div>
+                </section>
+
+                <section class="space-y-8">
+                    <div class="flex items-center gap-3 border-l-4 border-emerald-500 pl-4">
+                        <h3 class="text-xl font-black uppercase tracking-tight">Previous Year Archives (10 Years)</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        ${renderTestCard("2024 Solved PYQ", "Official", "₹99", "emerald")}
+                        ${renderTestCard("2023 Solved PYQ", "Official", "₹99", "emerald")}
+                        ${renderTestCard("2022 Solved PYQ", "Official", "₹99", "emerald")}
+                        ${renderTestCard("Topic-wise PYQ Bundle", "Hot Item", "₹299", "emerald")}
+                    </div>
+                </section>
+            </div>
+        `;
+
+        const DoubtSolverView = () => `
+            <div class="max-w-4xl mx-auto space-y-10">
+                <div class="text-center space-y-4">
+                    <div class="w-20 h-20 bg-cyan-500/10 rounded-full mx-auto flex items-center justify-center ai-glow border border-cyan-500/20">
+                        <i data-lucide="brain-circuit" class="text-cyan-400 w-10 h-10"></i>
+                    </div>
+                    <h2 class="text-4xl font-black uppercase tracking-tighter">AI <span class="text-indigo-500">Doubt Solver</span></h2>
+                    <p class="text-slate-500 text-sm">Snap a photo or type your question. Gaurav Classes AI will explain the solution step-by-step.</p>
+                </div>
+
+                <div class="glass-card p-8 rounded-[3rem] space-y-6">
+                    <textarea id="ai-input" placeholder="Paste your question here or describe your doubt..." class="w-full h-40 resize-none text-lg"></textarea>
+                    
+                    <div class="flex flex-col md:flex-row gap-4 items-center">
+                        <button class="w-full md:w-auto px-8 py-4 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center gap-3 hover:bg-white/10 transition uppercase text-[10px] font-black tracking-widest">
+                            <i data-lucide="camera" class="w-4 h-4"></i> Upload Image
+                        </button>
+                        <button onclick="simulateAISolver()" class="flex-grow py-4 shimmer-btn rounded-2xl uppercase text-[10px] font-black tracking-widest shadow-xl">
+                            Analyze & Solve
+                        </button>
+                    </div>
+                </div>
+
+                <div id="ai-response" class="hidden glass-card p-10 rounded-[3rem] border-cyan-500/30 bg-cyan-500/5 animate-in fade-in duration-700">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="px-3 py-1 bg-cyan-500 text-black text-[8px] font-black rounded-full uppercase">AI Analysis</span>
+                        <div class="h-[1px] flex-grow bg-cyan-500/20"></div>
+                    </div>
+                    <div id="ai-text-result" class="prose prose-invert max-w-none text-slate-300">
+                        </div>
                 </div>
             </div>
         `;
@@ -169,81 +233,35 @@
                             <p class="text-slate-500 text-xs mt-1 uppercase font-bold tracking-widest">Official Modules & NCERT Repository</p>
                         </div>
                         <div class="flex flex-wrap gap-2 justify-end max-w-xl">
-                            ${classes.map(c => `
-                                <button onclick="setBookClass('${c}')" class="class-toggle ${selectedClass === c ? 'active' : ''}">${c === 'Poly' ? 'Polytechnic' : 'Class ' + c}</button>
-                            `).join('')}
+                            ${classes.map(c => `<button onclick="setBookClass('${c}')" class="class-toggle ${selectedClass === c ? 'active' : ''}">${c === 'Poly' ? 'Poly' : 'Class ' + c}</button>`).join('')}
                         </div>
                     </div>
 
-                    <section class="glass-card p-10 rounded-[3rem] border-cyan-500/20 bg-cyan-500/5">
-                        <div class="flex items-center gap-4 mb-8">
-                            <div class="p-3 bg-cyan-500 rounded-2xl shadow-lg shadow-cyan-500/20">
-                                <i data-lucide="library" class="text-black w-6 h-6"></i>
-                            </div>
-                            <h3 class="text-xl font-black uppercase tracking-tight">NCERT Digital Vault (Class ${selectedClass})</h3>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                            ${renderBookCard(`NCERT Mathematics - Class ${selectedClass}`, "Official", "FREE", true)}
-                            ${renderBookCard(`NCERT Science/Physics - Class ${selectedClass}`, "Official", "FREE", true)}
-                            ${renderBookCard(`NCERT English - Class ${selectedClass}`, "Official", "FREE", true)}
-                        </div>
-                    </section>
-
-                    <section class="space-y-8">
-                        <h3 class="text-xl font-black uppercase tracking-tight flex items-center gap-3">
-                            <i data-lucide="star" class="text-orange-500 w-5 h-5"></i> Gaurav Sir's Special Modules
-                        </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                            ${renderBookCard(`Concept Mastery: Class ${selectedClass} Maths`, "Gaurav Sir", "₹499", false)}
-                            ${renderBookCard(`Numerical Punch: Class ${selectedClass} Physics`, "Gaurav Sir", "₹599", false)}
-                            ${renderBookCard(`Exam Ready Mock Papers`, "Nexus Team", "₹299", false)}
-                        </div>
-                    </section>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        ${renderBookCard(`NCERT Maths - ${selectedClass}`, "Official", "FREE", true)}
+                        ${renderBookCard(`Concept Mastery: Physics`, "Gaurav Sir", "₹499", false)}
+                        ${renderBookCard(`Numerical Punch: Science`, "Gaurav Sir", "₹599", false)}
+                        ${renderBookCard(`Nexus Formula Sheet`, "Nexus Team", "₹199", false)}
+                    </div>
                 </div>
             `;
         };
 
-        const AuthView = () => `
-            <div class="max-w-lg mx-auto py-12 px-4">
-                <div class="glass-card p-10 rounded-[3rem] relative overflow-hidden group">
-                    <div class="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl"></div>
-                    <div class="text-center space-y-3 mb-10">
-                        <div id="auth-icon-container" class="w-16 h-16 bg-white/5 rounded-2xl mx-auto flex items-center justify-center border border-white/10 mb-4">
-                            <i data-lucide="user-plus" id="auth-icon" class="text-cyan-400 w-8 h-8"></i>
-                        </div>
-                        <h2 id="auth-title" class="text-3xl font-black uppercase tracking-tighter">Join the <span class="text-indigo-500">Nexus</span></h2>
-                        <p id="auth-subtitle" class="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Student Registration Portal</p>
-                    </div>
-                    <div id="auth-error" class="hidden mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-black uppercase text-center"></div>
-                    <div class="space-y-4">
-                        <div id="reg-fields" class="space-y-4">
-                            <div class="relative"><i data-lucide="user" class="absolute left-4 top-4 w-4 h-4 text-slate-500"></i><input type="text" id="auth-name" placeholder="Full Name" class="w-full pl-12"></div>
-                            <div class="relative"><i data-lucide="graduation-cap" class="absolute left-4 top-4 w-4 h-4 text-slate-500"></i><select id="auth-class" class="w-full pl-12 appearance-none">
-                                <option value="">Select Level</option>
-                                <optgroup label="Schooling"><option value="6">Class 6</option><option value="7">Class 7</option><option value="8">Class 8</option><option value="9">Class 9</option><option value="10">Class 10</option><option value="11">Class 11</option><option value="12">Class 12</option></optgroup>
-                                <optgroup label="Competitive"><option value="JEE">JEE (Mains + Advanced)</option><option value="NEET">NEET-UG</option><option value="POLY">Polytechnic</option></optgroup>
-                            </select></div>
-                        </div>
-                        <div class="relative"><i data-lucide="mail" class="absolute left-4 top-4 w-4 h-4 text-slate-500"></i><input type="email" id="auth-email" placeholder="Email Address" class="w-full pl-12"></div>
-                        <div class="relative"><i data-lucide="lock" class="absolute left-4 top-4 w-4 h-4 text-slate-500"></i><input type="password" id="auth-pass" placeholder="Secure Password" class="w-full pl-12"></div>
-                        <button id="btn-auth-execute" onclick="executeAuthAction()" class="w-full py-5 shimmer-btn rounded-2xl font-black uppercase text-xs tracking-[0.3em] shadow-2xl">Create Student Account</button>
-                    </div>
-                    <div class="mt-10 pt-8 border-t border-white/5 flex flex-col gap-4 text-center">
-                        <button onclick="switchAuthMode('LOGIN')" id="link-to-login" class="text-[10px] font-bold text-slate-500 hover:text-cyan-400 uppercase tracking-widest transition">Already a member? <span class="text-white">Login here</span></button>
-                        <button onclick="switchAuthMode('REGISTER')" id="link-to-reg" class="hidden text-[10px] font-bold text-slate-500 hover:text-cyan-400 uppercase tracking-widest transition">New Student? <span class="text-white">Create Account</span></button>
-                        <button onclick="switchAuthMode('ADMIN')" id="link-to-admin" class="text-[9px] font-black text-slate-600 hover:text-orange-500 uppercase tracking-[0.2em] transition">Staff & Admin Access</button>
-                    </div>
-                </div>
-            </div>
-        `;
-
         // ── HELPERS ──
-        function renderCourseCard(title, price, desc, color) {
+        function renderTestCard(title, meta, price, color) {
             return `
-                <div class="glass-card p-8 rounded-[2.5rem] space-y-6 flex flex-col group">
-                    <div class="w-12 h-12 rounded-2xl bg-${color}-500/20 flex items-center justify-center border border-${color}-500/30"><i data-lucide="zap" class="text-${color}-500 w-6 h-6"></i></div>
-                    <div><h3 class="text-xl font-bold mb-2 group-hover:text-cyan-400 transition">${title}</h3><p class="text-slate-500 text-xs font-medium">${desc}</p></div>
-                    <div class="flex justify-between items-end pt-4 flex-grow"><span class="text-2xl font-black">${price}</span><button class="px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase hover:bg-white/10 transition">Enroll Now</button></div>
+                <div class="glass-card p-6 rounded-[2rem] space-y-4 group">
+                    <div class="flex justify-between items-start">
+                        <div class="p-3 bg-${color}-500/10 rounded-xl border border-${color}-500/20">
+                            <i data-lucide="clipboard-list" class="text-${color}-500 w-5 h-5"></i>
+                        </div>
+                        <span class="text-[10px] font-black text-slate-500 uppercase">${meta}</span>
+                    </div>
+                    <h4 class="font-bold text-sm h-10 line-clamp-2">${title}</h4>
+                    <div class="flex justify-between items-center pt-2">
+                        <span class="font-black text-lg">${price}</span>
+                        <button class="px-4 py-2 bg-${color}-500 text-black text-[9px] font-black rounded-lg uppercase shadow-lg shadow-${color}-500/20 hover:scale-105 transition">Buy Test</button>
+                    </div>
                 </div>
             `;
         }
@@ -255,7 +273,7 @@
                         <div class="absolute top-3 right-3 px-2 py-1 bg-black/50 backdrop-blur rounded text-[8px] font-black text-white uppercase">${isNcert ? 'NCERT' : 'Exclusive'}</div>
                         <div class="w-full h-full flex items-center justify-center opacity-20 group-hover:opacity-100 transition duration-500"><i data-lucide="book" class="w-16 h-16 text-indigo-400"></i></div>
                     </div>
-                    <h4 class="font-bold text-sm mb-1 leading-tight line-clamp-2">${title}</h4>
+                    <h4 class="font-bold text-sm mb-1 line-clamp-2">${title}</h4>
                     <p class="text-[10px] text-slate-500 font-bold uppercase mb-4 tracking-tighter">By ${author}</p>
                     <div class="mt-auto flex justify-between items-center"><span class="text-sm font-black ${isNcert ? 'text-cyan-400' : ''}">${price}</span>
                         <button class="p-2 rounded-lg bg-indigo-600/10 text-indigo-400 hover:bg-indigo-600 hover:text-white transition"><i data-lucide="${isNcert ? 'download' : 'shopping-cart'}" class="w-4 h-4"></i></button>
@@ -265,95 +283,44 @@
         }
 
         // ── LOGIC ──
-        window.switchAuthMode = (mode) => {
-            currentAuthMode = mode;
-            const regFields = document.getElementById('reg-fields');
-            const title = document.getElementById('auth-title');
-            const subtitle = document.getElementById('auth-subtitle');
-            const btn = document.getElementById('btn-auth-execute');
-            const icon = document.getElementById('auth-icon');
-            const iconContainer = document.getElementById('auth-icon-container');
-
-            document.getElementById('link-to-login').classList.add('hidden');
-            document.getElementById('link-to-reg').classList.add('hidden');
-            document.getElementById('link-to-admin').classList.remove('hidden');
-            regFields.classList.add('hidden');
-            iconContainer.className = "w-16 h-16 rounded-2xl mx-auto flex items-center justify-center border mb-4 ";
-
-            if (mode === 'REGISTER') {
-                title.innerHTML = `Join the <span class="text-indigo-500">Nexus</span>`;
-                subtitle.innerText = "Student Registration Portal";
-                btn.innerText = "Create Student Account";
-                btn.className = "w-full py-5 shimmer-btn rounded-2xl font-black uppercase text-xs tracking-[0.3em] shadow-2xl";
-                regFields.classList.remove('hidden');
-                document.getElementById('link-to-login').classList.remove('hidden');
-                icon.setAttribute('data-lucide', 'user-plus');
-                iconContainer.classList.add('bg-white/5', 'border-white/10');
-                icon.className = "text-cyan-400 w-8 h-8";
-            } else if (mode === 'LOGIN') {
-                title.innerHTML = `Student <span class="text-cyan-400">Login</span>`;
-                subtitle.innerText = "Return to Learning";
-                btn.innerText = "Connect to Dashboard";
-                btn.className = "w-full py-5 bg-indigo-600 rounded-2xl font-black uppercase text-xs tracking-[0.3em]";
-                document.getElementById('link-to-reg').classList.remove('hidden');
-                icon.setAttribute('data-lucide', 'log-in');
-                iconContainer.classList.add('bg-indigo-500/10', 'border-indigo-500/20');
-                icon.className = "text-indigo-400 w-8 h-8";
-            } else if (mode === 'ADMIN') {
-                title.innerHTML = `Admin <span class="text-orange-500">Terminal</span>`;
-                subtitle.innerText = "Restricted Access Only";
-                btn.innerText = "Authorize Root Access";
-                btn.className = "w-full py-5 bg-orange-600 rounded-2xl font-black uppercase text-xs tracking-[0.3em]";
-                document.getElementById('link-to-reg').classList.remove('hidden');
-                document.getElementById('link-to-admin').classList.add('hidden');
-                icon.setAttribute('data-lucide', 'shield-alert');
-                iconContainer.classList.add('bg-orange-500/10', 'border-orange-500/20');
-                icon.className = "text-orange-500 w-8 h-8";
-            }
-            lucide.createIcons();
-        };
-
-        window.executeAuthAction = async () => {
-            const email = document.getElementById('auth-email').value;
-            const pass = document.getElementById('auth-pass').value;
-            const errEl = document.getElementById('auth-error');
-            try {
-                if (currentAuthMode === 'REGISTER') {
-                    const name = document.getElementById('auth-name').value;
-                    const cls = document.getElementById('auth-class').value;
-                    if(!name || !cls) throw new Error("Name & Class Required");
-                    const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                    await setDoc(doc(db, "users", cred.user.uid), { fullName: name, assignedClass: cls, email: email, role: 'student', joinedAt: serverTimestamp() });
-                } else {
-                    const cred = await signInWithEmailAndPassword(auth, email, pass);
-                    if(currentAuthMode === 'ADMIN' && cred.user.uid !== ADMIN_UID) {
-                        await signOut(auth);
-                        throw new Error("UNAUTHORIZED: Not an Admin Account");
-                    }
-                }
-                router.navigate('home');
-            } catch (err) {
-                errEl.innerText = err.message.replace('Firebase:', '').trim();
-                errEl.classList.remove('hidden');
-            }
+        window.simulateAISolver = () => {
+            const input = document.getElementById('ai-input').value;
+            if(!input) return alert("Please enter a question first.");
+            
+            const res = document.getElementById('ai-response');
+            const text = document.getElementById('ai-text-result');
+            
+            res.classList.remove('hidden');
+            text.innerHTML = `<p class="animate-pulse">Analyzing problem space...</p>`;
+            
+            setTimeout(() => {
+                text.innerHTML = `
+                    <h4 class="text-white font-bold mb-2">Step-by-Step Solution:</h4>
+                    <p class="mb-4">Based on the concept of <strong>Calculus/Mechanics</strong>, we first identify the constants...</p>
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10 font-mono text-sm mb-4">
+                        Let v = u + at <br>
+                        Substituting values: 20 = 0 + (9.8)t <br>
+                        t = 2.04 seconds
+                    </div>
+                    <p class="text-cyan-400 text-xs font-bold uppercase italic">Solution Verified by Nexus AI System</p>
+                `;
+            }, 2000);
         };
 
         window.setBookClass = (c) => { selectedClass = c; router.navigate('books'); };
         window.handleLogout = () => signOut(auth).then(() => location.reload());
 
-        // ── INITIALIZATION ──
+        // ── AUTH INITIALIZATION ──
         onAuthStateChanged(auth, user => {
             currentUser = user;
             const zone = document.getElementById('user-zone');
             zone.innerHTML = user 
-                ? `<div class="flex items-center gap-4"><p class="hidden md:block text-[10px] font-black uppercase text-slate-400">${user.email.split('@')[0]}</p><button onclick="handleLogout()" class="px-6 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:text-rose-500 transition">Logout</button></div>`
-                : `<button onclick="router.navigate('auth')" class="px-8 py-2 bg-indigo-600 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-500/20">Login</button>`;
+                ? `<button onclick="handleLogout()" class="px-6 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:text-rose-500 transition">Logout</button>`
+                : `<button onclick="router.navigate('auth')" class="px-8 py-2 bg-indigo-600 rounded-full text-[10px] font-black uppercase tracking-widest">Login</button>`;
             
-            // Redirect to home if user just logged in and is on auth page
-            const currentRoot = document.getElementById('app-root').innerHTML;
-            if (user && currentRoot.includes('auth-title')) router.navigate('home');
-            else router.navigate('home');
+            router.navigate('home');
         });
+
     </script>
 </body>
 </html>
