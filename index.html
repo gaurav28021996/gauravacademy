@@ -233,16 +233,167 @@
         window.handleLogout = () => signOut(auth).then(() => location.reload());
 
         // ── INIT ──
-        onAuthStateChanged(auth, user => {
-            currentUser = user;
-            const zone = document.getElementById('user-zone');
-            zone.innerHTML = user 
-                ? `<button onclick="handleLogout()" class="px-6 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:text-rose-500 transition">Logout</button>`
-                : `<button onclick="router.navigate('auth')" class="px-8 py-2 bg-indigo-600 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-500/20">Login</button>`;
+       <script>
+const AuthView = () => `
+    <div class="max-w-lg mx-auto py-12 px-4">
+        <div class="glass-card p-10 rounded-[3rem] relative overflow-hidden group">
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl"></div>
             
-            router.navigate('home');
-        });
+            <div class="text-center space-y-3 mb-10">
+                <div id="auth-icon-container" class="w-16 h-16 bg-white/5 rounded-2xl mx-auto flex items-center justify-center border border-white/10 mb-4">
+                    <i data-lucide="user-plus" id="auth-icon" class="text-cyan-400 w-8 h-8"></i>
+                </div>
+                <h2 id="auth-title" class="text-3xl font-black uppercase tracking-tighter">Join the <span class="text-indigo-500">Nexus</span></h2>
+                <p id="auth-subtitle" class="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Student Registration Portal</p>
+            </div>
 
-    </script>
+            <div id="auth-error" class="hidden mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-black uppercase text-center"></div>
+
+            <div class="space-y-4">
+                <div id="reg-fields" class="space-y-4">
+                    <div class="relative">
+                        <i data-lucide="user" class="absolute left-4 top-4 w-4 h-4 text-slate-500"></i>
+                        <input type="text" id="auth-name" placeholder="Full Name" class="w-full pl-12">
+                    </div>
+                    <div class="relative">
+                        <i data-lucide="graduation-cap" class="absolute left-4 top-4 w-4 h-4 text-slate-500"></i>
+                        <select id="auth-class" class="w-full pl-12 appearance-none">
+                            <option value="">Select Your Academic Level</option>
+                            <optgroup label="Schooling">
+                                <option value="6">Class 6</option><option value="7">Class 7</option>
+                                <option value="8">Class 8</option><option value="9">Class 9</option>
+                                <option value="10">Class 10</option><option value="11">Class 11</option>
+                                <option value="12">Class 12</option>
+                            </optgroup>
+                            <optgroup label="Competitive">
+                                <option value="JEE">JEE (Mains + Advanced)</option>
+                                <option value="NEET">NEET-UG</option>
+                                <option value="POLY">Polytechnic</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <i data-lucide="mail" class="absolute left-4 top-4 w-4 h-4 text-slate-500"></i>
+                    <input type="email" id="auth-email" placeholder="Email Address" class="w-full pl-12">
+                </div>
+                <div class="relative">
+                    <i data-lucide="lock" class="absolute left-4 top-4 w-4 h-4 text-slate-500"></i>
+                    <input type="password" id="auth-pass" placeholder="Secure Password" class="w-full pl-12">
+                </div>
+
+                <button id="btn-auth-execute" onclick="executeAuthAction()" class="w-full py-5 shimmer-btn rounded-2xl font-black uppercase text-xs tracking-[0.3em] shadow-2xl">
+                    Create Student Account
+                </button>
+            </div>
+
+            <div class="mt-10 pt-8 border-t border-white/5 flex flex-col gap-4 text-center">
+                <button onclick="switchAuthMode('LOGIN')" id="link-to-login" class="text-[10px] font-bold text-slate-500 hover:text-cyan-400 uppercase tracking-widest transition">
+                    Already a member? <span class="text-white">Login here</span>
+                </button>
+                <button onclick="switchAuthMode('REGISTER')" id="link-to-reg" class="hidden text-[10px] font-bold text-slate-500 hover:text-cyan-400 uppercase tracking-widest transition">
+                    New Student? <span class="text-white">Create Account</span>
+                </button>
+                <button onclick="switchAuthMode('ADMIN')" id="link-to-admin" class="text-[9px] font-black text-slate-600 hover:text-orange-500 uppercase tracking-[0.2em] transition">
+                    Staff & Admin Access
+                </button>
+            </div>
+        </div>
+    </div>
+`;
+
+// Logic for switching modes
+let currentAuthMode = 'REGISTER'; // Modes: REGISTER, LOGIN, ADMIN
+
+window.switchAuthMode = (mode) => {
+    currentAuthMode = mode;
+    const regFields = document.getElementById('reg-fields');
+    const title = document.getElementById('auth-title');
+    const subtitle = document.getElementById('auth-subtitle');
+    const btn = document.getElementById('btn-auth-execute');
+    const icon = document.getElementById('auth-icon');
+    const iconContainer = document.getElementById('auth-icon-container');
+
+    // UI Reset
+    document.getElementById('link-to-login').classList.add('hidden');
+    document.getElementById('link-to-reg').classList.add('hidden');
+    document.getElementById('link-to-admin').classList.remove('hidden');
+    regFields.classList.add('hidden');
+    iconContainer.className = "w-16 h-16 rounded-2xl mx-auto flex items-center justify-center border mb-4 ";
+
+    if (mode === 'REGISTER') {
+        title.innerHTML = `Join the <span class="text-indigo-500">Nexus</span>`;
+        subtitle.innerText = "Student Registration Portal";
+        btn.innerText = "Create Student Account";
+        btn.className = "w-full py-5 shimmer-btn rounded-2xl font-black uppercase text-xs tracking-[0.3em] shadow-2xl";
+        regFields.classList.remove('hidden');
+        document.getElementById('link-to-login').classList.remove('hidden');
+        icon.setAttribute('data-lucide', 'user-plus');
+        iconContainer.classList.add('bg-white/5', 'border-white/10');
+        icon.className = "text-cyan-400 w-8 h-8";
+    } 
+    else if (mode === 'LOGIN') {
+        title.innerHTML = `Student <span class="text-cyan-400">Login</span>`;
+        subtitle.innerText = "Return to Learning";
+        btn.innerText = "Connect to Dashboard";
+        btn.className = "w-full py-5 bg-indigo-600 rounded-2xl font-black uppercase text-xs tracking-[0.3em]";
+        document.getElementById('link-to-reg').classList.remove('hidden');
+        icon.setAttribute('data-lucide', 'log-in');
+        iconContainer.classList.add('bg-indigo-500/10', 'border-indigo-500/20');
+        icon.className = "text-indigo-400 w-8 h-8";
+    }
+    else if (mode === 'ADMIN') {
+        title.innerHTML = `Admin <span class="text-orange-500">Terminal</span>`;
+        subtitle.innerText = "Restricted Access Only";
+        btn.innerText = "Authorize Root Access";
+        btn.className = "w-full py-5 bg-orange-600 rounded-2xl font-black uppercase text-xs tracking-[0.3em]";
+        document.getElementById('link-to-reg').classList.remove('hidden');
+        document.getElementById('link-to-admin').classList.add('hidden');
+        icon.setAttribute('data-lucide', 'shield-alert');
+        iconContainer.classList.add('bg-orange-500/10', 'border-orange-500/20');
+        icon.className = "text-orange-500 w-8 h-8";
+    }
+    
+    lucide.createIcons();
+};
+
+window.executeAuthAction = async () => {
+    const email = document.getElementById('auth-email').value;
+    const pass = document.getElementById('auth-pass').value;
+    const errEl = document.getElementById('auth-error');
+    
+    try {
+        if (currentAuthMode === 'REGISTER') {
+            const name = document.getElementById('auth-name').value;
+            const cls = document.getElementById('auth-class').value;
+            if(!name || !cls) throw new Error("Full Name & Class Required");
+            
+            // Firebase Logic
+            const cred = await createUserWithEmailAndPassword(auth, email, pass);
+            await setDoc(doc(db, "users", cred.user.uid), {
+                fullName: name,
+                assignedClass: cls,
+                email: email,
+                role: 'student',
+                joinedAt: serverTimestamp()
+            });
+        } else {
+            // LOGIN & ADMIN share the same auth call
+            const cred = await signInWithEmailAndPassword(auth, email, pass);
+            
+            // If mode was ADMIN, verify UID immediately
+            if(currentAuthMode === 'ADMIN' && cred.user.uid !== ADMIN_UID) {
+                await signOut(auth);
+                throw new Error("UNAUTHORIZED: Not an Admin Account");
+            }
+        }
+        router.navigate('home');
+    } catch (err) {
+        errEl.innerText = err.message.replace('Firebase:', '').trim();
+        errEl.classList.remove('hidden');
+    }
+};
+</script>
 </body>
 </html>
