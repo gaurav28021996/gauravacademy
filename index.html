@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaurav Classes | Nexus 2.0</title>
+    <title>Gaurav Classes | Premium Learning Store</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -11,105 +11,57 @@
     
     <style>
         :root {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
+            --bg-primary: #050810;
+            --bg-secondary: #0f172a;
             --accent-cyan: #22d3ee;
             --accent-indigo: #6366f1;
-            --accent-orange: #f97316;
-            --glass: rgba(30, 41, 59, 0.55);
-            --border: rgba(148, 163, 184, 0.12);
+            --glass: rgba(15, 23, 42, 0.7);
+            --border: rgba(255, 255, 255, 0.08);
         }
 
-        body {
-            font-family: 'Syne', sans-serif;
-            background-color: var(--bg-primary);
-            color: #f8fafc;
-            overflow-x: hidden;
-        }
-
+        body { font-family: 'Syne', sans-serif; background: var(--bg-primary); color: #f8fafc; }
         h1, h2, h3, .font-heading { font-family: 'Orbitron', sans-serif; }
 
-        /* Mesh Background */
         .mesh-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: 
-                radial-gradient(at 0% 0%, rgba(34, 211, 238, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.15) 0px, transparent 50%);
+            background: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, rgba(34, 211, 238, 0.1) 0px, transparent 50%);
         }
 
         .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
+            background: var(--glass); backdrop-filter: blur(16px);
             border: 1px solid var(--border);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .glass-card:hover {
-            transform: scale(1.015);
-            box-shadow: 0 0 25px rgba(34, 211, 238, 0.15);
+        .glass-card:hover { border-color: var(--accent-cyan); transform: translateY(-5px); }
+
+        .shimmer-btn {
+            background: linear-gradient(90deg, #6366f1, #22d3ee, #6366f1);
+            background-size: 200%;
+            animation: shimmer 3s infinite;
+            transition: 0.3s;
         }
+        @keyframes shimmer { 0% { background-position: 0%; } 100% { background-position: 200%; } }
 
-        /* Shimmer Animation */
-        .shimmer-text {
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-indigo), var(--accent-cyan));
-            background-size: 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shimmer 2.5s linear infinite;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 0%; }
-            100% { background-position: 300%; }
-        }
-
-        /* Bento Grid */
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-        }
-
-        @media (max-width: 1024px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 640px) { .bento-grid { grid-template-columns: 1fr; } }
-
-        /* Heatmap Cells */
-        .heatmap-grid {
-            display: grid;
-            grid-template-columns: repeat(13, 1fr);
-            gap: 4px;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-primary); }
-        ::-webkit-scrollbar-thumb { background: var(--bg-secondary); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-indigo); }
-
-        .terminal-bg { background: #050810; font-family: 'JetBrains Mono', monospace; }
-        
-        input, select {
-            background: rgba(255,255,255,0.03) !important;
-            border: 1px solid var(--border) !important;
-            color: white !important;
-        }
+        .course-badge { @apply text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full; }
     </style>
 </head>
 <body>
     <div class="mesh-bg"></div>
 
-    <header class="sticky top-0 z-[100] px-6 py-4 glass-card mx-4 mt-4 rounded-2xl flex justify-between items-center">
+    <header class="sticky top-0 z-[100] px-8 py-4 glass-card mx-4 mt-4 rounded-3xl flex justify-between items-center">
         <div class="flex items-center gap-3 cursor-pointer" onclick="router.navigate('home')">
-            <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                <i data-lucide="blocks" class="text-white w-6 h-6"></i>
+            <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                <i data-lucide="graduation-cap" class="text-white w-6 h-6"></i>
             </div>
-            <span class="font-heading font-black tracking-tighter text-xl">NEXUS <span class="text-cyan-400">2.0</span></span>
+            <span class="font-heading font-black tracking-tighter text-xl">GAURAV <span class="text-cyan-400 text-sm">CLASSES</span></span>
         </div>
 
-        <nav id="main-nav" class="hidden md:flex gap-8 items-center text-xs font-bold uppercase tracking-widest text-slate-400">
+        <nav id="main-nav" class="hidden md:flex gap-10 items-center text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
             </nav>
 
-        <div id="user-zone">
+        <div id="user-zone" class="flex gap-4 items-center">
             </div>
     </header>
 
@@ -118,451 +70,201 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ── REPLACE WITH YOUR FIREBASE CONFIG ──
+        // ── CONFIGURATION (Update with your Firebase Keys) ──
         const firebaseConfig = {
-            apiKey: "AIzaSy...",
-            authDomain: "your-project.firebaseapp.com",
-            projectId: "your-project",
-            storageBucket: "your-project.appspot.com",
+            apiKey: "YOUR_API_KEY",
+            authDomain: "gaurav-classes.firebaseapp.com",
+            projectId: "gaurav-classes",
+            storageBucket: "gaurav-classes.firebasestorage.app",
             messagingSenderId: "...",
             appId: "..."
         };
 
-        // ── REPLACE WITH YOUR FIREBASE UID ──
-        const ADMIN_UID = "PLACE_YOUR_ADMIN_UID_HERE";
+        const ADMIN_UID = "YOUR_ADMIN_UID"; // Hardcode your UID here
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
         let currentUser = null;
         let userData = null;
+        let courses = [];
 
-        // State Manager
-        const state = {
-            currentView: 'home',
-            library: [],
-            filter: 'All'
-        };
-
-        // UI Router
-        const router = {
-            navigate: (view) => {
-                state.currentView = view;
-                render();
-                window.scrollTo(0, 0);
-            }
-        };
-
-        // ── VIEW TEMPLATES ──
+        // ── VIEWS ──
 
         const HomeView = () => `
-            <section class="space-y-20 py-10">
-                <div class="text-center space-y-8 max-w-4xl mx-auto">
-                    <div class="inline-block px-4 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-400 text-[10px] font-bold tracking-[0.2em] uppercase">
-                        Unified Learning Ecosystem
-                    </div>
-                    <h1 class="text-6xl md:text-8xl font-black tracking-tight leading-none">
-                        MASTER YOUR <br> <span class="shimmer-text">SYLLABUS</span>
+            <section class="space-y-24 py-12">
+                <div class="text-center space-y-8">
+                    <h1 class="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] uppercase">
+                        Future-Proof <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500">Education.</span>
                     </h1>
-                    <p class="text-slate-400 text-lg md:text-xl font-medium max-w-2xl mx-auto">
-                        High-fidelity resources for UP Board, CBSE, ICSE, and Competitive Aspirants. Managed by Gaurav Sir.
-                    </p>
-                    <div class="flex flex-wrap justify-center gap-4 pt-6">
-                        <button onclick="router.navigate('library')" class="px-10 py-4 bg-indigo-600 rounded-xl font-bold hover:bg-indigo-500 transition shadow-xl shadow-indigo-500/20">Open Library</button>
-                        <button onclick="router.navigate('dashboard')" class="px-10 py-4 glass-card rounded-xl font-bold">My Dashboard</button>
+                    <p class="text-slate-400 max-w-2xl mx-auto text-lg">Premium coaching for Academic Excellence, JEE, NEET, and Polytechnic entrance exams. Start your journey with Gaurav Sir today.</p>
+                    <div class="flex justify-center gap-6">
+                        <button onclick="router.navigate('store')" class="shimmer-btn px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-sm shadow-2xl">Browse Courses</button>
+                        <button class="glass-card px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-sm">Free Resources</button>
                     </div>
                 </div>
 
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="glass-card p-8 rounded-3xl space-y-4">
-                        <i data-lucide="cpu" class="text-cyan-400 w-10 h-10"></i>
-                        <h3 class="text-xl font-bold">Smart Sync</h3>
-                        <p class="text-slate-500 text-sm">Notes and videos update in real-time as Gaurav Sir uploads them.</p>
+                <div class="grid md:grid-cols-3 gap-6 h-[400px]">
+                    <div class="glass-card p-10 rounded-[2.5rem] flex flex-col justify-end bg-gradient-to-br from-indigo-500/10 to-transparent">
+                        <h3 class="text-2xl font-bold">SCHOOLING</h3>
+                        <p class="text-slate-500 text-sm">Classes 6th to 12th (All Boards)</p>
                     </div>
-                    <div class="glass-card p-8 rounded-3xl space-y-4">
-                        <i data-lucide="flame" class="text-orange-500 w-10 h-10"></i>
-                        <h3 class="text-xl font-bold">JEE/NEET Prep</h3>
-                        <p class="text-slate-500 text-sm">Advanced modules curated for top-tier competitive engineering and medical exams.</p>
+                    <div class="glass-card p-10 rounded-[2.5rem] flex flex-col justify-end border-cyan-500/20">
+                        <h3 class="text-2xl font-bold">ENGINEERING</h3>
+                        <p class="text-slate-500 text-sm">JEE Main/Advanced & Polytechnic</p>
                     </div>
-                    <div class="glass-card p-8 rounded-3xl space-y-4">
-                        <i data-lucide="globe" class="text-indigo-400 w-10 h-10"></i>
-                        <h3 class="text-xl font-bold">Global Access</h3>
-                        <p class="text-slate-500 text-sm">Your dashboard, your progress, available on any device, anywhere.</p>
+                    <div class="glass-card p-10 rounded-[2.5rem] flex flex-col justify-end bg-gradient-to-tr from-rose-500/10 to-transparent">
+                        <h3 class="text-2xl font-bold">MEDICAL</h3>
+                        <p class="text-slate-500 text-sm">NEET-UG Foundation & Pro</p>
                     </div>
                 </div>
             </section>
         `;
 
-        const LibraryView = () => {
-            const filtered = state.filter === 'All' ? state.library : state.library.filter(i => i.type === state.filter);
-            return `
-                <div class="space-y-12">
-                    <div class="flex flex-col md:flex-row justify-between items-end gap-6">
-                        <div>
-                            <h2 class="text-4xl font-black tracking-tighter uppercase">Smart <span class="text-indigo-500">Archive</span></h2>
-                            <p class="text-slate-500 font-medium">Synchronized database of Class 6-12 resources.</p>
-                        </div>
-                        <div class="flex bg-slate-900/50 p-1 rounded-xl border border-white/5">
-                            ${['All', 'PDF', 'Video', 'Test'].map(f => `
-                                <button onclick="setFilter('${f}')" class="px-6 py-2 rounded-lg text-[10px] font-black tracking-widest uppercase transition ${state.filter === f ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-300'}">${f}</button>
-                            `).join('')}
-                        </div>
+        const StoreView = () => `
+            <div class="space-y-12">
+                <div class="flex justify-between items-end">
+                    <div>
+                        <h2 class="text-4xl font-black uppercase tracking-tighter">COURSE <span class="text-cyan-400">CATALOG</span></h2>
+                        <p class="text-slate-500 font-medium">Select your path to academic dominance.</p>
                     </div>
+                    <div class="flex glass-card p-1 rounded-2xl">
+                        <button class="px-6 py-2 bg-indigo-600 rounded-xl text-[10px] font-black uppercase">All</button>
+                        <button class="px-6 py-2 text-slate-500 text-[10px] font-black uppercase">JEE/NEET</button>
+                        <button class="px-6 py-2 text-slate-500 text-[10px] font-black uppercase">School</button>
+                    </div>
+                </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        ${filtered.map(item => `
-                            <div class="glass-card p-5 rounded-[2rem] group flex flex-col justify-between h-full">
-                                <div class="space-y-4">
-                                    <div class="w-full aspect-video rounded-2xl bg-slate-800/50 flex items-center justify-center">
-                                        <i data-lucide="${item.type === 'PDF' ? 'file-text' : item.type === 'Video' ? 'play-circle' : 'clipboard-list'}" 
-                                           class="w-12 h-12 ${item.type === 'PDF' ? 'text-cyan-400' : 'text-indigo-400'} opacity-40 group-hover:opacity-100 transition"></i>
-                                    </div>
-                                    <div>
-                                        <div class="flex gap-2 mb-2">
-                                            <span class="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-[8px] font-bold text-slate-400 uppercase">Class ${item.class}</span>
-                                            <span class="px-2 py-0.5 rounded-md bg-indigo-500/10 border border-indigo-500/20 text-[8px] font-bold text-indigo-400 uppercase">${item.type}</span>
-                                        </div>
-                                        <h4 class="font-bold text-slate-200 leading-tight">${item.name}</h4>
-                                    </div>
+                <div id="course-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    ${courses.map(course => `
+                        <div class="glass-card p-6 rounded-[2.5rem] flex flex-col group">
+                            <div class="w-full aspect-video rounded-[1.5rem] mb-6 overflow-hidden bg-slate-800">
+                                <img src="${course.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800'}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            </div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="course-badge bg-cyan-500/10 text-cyan-400">${course.category}</span>
+                                <div class="text-right">
+                                    <span class="text-xs text-slate-500 line-through">₹${course.originalPrice}</span>
+                                    <p class="text-xl font-black text-white">₹${course.price}</p>
                                 </div>
-                                <a href="${item.fileUrl}" target="_blank" class="mt-6 w-full py-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-tighter hover:bg-indigo-600 hover:border-indigo-600 transition">
-                                    Access Resource <i data-lucide="external-link" class="w-3 h-3"></i>
-                                </a>
                             </div>
-                        `).join('')}
-                    </div>
+                            <h3 class="text-xl font-bold mb-4 leading-tight">${course.title}</h3>
+                            <ul class="text-[11px] text-slate-500 space-y-2 mb-8 flex-grow">
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3 h-3 text-cyan-400"></i> Full Syllabus Coverage</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3 h-3 text-cyan-400"></i> Weekly Mock Tests</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3 h-3 text-cyan-400"></i> Live Doubt Sessions</li>
+                            </ul>
+                            <button onclick="enroll('${course.id}')" class="w-full py-4 rounded-xl bg-white/5 border border-white/10 hover:bg-indigo-600 transition font-black uppercase text-[10px] tracking-[0.2em]">Enroll Now</button>
+                        </div>
+                    `).join('')}
                 </div>
-            `;
-        };
-
-        const DashboardView = () => {
-            if (!currentUser) return AuthView();
-            const cells = Array.from({length: 91}, () => Math.random());
-            return `
-                <div class="space-y-10">
-                    <h2 class="text-3xl font-black uppercase tracking-tighter">Student <span class="text-cyan-400">Terminal</span></h2>
-                    
-                    <div class="bento-grid">
-                        <div class="glass-card p-8 rounded-[2.5rem] flex items-center gap-6 md:col-span-2">
-                            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center text-3xl font-black">
-                                ${userData?.fullName?.charAt(0) || 'U'}
-                            </div>
-                            <div>
-                                <h3 class="text-2xl font-bold">${userData?.fullName || 'Academic User'}</h3>
-                                <p class="text-slate-500 text-sm mb-2">${userData?.email}</p>
-                                <span class="px-3 py-1 rounded-full bg-indigo-500 text-[10px] font-black uppercase tracking-widest">Class ${userData?.assignedClass}</span>
-                            </div>
-                        </div>
-
-                        <div class="glass-card p-8 rounded-[2.5rem] flex flex-col justify-center text-center">
-                            <h4 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Finals Countdown</h4>
-                            <p id="countdown-timer" class="text-3xl font-heading font-black tracking-tighter text-indigo-400">00:00:00:00</p>
-                        </div>
-
-                        <div class="glass-card p-8 rounded-[2.5rem] md:col-span-2">
-                            <h4 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Syllabus Coverage Heatmap</h4>
-                            <div class="heatmap-grid">
-                                ${cells.map(op => `<div class="aspect-square rounded-[2px] bg-cyan-500" style="opacity: ${op * 0.8 + 0.1}"></div>`).join('')}
-                            </div>
-                        </div>
-
-                        <div class="glass-card p-8 rounded-[2.5rem] flex flex-col justify-center">
-                            <div class="flex justify-between items-center mb-4">
-                                <span class="text-xs font-black text-slate-500 uppercase">Resource Analytics</span>
-                                <i data-lucide="bar-chart-3" class="w-4 h-4 text-slate-600"></i>
-                            </div>
-                            <div class="space-y-3">
-                                <div class="flex justify-between text-sm"><span class="text-slate-400">PDFs Accessed</span><span class="font-bold">12</span></div>
-                                <div class="flex justify-between text-sm"><span class="text-slate-400">Lectures Viewed</span><span class="font-bold">08</span></div>
-                                <div class="flex justify-between text-sm"><span class="text-slate-400">Tests Mocked</span><span class="font-bold">03</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        };
+            </div>
+        `;
 
         const AdminView = () => `
-            <div class="max-w-4xl mx-auto space-y-10">
-                <div class="flex justify-between items-end">
-                    <h2 class="text-3xl font-black uppercase tracking-tighter text-orange-500 underline underline-offset-8">Gaurav Command Center</h2>
-                    <span class="text-[10px] font-mono text-slate-600">ROOT_ACCESS: GRANTED</span>
+            <div class="max-w-4xl mx-auto glass-card p-12 rounded-[3rem] space-y-10 border-indigo-500/20">
+                <div class="flex justify-between items-center border-b border-white/5 pb-6">
+                    <h2 class="text-2xl font-black uppercase tracking-tighter text-indigo-400">Product Manager</h2>
+                    <span class="text-[10px] font-mono opacity-50">GAURAV_SIR_ROOT</span>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div class="glass-card p-8 rounded-[2.5rem] space-y-6">
-                        <h3 class="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Push New Resource</h3>
-                        
-                        <div class="space-y-4">
-                            <input type="text" id="adm-title" placeholder="Resource Title" class="w-full p-4 rounded-xl outline-none focus:ring-2 ring-indigo-500/20 transition">
-                            <select id="adm-class" class="w-full p-4 rounded-xl outline-none">
-                                <option value="10">Class 10</option>
-                                <option value="11">Class 11</option>
-                                <option value="12">Class 12</option>
-                                <option value="JEE">JEE / NEET</option>
-                            </select>
-                            
-                            <div class="relative group">
-                                <input type="file" id="adm-file" class="hidden" onchange="window.handleFileSelect(this)">
-                                <label for="adm-file" class="flex flex-col items-center justify-center w-full p-8 border-2 border-dashed border-white/10 rounded-2xl cursor-pointer group-hover:bg-white/5 transition">
-                                    <i data-lucide="upload-cloud" class="w-8 h-8 text-slate-500 mb-2"></i>
-                                    <span id="file-label" class="text-[10px] font-bold text-slate-500 uppercase">Select Material</span>
-                                </label>
-                            </div>
-
-                            <div id="upload-progress-container" class="hidden space-y-2">
-                                <div class="flex justify-between text-[10px] font-black uppercase">
-                                    <span class="text-cyan-400">Uploading to Storage</span>
-                                    <span id="progress-val">0%</span>
-                                </div>
-                                <div class="w-full h-1 bg-slate-800 rounded-full overflow-hidden">
-                                    <div id="progress-bar" class="h-full bg-cyan-400 w-0 transition-all duration-300"></div>
-                                </div>
-                            </div>
-
-                            <button id="btn-deploy" onclick="deployResource()" class="w-full py-4 bg-orange-600 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-orange-500 transition shadow-xl shadow-orange-500/20">Execute Cloud Deploy</button>
-                        </div>
-                    </div>
-
-                    <div class="terminal-bg p-6 rounded-[2.5rem] border border-white/5 h-[450px] flex flex-col">
-                        <div class="flex items-center gap-2 mb-4 border-b border-white/5 pb-2">
-                            <div class="flex gap-1">
-                                <div class="w-2 h-2 rounded-full bg-red-500/50"></div>
-                                <div class="w-2 h-2 rounded-full bg-yellow-500/50"></div>
-                                <div class="w-2 h-2 rounded-full bg-green-500/50"></div>
-                            </div>
-                            <span class="text-[9px] font-mono text-slate-600 uppercase tracking-widest">Network Traffic Console</span>
-                        </div>
-                        <div id="network-log" class="flex-grow overflow-y-auto text-[10px] space-y-1 font-mono text-slate-400">
-                            <div>[${new Date().toLocaleTimeString()}] > System Initialized.</div>
-                            <div>[${new Date().toLocaleTimeString()}] > Awaiting instructions...</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        const AuthView = () => `
-            <div class="max-w-md mx-auto py-10">
-                <div class="glass-card p-10 rounded-[3rem] space-y-8">
-                    <div class="text-center">
-                        <h2 id="auth-title" class="text-2xl font-black uppercase tracking-tighter">Student Login</h2>
-                        <p class="text-slate-500 text-xs mt-1 uppercase tracking-widest font-bold">Access your Nexus account</p>
-                    </div>
-
-                    <div id="auth-error" class="hidden p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-bold uppercase text-center"></div>
-
+                <div class="grid md:grid-cols-2 gap-10">
                     <div class="space-y-4">
-                        <div id="register-fields" class="hidden space-y-4">
-                            <input type="text" id="auth-name" placeholder="Full Name" class="w-full p-4 rounded-xl outline-none">
-                            <select id="auth-class" class="w-full p-4 rounded-xl outline-none">
-                                <option value="">Select Your Class</option>
-                                <option value="6">Class 6</option><option value="7">Class 7</option>
-                                <option value="8">Class 8</option><option value="9">Class 9</option>
-                                <option value="10">Class 10</option><option value="11">Class 11</option>
-                                <option value="12">Class 12</option><option value="JEE">JEE / NEET</option>
-                            </select>
-                        </div>
-                        <input type="email" id="auth-email" placeholder="Email Address" class="w-full p-4 rounded-xl outline-none">
-                        <input type="password" id="auth-pass" placeholder="Password" class="w-full p-4 rounded-xl outline-none">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Course Details</label>
+                        <input id="p-title" type="text" placeholder="Course Title (e.g. Physics JEE Crash Course)" class="w-full p-4 rounded-xl bg-white/5 border border-white/10 outline-none focus:border-cyan-400 transition">
                         
-                        <button id="btn-auth" onclick="handleAuth()" class="w-full py-4 bg-indigo-600 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-indigo-500 transition shadow-xl shadow-indigo-500/20">Connect to Nexus</button>
+                        <div class="grid grid-cols-2 gap-4">
+                            <select id="p-cat" class="bg-slate-900 border border-white/10 p-4 rounded-xl outline-none">
+                                <option>Class 6-8</option><option>Class 9-10</option>
+                                <option>Class 11-12</option><option>JEE Main</option>
+                                <option>NEET</option><option>Polytechnic</option>
+                            </select>
+                            <input id="p-price" type="number" placeholder="Offer Price" class="w-full p-4 rounded-xl bg-white/5 border border-white/10 outline-none">
+                        </div>
+                        
+                        <input id="p-orig" type="number" placeholder="Original Price (for discount display)" class="w-full p-4 rounded-xl bg-white/5 border border-white/10 outline-none">
+                        <input id="p-img" type="text" placeholder="Thumbnail URL" class="w-full p-4 rounded-xl bg-white/5 border border-white/10 outline-none">
+                        
+                        <button onclick="addProduct()" class="w-full py-5 bg-indigo-600 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl shadow-indigo-500/20">Publish Course</button>
                     </div>
 
-                    <div class="text-center">
-                        <button onclick="toggleAuthMode()" id="auth-toggle" class="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-cyan-400 transition">Create New Student Account</button>
+                    <div class="bg-black/40 rounded-[2rem] p-6 font-mono text-[10px] flex flex-col border border-white/5 h-[350px]">
+                        <p class="text-indigo-400 mb-4 uppercase font-bold tracking-widest">Inventory_Feed</p>
+                        <div id="admin-list" class="space-y-4 overflow-y-auto">
+                            </div>
                     </div>
                 </div>
             </div>
         `;
 
-        // ── CORE LOGIC ──
+        // ── LOGIC ──
 
-        window.render = async () => {
-            const root = document.getElementById('app-root');
-            const nav = document.getElementById('main-nav');
-            const userZone = document.getElementById('user-zone');
+        window.router = {
+            navigate: (view) => {
+                const root = document.getElementById('app-root');
+                const nav = document.getElementById('main-nav');
+                const userZone = document.getElementById('user-zone');
 
-            // Render Nav
-            let navLinks = `<button onclick="router.navigate('home')" class="hover:text-cyan-400 transition">Home</button>`;
-            navLinks += `<button onclick="router.navigate('library')" class="hover:text-cyan-400 transition">Archive</button>`;
-            if (currentUser) {
-                navLinks += `<button onclick="router.navigate('dashboard')" class="hover:text-cyan-400 transition">Dashboard</button>`;
-                if (currentUser.uid === ADMIN_UID) {
-                    navLinks += `<button onclick="router.navigate('admin')" class="text-orange-500 hover:text-orange-400 transition">Console</button>`;
-                }
-            }
-            nav.innerHTML = navLinks;
+                // Update Nav
+                nav.innerHTML = `
+                    <button onclick="router.navigate('home')" class="hover:text-cyan-400">Home</button>
+                    <button onclick="router.navigate('store')" class="hover:text-cyan-400">Courses</button>
+                    ${currentUser ? `<button onclick="router.navigate('dashboard')" class="hover:text-cyan-400">My Learning</button>` : ''}
+                    ${currentUser?.uid === ADMIN_UID ? `<button onclick="router.navigate('admin')" class="text-cyan-400">Admin</button>` : ''}
+                `;
 
-            // Render User Zone
-            userZone.innerHTML = currentUser 
-                ? `<button onclick="handleLogout()" class="px-6 py-2 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-white/5 transition">Exit Session</button>`
-                : `<button onclick="router.navigate('auth')" class="px-6 py-2 bg-white/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-white/20 transition">Initialize</button>`;
+                // Update User Zone
+                userZone.innerHTML = currentUser 
+                    ? `<button onclick="handleLogout()" class="text-[10px] font-black uppercase opacity-50 hover:opacity-100">Logout</button>`
+                    : `<button onclick="router.navigate('auth')" class="px-6 py-2 bg-white/10 rounded-full text-[10px] font-black uppercase tracking-widest">Login</button>`;
 
-            // Render View
-            switch(state.currentView) {
-                case 'home': root.innerHTML = HomeView(); break;
-                case 'library': root.innerHTML = LibraryView(); break;
-                case 'dashboard': root.innerHTML = DashboardView(); break;
-                case 'admin': root.innerHTML = currentUser?.uid === ADMIN_UID ? AdminView() : HomeView(); break;
-                case 'auth': root.innerHTML = AuthView(); break;
-                default: root.innerHTML = HomeView();
-            }
-
-            lucide.createIcons();
-            initTimers();
-        };
-
-        // Auth Logic
-        let isLogin = true;
-        window.toggleAuthMode = () => {
-            isLogin = !isLogin;
-            document.getElementById('register-fields').classList.toggle('hidden', isLogin);
-            document.getElementById('auth-title').innerText = isLogin ? 'Student Login' : 'Student Registry';
-            document.getElementById('auth-toggle').innerText = isLogin ? 'Create New Student Account' : 'Return to Login';
-            document.getElementById('btn-auth').innerText = isLogin ? 'Connect to Nexus' : 'Establish Profile';
-        };
-
-        window.handleAuth = async () => {
-            const email = document.getElementById('auth-email').value;
-            const pass = document.getElementById('auth-pass').value;
-            const errEl = document.getElementById('auth-error');
-
-            try {
-                if (isLogin) {
-                    await signInWithEmailAndPassword(auth, email, pass);
-                } else {
-                    const name = document.getElementById('auth-name').value;
-                    const cls = document.getElementById('auth-class').value;
-                    if (!name || !cls) throw new Error("Missing Registry Data");
-                    
-                    const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                    await setDoc(doc(db, "users", cred.user.uid), {
-                        fullName: name,
-                        email: email,
-                        assignedClass: cls,
-                        joinedDate: serverTimestamp()
-                    });
-                }
-                router.navigate('dashboard');
-            } catch (err) {
-                errEl.innerText = err.message;
-                errEl.classList.remove('hidden');
+                // Inject View
+                if (view === 'home') root.innerHTML = HomeView();
+                if (view === 'store') root.innerHTML = StoreView();
+                if (view === 'admin') root.innerHTML = AdminView();
+                
+                lucide.createIcons();
             }
         };
 
-        window.handleLogout = () => signOut(auth).then(() => router.navigate('home'));
+        window.addProduct = async () => {
+            const title = document.getElementById('p-title').value;
+            const cat = document.getElementById('p-cat').value;
+            const price = document.getElementById('p-price').value;
+            const original = document.getElementById('p-orig').value;
+            const img = document.getElementById('p-img').value;
 
-        // Admin Upload Logic
-        let selectedFile = null;
-        window.handleFileSelect = (input) => {
-            selectedFile = input.files[0];
-            if (selectedFile) {
-                document.getElementById('file-label').innerText = selectedFile.name;
-                logAdmin(`File Buffered: ${selectedFile.name} (${(selectedFile.size / 1024 / 1024).toFixed(2)} MB)`);
-            }
+            await addDoc(collection(db, "courses"), {
+                title, category: cat, price, originalPrice: original, thumbnail: img,
+                createdAt: serverTimestamp()
+            });
+            alert("Course Live!");
+            location.reload();
         };
 
-        window.deployResource = async () => {
-            const title = document.getElementById('adm-title').value;
-            const targetClass = document.getElementById('adm-class').value;
-            const btn = document.getElementById('btn-deploy');
-
-            if (!title || !selectedFile) return logAdmin("ERROR: Missing Title or File.", "text-red-500");
-
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
-            document.getElementById('upload-progress-container').classList.remove('hidden');
-
-            const type = selectedFile.type === 'application/pdf' ? 'PDF' : selectedFile.type.startsWith('video/') ? 'Video' : 'Test';
-            const storageRef = ref(storage, `study-materials/${Date.now()}_${selectedFile.name}`);
-            const uploadTask = uploadBytesResumable(storageRef, selectedFile);
-
-            uploadTask.on('state_changed', 
-                (snap) => {
-                    const p = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
-                    document.getElementById('progress-bar').style.width = p + '%';
-                    document.getElementById('progress-val').innerText = p + '%';
-                },
-                (err) => {
-                    logAdmin(`STORAGE_ERROR: ${err.message}`, "text-red-500");
-                    btn.disabled = false;
-                },
-                async () => {
-                    const url = await getDownloadURL(uploadTask.snapshot.ref);
-                    await addDoc(collection(db, "library"), {
-                        name: title,
-                        class: targetClass,
-                        type: type,
-                        fileUrl: url,
-                        createdAt: serverTimestamp()
-                    });
-                    logAdmin(`DATABASE_SYNC: SUCCESS. ${title} is now live.`, "text-emerald-500");
-                    router.navigate('library');
-                }
-            );
+        window.enroll = async (courseId) => {
+            if (!currentUser) return alert("Please Login to Enroll");
+            alert(`Initiating secure payment for ${courseId}. (Integration Placeholder)`);
         };
 
-        const logAdmin = (msg, color = 'text-slate-400') => {
-            const logEl = document.getElementById('network-log');
-            if (logEl) {
-                logEl.innerHTML = `<div class="${color}">[${new Date().toLocaleTimeString()}] > ${msg}</div>` + logEl.innerHTML;
-            }
-        };
-
-        window.setFilter = (f) => {
-            state.filter = f;
-            render();
-        };
-
-        // Utility: Timers
-        const initTimers = () => {
-            const counter = document.getElementById('countdown-timer');
-            if (!counter) return;
-
-            const target = new Date("March 1, 2026 00:00:00").getTime();
-            const itv = setInterval(() => {
-                const now = new Date().getTime();
-                const diff = target - now;
-                if (diff < 0) {
-                    clearInterval(itv);
-                    counter.innerText = "EXAMS COMMENCED";
-                    return;
-                }
-                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((diff % (1000 * 60)) / 1000);
-                counter.innerText = `${d.toString().padStart(2,'0')}D:${h.toString().padStart(2,'0')}H:${m.toString().padStart(2,'0')}M:${s.toString().padStart(2,'0')}S`;
-            }, 1000);
-        };
+        window.handleLogout = () => signOut(auth).then(() => location.reload());
 
         // Global Listeners
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, user => {
             currentUser = user;
-            if (user) {
-                const docSnap = await getDoc(doc(db, "users", user.uid));
-                userData = docSnap.exists() ? docSnap.data() : null;
-            } else {
-                userData = null;
-            }
-            render();
+            router.navigate('home');
         });
 
-        // Real-time Library Sync
-        onSnapshot(query(collection(db, "library"), orderBy("createdAt", "desc")), (snap) => {
-            state.library = snap.docs.map(d => d.data());
-            if (state.currentView === 'library') render();
+        onSnapshot(query(collection(db, "courses"), orderBy("createdAt", "desc")), (snap) => {
+            courses = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            if (document.getElementById('course-grid')) router.navigate('store');
         });
 
-        window.router = router;
-        render();
+        router.navigate('home');
 
     </script>
 </body>
