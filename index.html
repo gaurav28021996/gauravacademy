@@ -10,81 +10,26 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        :root {
-            --primary: #4f46e5;
-            --bg: #f8fafc;
-        }
-
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #1e293b; }
+        :root { --primary: #4f46e5; --bg: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #1e293b; overflow-x: hidden; }
         h1, h2, h3, .font-heading { font-family: 'Outfit', sans-serif; }
 
-        /* --- Improved Toggle Styling --- */
-        .toggle-container {
-            display: inline-flex;
-            background: #f1f5f9;
-            padding: 4px;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
-        }
+        .toggle-container { display: inline-flex; background: #f1f5f9; padding: 4px; border-radius: 16px; border: 1px solid #e2e8f0; }
+        .toggle-item { padding: 8px 20px; border-radius: 12px; font-size: 0.875rem; font-weight: 600; transition: all 0.2s; cursor: pointer; color: #64748b; }
+        .toggle-item.active { background: white; color: var(--primary); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1); }
 
-        .toggle-item {
-            padding: 8px 20px;
-            border-radius: 12px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            color: #64748b;
-        }
-
-        .toggle-item.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 4px 12px -2px rgba(79, 70, 229, 0.12);
-        }
-
-        .class-pill-grid {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            scrollbar-width: none;
-        }
+        .class-pill-grid { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
         .class-pill-grid::-webkit-scrollbar { display: none; }
+        .class-pill { white-space: nowrap; padding: 6px 16px; border-radius: 99px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border: 2px solid #f1f5f9; background: white; color: #94a3b8; transition: 0.2s; }
+        .class-pill.active { border-color: var(--primary); color: var(--primary); background: #eff6ff; }
 
-        .class-pill {
-            white-space: nowrap;
-            padding: 6px 16px;
-            border-radius: 99px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.025em;
-            border: 2px solid #f1f5f9;
-            background: white;
-            color: #94a3b8;
-            transition: all 0.2s;
-        }
-
-        .class-pill.active {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: #eff6ff;
-        }
-
-        .card-shadow {
-            background: white;
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-        .card-shadow:hover {
-            border-color: var(--primary);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-        }
+        .card-shadow { background: white; border: 1px solid #e2e8f0; transition: all 0.3s ease; }
+        .card-shadow:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05); }
 
         .btn-primary { background: var(--primary); color: white; transition: 0.2s; }
         .btn-primary:hover { transform: scale(1.02); filter: brightness(1.1); }
+        .animate-fade { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -105,9 +50,7 @@
                 <button onclick="router.navigate('solver')" class="text-indigo-600 font-bold bg-indigo-50 px-4 py-2 rounded-full">AI Solver</button>
             </div>
 
-            <button onclick="router.navigate('dashboard')" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-indigo-600 transition">
-                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-            </button>
+            <div id="nav-actions"></div>
         </div>
     </nav>
 
@@ -116,6 +59,8 @@
     <script type="module">
         let currentFilter = 'all';
         let selectedClass = '10';
+        let authMode = 'login'; 
+        let selectedCourseForCheckout = null;
 
         const courses = [
             { id: 1, title: "Class 6 Foundation", cat: "school", price: "1499", tags: ["Maths", "Science"] },
@@ -126,8 +71,13 @@
             { id: 12, title: "NEET Crashcourse", cat: "medical", price: "2999", tags: ["60 Days", "High Yield"] }
         ];
 
+        const isUserLoggedIn = () => localStorage.getItem('isLoggedIn') === 'true';
+
         window.router = {
             navigate: (view, data = null) => {
+                if (view === 'dashboard' && !isUserLoggedIn()) { authMode = 'login'; view = 'auth'; }
+                if (view === 'checkout' && !isUserLoggedIn()) { authMode = 'login'; view = 'auth'; }
+                
                 const root = document.getElementById('app-root');
                 const views = {
                     home: HomeView,
@@ -135,50 +85,73 @@
                     books: BooksView,
                     tests: TestsView,
                     solver: SolverView,
-                    dashboard: DashboardView
+                    dashboard: DashboardView,
+                    auth: AuthView,
+                    checkout: CheckoutView
                 };
+                
+                if (data) selectedCourseForCheckout = data;
+                
                 root.innerHTML = views[view]();
+                updateNavbar();
                 lucide.createIcons();
                 window.scrollTo(0,0);
             }
         };
 
-        // --- Improved Toggle Components ---
-        const CategoryToggle = () => `
-            <div class="toggle-container">
-                <div onclick="setFilter('all')" class="toggle-item ${currentFilter === 'all' ? 'active' : ''}">All</div>
-                <div onclick="setFilter('school')" class="toggle-item ${currentFilter === 'school' ? 'active' : ''}">School</div>
-                <div onclick="setFilter('engineering')" class="toggle-item ${currentFilter === 'engineering' ? 'active' : ''}">JEE</div>
-                <div onclick="setFilter('medical')" class="toggle-item ${currentFilter === 'medical' ? 'active' : ''}">NEET</div>
-            </div>
-        `;
+        // --- AUTH LOGIC ---
+        window.handleAuthSubmit = () => {
+            localStorage.setItem('isLoggedIn', 'true');
+            // If they were trying to buy a course, send them back to checkout, else dashboard
+            router.navigate(selectedCourseForCheckout ? 'checkout' : 'dashboard');
+        };
 
-        const ClassPillToggle = (targetView) => `
-            <div class="class-pill-grid">
-                ${['6','7','8','9','10','11','12','JEE','NEET'].map(c => `
-                    <button onclick="setClass('${c}', '${targetView}')" class="class-pill ${selectedClass === c ? 'active' : ''}">
-                        ${isNaN(c) ? c : 'Class ' + c}
-                    </button>
-                `).join('')}
-            </div>
-        `;
+        window.handleLogout = () => {
+            localStorage.removeItem('isLoggedIn');
+            router.navigate('home');
+        };
 
-        // --- Views ---
+        window.toggleAuthMode = () => {
+            authMode = authMode === 'login' ? 'register' : 'login';
+            router.navigate('auth');
+        };
+
+        const updateNavbar = () => {
+            const navActions = document.getElementById('nav-actions');
+            if (!navActions) return;
+            if (isUserLoggedIn()) {
+                navActions.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <button onclick="router.navigate('dashboard')" class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 hover:bg-indigo-100 transition"><i data-lucide="layout-dashboard" class="w-5 h-5"></i></button>
+                        <button onclick="handleLogout()" class="px-5 py-2.5 bg-rose-50 text-rose-600 rounded-xl text-sm font-bold hover:bg-rose-100 transition flex items-center gap-2"><i data-lucide="log-out" class="w-4 h-4"></i> Logout</button>
+                    </div>`;
+            } else {
+                navActions.innerHTML = `<button onclick="router.navigate('auth')" class="btn-primary px-6 py-2.5 rounded-xl text-sm font-bold">Login</button>`;
+            }
+        };
+
+        // --- VIEWS ---
         const HomeView = () => `
-            <div class="py-20 text-center space-y-8">
+            <div class="py-20 text-center space-y-8 animate-fade">
                 <h1 class="text-6xl font-extrabold tracking-tighter">Your Academic <span class="text-indigo-600">Evolution.</span></h1>
                 <p class="text-slate-500 max-w-xl mx-auto">Premium coaching for Boards, JEE, and NEET by Gaurav Sir.</p>
-                <button onclick="router.navigate('courses')" class="btn-primary px-8 py-4 rounded-2xl font-bold">Start Learning</button>
-            </div>
-        `;
+                <div class="flex justify-center gap-4">
+                    <button onclick="router.navigate('courses')" class="btn-primary px-8 py-4 rounded-2xl font-bold">Browse Courses</button>
+                    <button onclick="router.navigate('solver')" class="bg-white border border-slate-200 px-8 py-4 rounded-2xl font-bold hover:bg-slate-50 transition">Try AI Solver</button>
+                </div>
+            </div>`;
 
         const CoursesView = () => {
             const filtered = currentFilter === 'all' ? courses : courses.filter(c => c.cat === currentFilter);
             return `
-                <div class="space-y-10">
+                <div class="space-y-10 animate-fade">
                     <div class="flex flex-col md:flex-row justify-between items-center gap-6">
                         <h2 class="text-3xl font-bold">Explore <span class="text-indigo-600">Courses</span></h2>
-                        ${CategoryToggle()}
+                        <div class="toggle-container">
+                            ${['all', 'school', 'engineering', 'medical'].map(f => `
+                                <div onclick="setFilter('${f}')" class="toggle-item ${currentFilter === f ? 'active' : ''}">${f.toUpperCase()}</div>
+                            `).join('')}
+                        </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                         ${filtered.map(c => `
@@ -189,67 +162,85 @@
                                 <h3 class="text-xl font-bold mb-6">${c.title}</h3>
                                 <div class="mt-auto flex items-center justify-between">
                                     <span class="text-2xl font-black text-indigo-600">₹${c.price}</span>
-                                    <button class="btn-primary px-6 py-2.5 rounded-xl text-sm font-bold">Enroll</button>
+                                    <button onclick="router.navigate('checkout', ${JSON.stringify(c).replace(/"/g, '&quot;')})" class="btn-primary px-6 py-2.5 rounded-xl text-sm font-bold">Enroll</button>
+                                </div>
+                            </div>`).join('')}
+                    </div>
+                </div>`;
+        };
+
+        const AuthView = () => `
+            <div class="max-w-md mx-auto py-12 animate-fade">
+                <div class="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-xl space-y-8">
+                    <div class="text-center space-y-2">
+                        <h2 class="text-3xl font-extrabold text-slate-900">${authMode === 'login' ? 'Welcome Back' : 'Create Account'}</h2>
+                        <p class="text-slate-500 text-sm">Join Gaurav Classes Premium</p>
+                    </div>
+                    <div class="space-y-4">
+                        ${authMode === 'register' ? '<input type="text" placeholder="Full Name" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-indigo-600 transition">' : ''}
+                        <input type="email" placeholder="Email Address" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-indigo-600 transition">
+                        <input type="password" placeholder="Password" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-indigo-600 transition">
+                        <button onclick="handleAuthSubmit()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition">
+                            ${authMode === 'login' ? 'Sign In' : 'Register Now'}
+                        </button>
+                    </div>
+                    <p class="text-center text-sm font-semibold text-slate-600">
+                        ${authMode === 'login' ? "New student?" : "Already have an account?"}
+                        <button onclick="toggleAuthMode()" class="text-indigo-600 font-bold hover:underline ml-1">${authMode === 'login' ? 'Register' : 'Login'}</button>
+                    </p>
+                </div>
+            </div>`;
+
+        const CheckoutView = () => {
+            const item = selectedCourseForCheckout || courses[2];
+            return `
+                <div class="max-w-5xl mx-auto py-10 animate-fade">
+                    <div class="flex flex-col lg:flex-row gap-12">
+                        <div class="flex-1 space-y-8">
+                            <h2 class="text-4xl font-extrabold text-slate-900">Checkout</h2>
+                            <div class="space-y-4">
+                                <input type="text" placeholder="Phone Number" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:border-indigo-600 transition">
+                                <div class="p-6 bg-indigo-50 border border-indigo-100 rounded-[2rem] flex items-center gap-4">
+                                    <i data-lucide="shield-check" class="text-indigo-600"></i>
+                                    <div><p class="font-bold text-sm">Secure Payment</p><p class="text-xs text-indigo-400">SSL Encrypted Transaction</p></div>
                                 </div>
                             </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        };
-
-        const BooksView = () => `
-            <div class="space-y-10">
-                <div class="space-y-6">
-                    <h2 class="text-3xl font-bold">Nexus <span class="text-indigo-600">Library</span></h2>
-                    ${ClassPillToggle('books')}
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
-                    ${[1,2,3,4,5].map(i => `
-                        <div class="group cursor-pointer">
-                            <div class="aspect-[3/4] bg-slate-100 rounded-2xl mb-3 flex items-center justify-center border-2 border-transparent group-hover:border-indigo-600 transition">
-                                <i data-lucide="book-open" class="text-slate-300 w-10 h-10"></i>
+                        </div>
+                        <div class="w-full lg:w-[400px]">
+                            <div class="bg-slate-900 rounded-[2.5rem] p-8 text-white shadow-2xl">
+                                <h3 class="text-sm font-black uppercase text-slate-400 mb-6 tracking-widest">Order Summary</h3>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between font-bold"><span>${item.title}</span><span>₹${item.price}</span></div>
+                                    <div class="flex justify-between text-sm text-slate-400"><span>Platform Fee</span><span class="text-emerald-400">FREE</span></div>
+                                    <div class="border-t border-white/10 pt-4 flex justify-between items-center">
+                                        <span class="font-bold">Total</span>
+                                        <span class="text-3xl font-black text-indigo-400">₹${item.price}</span>
+                                    </div>
+                                    <button onclick="alert('Redirecting to Payment Gateway...')" class="w-full bg-indigo-600 py-4 rounded-2xl font-bold hover:bg-indigo-500 transition">Complete Purchase</button>
+                                </div>
                             </div>
-                            <h4 class="font-bold text-sm">Subject Material ${i}</h4>
-                            <p class="text-xs text-slate-400 font-bold">Class ${selectedClass}</p>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-
-        const TestsView = () => `
-            <div class="space-y-10">
-                <div class="space-y-6">
-                    <h2 class="text-3xl font-bold">Test <span class="text-indigo-600">Series</span></h2>
-                    ${ClassPillToggle('tests')}
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="card-shadow p-6 rounded-3xl">
-                        <h4 class="font-bold text-xs uppercase text-slate-400 tracking-widest mb-4">Chapter Wise</h4>
-                        <div class="p-4 bg-slate-50 rounded-2xl flex justify-between items-center">
-                            <span class="font-bold text-sm">Physics Mock 1</span>
-                            <span class="text-indigo-600 font-bold">₹49</span>
                         </div>
                     </div>
+                </div>`;
+        };
+
+        const DashboardView = () => `
+            <div class="py-10 space-y-8 animate-fade">
+                <h2 class="text-4xl font-extrabold">Student <span class="text-indigo-600">Dashboard</span></h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="card-shadow p-8 rounded-3xl"><i data-lucide="play-circle" class="text-indigo-600 mb-4"></i><h3 class="font-bold">My Lectures</h3><p class="text-slate-500 text-sm mt-2">Watch your recorded sessions.</p></div>
+                    <div class="card-shadow p-8 rounded-3xl"><i data-lucide="file-text" class="text-indigo-600 mb-4"></i><h3 class="font-bold">Notes & PDFs</h3><p class="text-slate-500 text-sm mt-2">Download class materials.</p></div>
+                    <div class="card-shadow p-8 rounded-3xl"><i data-lucide="award" class="text-indigo-600 mb-4"></i><h3 class="font-bold">Test Results</h3><p class="text-slate-500 text-sm mt-2">Check your performance.</p></div>
                 </div>
-            </div>
-        `;
+            </div>`;
 
-        const SolverView = () => `<div class="py-20 text-center"><h2 class="text-3xl font-bold">AI Solver</h2></div>`;
-        const DashboardView = () => `<div class="py-20 text-center"><h2 class="text-3xl font-bold">Dashboard</h2></div>`;
+        const BooksView = () => `<div class="space-y-10 animate-fade"><h2 class="text-3xl font-bold">Book Store</h2><div class="grid grid-cols-2 md:grid-cols-4 gap-6">${[1,2,3,4].map(i => `<div class="card-shadow p-6 rounded-2xl text-center"><i data-lucide="book" class="mx-auto mb-4 text-slate-300"></i><p class="font-bold">Study Kit ${i}</p></div>`).join('')}</div></div>`;
+        const TestsView = () => `<div class="space-y-10 animate-fade"><h2 class="text-3xl font-bold">Test Series</h2><div class="p-6 card-shadow rounded-3xl max-w-sm"><p class="font-bold">Weekly Mock Test</p><button class="mt-4 btn-primary px-4 py-2 rounded-lg text-sm w-full">Start Now</button></div></div>`;
+        const SolverView = () => `<div class="py-20 text-center animate-fade"><h2 class="text-4xl font-bold text-indigo-600">AI Doubt Solver</h2><p class="mt-4 text-slate-500">Upload a photo of your question to get instant step-by-step help.</p><button class="mt-8 bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold">Open Camera</button></div>`;
 
-        // --- Update Functions ---
-        window.setFilter = (f) => {
-            currentFilter = f;
-            router.navigate('courses');
-        };
-
-        window.setClass = (c, view) => {
-            selectedClass = c;
-            router.navigate(view);
-        };
-
+        window.setFilter = (f) => { currentFilter = f; router.navigate('courses'); };
+        
+        // Final Init
         router.navigate('home');
     </script>
 </body>
