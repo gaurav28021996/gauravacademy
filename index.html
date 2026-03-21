@@ -266,7 +266,7 @@
                 currentSlide = (currentSlide + 1) % slides.length;
                 router.navigate('home');
             }
-        }, 5000); // Switches every 5 seconds
+        }, 10000); // Switches every 5 seconds
         const CoursesView = () => {
             const filtered = currentFilter === 'all' ? courses : courses.filter(c => c.cat === currentFilter);
             return `
