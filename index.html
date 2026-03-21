@@ -302,6 +302,17 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                         ${filtered.map(c => `
+                            // Add this inside your CoursesView map function
+<div class="flex gap-3 mt-6">
+    <button onclick="router.navigate('course-details', '${course.id}')" 
+            class="flex-1 bg-slate-100 text-slate-800 py-3 rounded-2xl font-bold hover:bg-slate-200 transition text-sm">
+        View Details
+    </button>
+    <button onclick="router.navigate('player', '${course.id}')" 
+            class="flex-1 bg-indigo-600 text-white py-3 rounded-2xl font-bold hover:bg-indigo-500 transition shadow-lg shadow-indigo-100 text-sm">
+        Enroll Now
+    </button>
+</div>
                             <div class="card-shadow p-8 rounded-[2rem] flex flex-col h-full">
                                 <div class="flex gap-2 mb-4">
                                     ${c.tags.map(t => `<span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 px-2 py-1 rounded">${t}</span>`).join('')}
@@ -524,6 +535,106 @@
                     </div>
                 </div>`;
         };
+        const CourseDetailsView = (courseId) => {
+    // Mock data for the detailed view
+    const details = {
+        title: "Class 10 Mathematics: Foundation & Boards",
+        tagline: "Complete NCERT Coverage + JEE Foundation Module",
+        features: [
+            { icon: 'check-circle', text: '100% NCERT Solutions & Exemplar' },
+            { icon: 'trending-up', text: 'High-Order Thinking (HOTS) for Boards' },
+            { icon: 'shield-check', text: 'Previous 10-Year Board Questions' },
+            { icon: 'zap', text: 'Shortcuts for Competitive Exams' }
+        ]
+    };
+
+    return `
+        <div class="animate-fade pb-20 space-y-12">
+            <div class="bg-slate-900 rounded-[3rem] p-8 md:p-16 text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-[100px]"></div>
+                <div class="relative z-10 max-w-3xl space-y-6">
+                    <button onclick="router.navigate('courses')" class="text-indigo-300 font-bold text-sm flex items-center gap-2 mb-4">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Courses
+                    </button>
+                    <h1 class="text-4xl md:text-6xl font-black font-heading leading-tight">${details.title}</h1>
+                    <p class="text-xl text-slate-400 font-medium">${details.tagline}</p>
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <div class="bg-white/10 px-4 py-2 rounded-xl border border-white/10 flex items-center gap-2">
+                            <i data-lucide="calendar" class="w-4 h-4 text-indigo-400"></i>
+                            <span class="text-xs font-bold">1 Year Validity</span>
+                        </div>
+                        <div class="bg-white/10 px-4 py-2 rounded-xl border border-white/10 flex items-center gap-2">
+                            <i data-lucide="users" class="w-4 h-4 text-emerald-400"></i>
+                            <span class="text-xs font-bold">500+ Enrolled</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <div class="lg:col-span-2 space-y-10">
+                    <section class="space-y-6">
+                        <h3 class="text-2xl font-bold border-l-4 border-indigo-600 pl-4">Academic Coverage</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+                                <h4 class="font-black text-indigo-600 uppercase text-[10px] tracking-widest mb-2">School Boards</h4>
+                                <p class="text-slate-800 font-bold mb-2">NCERT (CBSE/UP Board/ICSE)</p>
+                                <p class="text-sm text-slate-500 leading-relaxed">Deep-dive into every exercise. We don't just solve; we explain the 'Why' behind every theorem to ensure 95%+ in boards.</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+                                <h4 class="font-black text-rose-600 uppercase text-[10px] tracking-widest mb-2">Competitive Edge</h4>
+                                <p class="text-slate-800 font-bold mb-2">JEE/NEET Foundation</p>
+                                <p class="text-sm text-slate-500 leading-relaxed">Advanced modules that bridge the gap between school and competition. Intro to Calculus, Vectors, and Logical Reasoning.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="space-y-6">
+                        <h3 class="text-2xl font-bold border-l-4 border-indigo-600 pl-4">Curriculum Highlights</h3>
+                        <ul class="space-y-4">
+                            ${details.features.map(f => `
+                                <li class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                    <i data-lucide="${f.icon}" class="text-indigo-600 w-5 h-5"></i>
+                                    <span class="font-bold text-slate-700">${f.text}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </section>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl sticky top-24">
+                        <div class="mb-6">
+                            <p class="text-slate-400 text-sm font-bold uppercase tracking-widest mb-1">Course Price</p>
+                            <div class="flex items-end gap-2">
+                                <span class="text-4xl font-black text-slate-900">₹4,999</span>
+                                <span class="text-slate-400 line-through mb-1 text-lg">₹9,999</span>
+                                <span class="text-emerald-500 font-bold mb-1 text-sm">50% OFF</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3 mb-8">
+                            <div class="flex items-center gap-3 text-sm text-slate-600">
+                                <i data-lucide="video" class="w-4 h-4"></i> 150+ Video Lectures
+                            </div>
+                            <div class="flex items-center gap-3 text-sm text-slate-600">
+                                <i data-lucide="file-text" class="w-4 h-4"></i> Daily Practice Problems
+                            </div>
+                            <div class="flex items-center gap-3 text-sm text-slate-600">
+                                <i data-lucide="smartphone" class="w-4 h-4"></i> Offline Access (App)
+                            </div>
+                        </div>
+
+                        <button onclick="router.navigate('player', '10')" class="w-full bg-indigo-600 text-white py-5 rounded-[1.5rem] font-bold text-lg hover:bg-indigo-500 transition shadow-xl shadow-indigo-100 mb-4">
+                            Enroll Now
+                        </button>
+                        <p class="text-[10px] text-center text-slate-400 font-medium">Secure Checkout • Instant Access after Payment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+};
         
         const CoursePlayerView = (courseId) => {
             const currentVideo = courseCurriculum[2]; // Simulating "Resuming" at Video #3
