@@ -38,6 +38,8 @@
 
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
         .modal-content { background: white; padding: 24px; border-radius: 24px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+
+        .loading { text-align: center; padding: 40px; color: #94a3b8; }
     </style>
 </head>
 <body>
@@ -115,40 +117,7 @@
             }
         ];
 
-        // Helper functions
-        const isUserLoggedIn = () => currentUser !== null;
-
-        // --- Auth Functions ---
-        async function signIn(email, password) {
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) throw error;
-            return data;
-        }
-
-        async function signUp(email, password, name, role = 'student') {
-            const { data, error } = await supabase.auth.signUp({ email, password });
-            if (error) throw error;
-            // Create profile
-            const { error: profileError } = await supabase.from('profiles').insert([{ 
-                id: data.user.id, 
-                name, 
-                role, 
-                class: '10',
-                target_exam: 'Board',
-                progress: 0
-            }]);
-            if (profileError) throw profileError;
-            return data;
-        }
-
-        async function signOut() {
-            await supabase.auth.signOut();
-            currentUser = null;
-            isAdmin = false;
-            router.navigate('home');
-        }
-
-        // --- Data Fetching (using Supabase) ---
+        // --- Supabase Data Functions ---
         async function fetchCourses() {
             const { data, error } = await supabase.from('courses').select('*');
             if (error) throw error;
@@ -183,6 +152,36 @@
             return data;
         }
 
+        // --- Auth Functions ---
+        async function signIn(email, password) {
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+            return data;
+        }
+
+        async function signUp(email, password, name, role = 'student') {
+            const { data, error } = await supabase.auth.signUp({ email, password });
+            if (error) throw error;
+            // Create profile
+            const { error: profileError } = await supabase.from('profiles').insert([{
+                id: data.user.id,
+                name,
+                role,
+                class: '10',
+                target_exam: 'Board',
+                progress: 0
+            }]);
+            if (profileError) throw profileError;
+            return data;
+        }
+
+        async function signOut() {
+            await supabase.auth.signOut();
+            currentUser = null;
+            isAdmin = false;
+            router.navigate('home');
+        }
+
         // --- Admin Functions ---
         async function uploadMaterial(file, title, type, classValue, courseId = null) {
             // Upload file to storage
@@ -215,19 +214,37 @@
             return true;
         }
 
-        // --- UI Components ---
-        const ClassPillToggle = (targetView) => `
-            <div class="class-pill-grid">
-                ${['6','7','8','9','10','11','12','JEE','NEET'].map(c => `
-                    <button onclick="setClass('${c}', '${targetView}')" class="class-pill ${selectedClass === c ? 'active' : ''}">
-                        ${isNaN(c) ? c : 'Class ' + c}
-                    </button>
-                `).join('')}
-            </div>
-        `;
+        async function deleteMaterial(id) {
+            const { error } = await supabase.from('materials').delete().eq('id', id);
+            if (error) throw error;
+            return true;
+        }
+
+        // --- Helper Functions for UI ---
+        function downloadFile(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // --- Class Pills Component ---
+        function classPillToggle(targetView) {
+            return `
+                <div class="class-pill-grid">
+                    ${['6','7','8','9','10','11','12','JEE','NEET'].map(c => `
+                        <button onclick="setClass('${c}', '${targetView}')" class="class-pill ${selectedClass === c ? 'active' : ''}">
+                            ${isNaN(c) ? c : 'Class ' + c}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
 
         // --- View Functions ---
-        const HomeView = async () => {
+        async function HomeView() {
             const offers = [
                 { icon: 'monitor-play', title: 'Live Interactive Classes', desc: 'Real-time engagement with Gaurav Sir for conceptual clarity.', color: 'indigo' },
                 { icon: 'book-marked', title: 'Premium Study Material', desc: 'Class-specific E-Books, PYQs, and handwritten notes.', color: 'emerald' },
@@ -288,10 +305,11 @@
                         <div class="text-center"><p class="text-4xl font-black text-indigo-600">500+</p><p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">JEE/NEET Selections</p></div>
                         <div class="text-center"><p class="text-4xl font-black text-indigo-600">24/7</p><p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">Doubt Support</p></div>
                     </div>
-                </div>`;
-        };
+                </div>
+            `;
+        }
 
-        const CoursesView = async () => {
+        async function CoursesView() {
             const courses = await fetchCourses();
             const filtered = currentFilter === 'all' ? courses : courses.filter(c => c.category === currentFilter);
             if (filtered.length === 0) {
@@ -328,10 +346,11 @@
                             </div>
                         `).join('')}
                     </div>
-                </div>`;
-        };
+                </div>
+            `;
+        }
 
-        const BooksView = async () => {
+        async function BooksView() {
             const materials = await fetchMaterials(selectedClass);
             return `
                 <div class="space-y-10 animate-fade">
@@ -340,7 +359,7 @@
                             <h2 class="text-3xl font-bold font-heading">Nexus <span class="text-indigo-600">Library</span></h2>
                             <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full">Selected: ${selectedClass}</span>
                         </div>
-                        ${ClassPillToggle('books')}
+                        ${classPillToggle('books')}
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
                         ${materials.map(m => `
@@ -362,13 +381,14 @@
                     </div>
                     ${isAdmin ? `
                         <div class="mt-8 text-center">
-                            <button onclick="showUploadModal()" class="bg-indigo-600 text-white px-6 py-3 rounded-2xl text-sm font-bold">+ Upload Material</button>
+                            <button onclick="router.navigate('admin'); setTimeout(() => document.querySelector('#upload-section')?.scrollIntoView({behavior:'smooth'}), 100)" class="bg-indigo-600 text-white px-6 py-3 rounded-2xl text-sm font-bold">+ Upload Material</button>
                         </div>
                     ` : ''}
-                </div>`;
-        };
+                </div>
+            `;
+        }
 
-        const TestsView = async () => {
+        async function TestsView() {
             const testSeries = await fetchTestSeries(selectedClass);
             const categories = [
                 { title: 'Weekly Mock Test', key: 'weekly', icon: 'calendar-days', color: 'indigo' },
@@ -390,7 +410,7 @@
                             <h2 class="text-3xl font-bold font-heading">Test <span class="text-indigo-600">Series</span></h2>
                             <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full">Grade: ${selectedClass}</span>
                         </div>
-                        ${ClassPillToggle('tests')}
+                        ${classPillToggle('tests')}
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         ${categories.map(cat => {
@@ -414,10 +434,11 @@
                             `;
                         }).join('')}
                     </div>
-                </div>`;
-        };
+                </div>
+            `;
+        }
 
-        const DashboardView = async () => {
+        async function DashboardView() {
             if (!currentUser) return '<div class="text-center py-20">Please login first.</div>';
             const profile = await fetchUserProfile(currentUser.id);
             const enrollments = await fetchUserEnrollments(currentUser.id);
@@ -474,14 +495,15 @@
                                     <p><span class="font-semibold">Target Exam:</span> ${profile.target_exam || 'Not set'}</p>
                                     <p><span class="font-semibold">Member since:</span> ${new Date(profile.created_at).toLocaleDateString()}</p>
                                 </div>
-                                <button onclick="editProfile()" class="mt-4 w-full bg-slate-100 py-2 rounded-xl text-sm font-bold hover:bg-slate-200">Edit Profile</button>
+                                <button onclick="alert('Profile editing coming soon!')" class="mt-4 w-full bg-slate-100 py-2 rounded-xl text-sm font-bold hover:bg-slate-200">Edit Profile</button>
                             </div>
                         </div>
                     </div>
-                </div>`;
-        };
+                </div>
+            `;
+        }
 
-        const CourseDetailsView = async () => {
+        async function CourseDetailsView() {
             const courses = await fetchCourses();
             const course = courses.find(c => c.id == selectedCourseId);
             if (!course) return '<div class="text-center py-20">Course not found</div>';
@@ -533,10 +555,11 @@
                             </div>
                         </div>
                     </div>
-                </div>`;
-        };
+                </div>
+            `;
+        }
 
-        const CoursePlayerView = async () => {
+        async function CoursePlayerView() {
             const courses = await fetchCourses();
             const course = courses.find(c => c.id == selectedCourseId);
             if (!course) return '<div class="text-center py-20">Course not found</div>';
@@ -588,43 +611,46 @@
                             </div>
                         </div>
                     </div>
-                </div>`;
-        };
+                </div>
+            `;
+        }
 
-        const AuthView = () => `
-            <div class="max-w-md mx-auto py-12 animate-fade">
-                <div class="bg-white p-8 md:p-10 rounded-[2.5rem] border border-slate-200 shadow-xl space-y-8">
-                    <div class="text-center space-y-2">
-                        <h2 class="text-3xl font-extrabold text-slate-900">${authMode === 'login' ? 'Welcome Back' : 'Create Account'}</h2>
-                        <p class="text-slate-500 text-sm">${authMode === 'login' ? 'Sign in to continue' : 'Join Gaurav Classes Premium'}</p>
-                    </div>
-                    <div class="space-y-4">
-                        ${authMode === 'register' ? '<input type="text" id="regName" placeholder="Full Name" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-indigo-600 transition">' : ''}
-                        <input type="email" id="authEmail" placeholder="Email Address" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-indigo-600 transition">
-                        <input type="password" id="authPassword" placeholder="Password" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-indigo-600 transition">
-                        <button onclick="handleAuth()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition">
-                            ${authMode === 'login' ? 'Sign In' : 'Register Now'}
-                        </button>
-                    </div>
-                    <p class="text-center text-sm font-semibold text-slate-600">
-                        ${authMode === 'login' ? "New student?" : "Already have an account?"}
-                        <button onclick="toggleAuthMode()" class="text-indigo-600 font-bold hover:underline ml-1">
-                            ${authMode === 'login' ? 'Register' : 'Login'}
-                        </button>
-                    </p>
-                    <div class="relative">
-                        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
-                        <div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-2 text-slate-400">Demo Credentials</span></div>
-                    </div>
-                    <div class="text-center text-xs text-slate-500 space-y-1">
-                        <p>Student: student@example.com / student123</p>
-                        <p>Admin: admin@example.com / admin123 (set role in DB)</p>
+        async function AuthView() {
+            return `
+                <div class="max-w-md mx-auto py-12 animate-fade">
+                    <div class="bg-white p-8 md:p-10 rounded-[2.5rem] border border-slate-200 shadow-xl space-y-8">
+                        <div class="text-center space-y-2">
+                            <h2 class="text-3xl font-extrabold text-slate-900">${authMode === 'login' ? 'Welcome Back' : 'Create Account'}</h2>
+                            <p class="text-slate-500 text-sm">${authMode === 'login' ? 'Sign in to continue' : 'Join Gaurav Classes Premium'}</p>
+                        </div>
+                        <div class="space-y-4">
+                            ${authMode === 'register' ? '<input type="text" id="regName" placeholder="Full Name" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-indigo-600 transition">' : ''}
+                            <input type="email" id="authEmail" placeholder="Email Address" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-indigo-600 transition">
+                            <input type="password" id="authPassword" placeholder="Password" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-indigo-600 transition">
+                            <button onclick="handleAuth()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition">
+                                ${authMode === 'login' ? 'Sign In' : 'Register Now'}
+                            </button>
+                        </div>
+                        <p class="text-center text-sm font-semibold text-slate-600">
+                            ${authMode === 'login' ? "New student?" : "Already have an account?"}
+                            <button onclick="toggleAuthMode()" class="text-indigo-600 font-bold hover:underline ml-1">
+                                ${authMode === 'login' ? 'Register' : 'Login'}
+                            </button>
+                        </p>
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
+                            <div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-2 text-slate-400">Demo Credentials</span></div>
+                        </div>
+                        <div class="text-center text-xs text-slate-500 space-y-1">
+                            <p>Student: student@example.com / student123</p>
+                            <p>Admin: admin@example.com / admin123 (set role in DB)</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
 
-        const CheckoutView = async () => {
+        async function CheckoutView() {
             const item = selectedCourseForCheckout;
             if (!item) return '<div class="text-center py-20">No course selected.</div>';
             return `
@@ -655,18 +681,20 @@
                             </div>
                         </div>
                     </div>
-                </div>`;
-        };
+                </div>
+            `;
+        }
 
-        const AdminPanelView = () => {
+        async function AdminPanelView() {
             if (!isAdmin) return '<div class="text-center py-20">Access denied. Admin only.</div>';
+            const materials = await fetchMaterials();
             return `
                 <div class="space-y-10 animate-fade">
                     <div class="bg-white rounded-2xl shadow p-6">
                         <h2 class="text-2xl font-bold mb-4">Admin Dashboard</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Upload Material -->
-                            <div class="border rounded-xl p-4">
+                            <div id="upload-section" class="border rounded-xl p-4">
                                 <h3 class="text-lg font-bold mb-3">Upload Material</h3>
                                 <div>
                                     <select id="materialType" class="w-full p-2 border rounded mb-2">
@@ -680,9 +708,9 @@
                                     </select>
                                     <input type="text" id="materialCourseId" placeholder="Course ID (optional)" class="w-full p-2 border rounded mb-2">
                                     <input type="file" id="materialFile" class="w-full p-2 border rounded mb-2">
+                                    <div id="uploadProgress" class="hidden mt-2 text-sm text-slate-600"></div>
                                     <button onclick="uploadMaterialFile()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl">Upload</button>
                                 </div>
-                                <div id="uploadProgress" class="hidden mt-2 text-sm text-slate-600"></div>
                             </div>
                             <!-- Add Course -->
                             <div class="border rounded-xl p-4">
@@ -698,6 +726,7 @@
                                     <input type="text" id="courseDuration" placeholder="Duration (e.g., 6 months)" class="w-full p-2 border rounded mb-2">
                                     <textarea id="courseDesc" placeholder="Description" class="w-full p-2 border rounded mb-2" rows="2"></textarea>
                                     <input type="text" id="courseTags" placeholder="Tags (comma separated)" class="w-full p-2 border rounded mb-2">
+                                    <div id="courseUploadProgress" class="hidden mt-2 text-sm text-slate-600"></div>
                                     <button onclick="addNewCourse()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl">Add Course</button>
                                 </div>
                             </div>
@@ -706,25 +735,35 @@
                     <!-- Manage Materials -->
                     <div class="bg-white rounded-2xl shadow p-6">
                         <h3 class="text-xl font-bold mb-4">Manage Materials</h3>
-                        <div id="materialsList" class="space-y-2 max-h-96 overflow-y-auto"></div>
-                        <button onclick="loadMaterials()" class="mt-4 text-indigo-600 underline">Refresh</button>
+                        <div id="materialsList" class="space-y-2 max-h-96 overflow-y-auto">
+                            ${materials.map(m => `
+                                <div class="flex justify-between items-center border-b py-2">
+                                    <div><strong>${m.title}</strong> (${m.type}, ${m.class})</div>
+                                    <div><button onclick="deleteMaterialItem(${m.id})" class="text-red-600 text-sm">Delete</button></div>
+                                </div>
+                            `).join('')}
+                            ${materials.length === 0 ? '<p class="text-slate-500">No materials uploaded yet.</p>' : ''}
+                        </div>
+                        <button onclick="loadMaterialsList()" class="mt-4 text-indigo-600 underline">Refresh</button>
                     </div>
                 </div>
             `;
-        };
+        }
 
-        const SolverView = () => `
-            <div class="py-20 text-center animate-fade">
-                <h2 class="text-4xl font-bold text-indigo-600">AI Doubt Solver</h2>
-                <p class="mt-4 text-slate-500">Upload a photo of your question to get instant step-by-step help.</p>
-                <button class="mt-8 bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold">Upload Image</button>
-            </div>
-        `;
+        async function SolverView() {
+            return `
+                <div class="py-20 text-center animate-fade">
+                    <h2 class="text-4xl font-bold text-indigo-600">AI Doubt Solver</h2>
+                    <p class="mt-4 text-slate-500">Upload a photo of your question to get instant step-by-step help.</p>
+                    <button class="mt-8 bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold">Upload Image</button>
+                </div>
+            `;
+        }
 
         // --- Router ---
-        window.router = {
+        const router = {
             navigate: async (view, data = null) => {
-                if (!isUserLoggedIn() && ['dashboard', 'checkout', 'player'].includes(view)) {
+                if (!currentUser && ['dashboard', 'checkout', 'player'].includes(view)) {
                     view = 'auth';
                 }
                 if (data) {
@@ -748,7 +787,15 @@
                 };
                 const viewFn = views[view];
                 if (viewFn) {
-                    root.innerHTML = await viewFn();
+                    root.innerHTML = '<div class="loading"><i data-lucide="loader-2" class="animate-spin mx-auto w-8 h-8"></i><p class="mt-2">Loading...</p></div>';
+                    lucide.createIcons();
+                    try {
+                        const html = await viewFn();
+                        root.innerHTML = html;
+                    } catch (err) {
+                        console.error(err);
+                        root.innerHTML = `<div class="text-center py-20 text-red-600">Error loading page: ${err.message}</div>`;
+                    }
                 } else {
                     root.innerHTML = await HomeView();
                 }
@@ -757,33 +804,27 @@
                 window.scrollTo(0,0);
             }
         };
+        window.router = router;
 
-        // --- Helper Functions for UI ---
+        // --- Event Handlers (exposed globally) ---
         window.setFilter = (f) => { currentFilter = f; router.navigate('courses'); };
         window.setClass = (c, view) => { selectedClass = c; router.navigate(view); };
         window.setSlide = (index) => { currentSlide = index; router.navigate('home'); };
         window.toggleAuthMode = () => { authMode = authMode === 'login' ? 'register' : 'login'; router.navigate('auth'); };
-        window.downloadFile = (url, filename) => {
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        };
-        window.editProfile = () => alert('Profile editing coming soon!');
+        window.downloadFile = downloadFile;
         window.completePurchase = async () => {
             if (!selectedCourseForCheckout) return;
-            // Add enrollment
-            const { error } = await supabase.from('enrollments').insert({
-                user_id: currentUser.id,
-                course_id: selectedCourseForCheckout.id,
-                progress: 0
-            });
-            if (error) alert('Enrollment failed: ' + error.message);
-            else {
+            try {
+                const { error } = await supabase.from('enrollments').insert({
+                    user_id: currentUser.id,
+                    course_id: selectedCourseForCheckout.id,
+                    progress: 0
+                });
+                if (error) throw error;
                 alert('Enrolled successfully!');
                 router.navigate('dashboard');
+            } catch (error) {
+                alert('Enrollment failed: ' + error.message);
             }
         };
         window.handleAuth = async () => {
@@ -811,7 +852,7 @@
             }
         };
 
-        // Admin panel functions
+        // Admin functions
         window.uploadMaterialFile = async () => {
             const fileInput = document.getElementById('materialFile');
             const title = document.getElementById('materialTitle').value;
@@ -832,8 +873,8 @@
                 fileInput.value = '';
                 document.getElementById('materialTitle').value = '';
                 document.getElementById('materialCourseId').value = '';
-                if (document.getElementById('materialsList')) loadMaterials();
-                if (window.location.hash === '#books') router.navigate('books');
+                await loadMaterialsList();
+                if (window.location.pathname.includes('books')) router.navigate('books');
             } catch (error) {
                 progressDiv.innerHTML = 'Error: ' + error.message;
                 console.error(error);
@@ -851,42 +892,43 @@
                 alert('Please fill required fields');
                 return;
             }
+            const progressDiv = document.getElementById('courseUploadProgress');
+            progressDiv.classList.remove('hidden');
+            progressDiv.innerHTML = 'Adding course...';
             try {
                 await addCourse({ title, category, price, duration, description, tags });
-                alert('Course added!');
+                progressDiv.innerHTML = 'Course added!';
+                setTimeout(() => progressDiv.classList.add('hidden'), 3000);
                 document.getElementById('courseTitle').value = '';
                 document.getElementById('coursePrice').value = '';
                 document.getElementById('courseDuration').value = '';
                 document.getElementById('courseDesc').value = '';
                 document.getElementById('courseTags').value = '';
             } catch (error) {
-                alert('Error: ' + error.message);
+                progressDiv.innerHTML = 'Error: ' + error.message;
+                console.error(error);
             }
         };
-        window.loadMaterials = async () => {
+        window.loadMaterialsList = async () => {
             const materials = await fetchMaterials();
             const container = document.getElementById('materialsList');
             if (!container) return;
             container.innerHTML = materials.map(m => `
                 <div class="flex justify-between items-center border-b py-2">
                     <div><strong>${m.title}</strong> (${m.type}, ${m.class})</div>
-                    <div><button onclick="deleteMaterial(${m.id})" class="text-red-600 text-sm">Delete</button></div>
+                    <div><button onclick="deleteMaterialItem(${m.id})" class="text-red-600 text-sm">Delete</button></div>
                 </div>
             `).join('');
+            if (materials.length === 0) container.innerHTML = '<p class="text-slate-500">No materials uploaded yet.</p>';
         };
-        window.deleteMaterial = async (id) => {
+        window.deleteMaterialItem = async (id) => {
             if (!confirm('Delete this material?')) return;
-            const { error } = await supabase.from('materials').delete().eq('id', id);
-            if (error) alert('Delete failed: ' + error.message);
-            else loadMaterials();
-        };
-        window.showUploadModal = () => {
-            // Scroll to upload section in admin panel
-            if (window.location.hash === '#admin') {
-                document.querySelector('.border.rounded-xl.p-4')?.scrollIntoView({ behavior: 'smooth' });
-            } else {
-                router.navigate('admin');
-                setTimeout(() => document.querySelector('.border.rounded-xl.p-4')?.scrollIntoView({ behavior: 'smooth' }), 100);
+            try {
+                await deleteMaterial(id);
+                await loadMaterialsList();
+                if (window.location.pathname.includes('books')) router.navigate('books');
+            } catch (error) {
+                alert('Delete failed: ' + error.message);
             }
         };
 
@@ -894,7 +936,7 @@
             const navActions = document.getElementById('nav-actions');
             const adminLink = document.getElementById('admin-link');
             if (!navActions) return;
-            if (isUserLoggedIn()) {
+            if (currentUser) {
                 navActions.innerHTML = `
                     <div class="flex items-center gap-4">
                         <button onclick="router.navigate('dashboard')" class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"><i data-lucide="layout-dashboard" class="w-5 h-5"></i></button>
@@ -924,7 +966,7 @@
                 isAdmin = false;
             }
             updateNavbar();
-            if (window.location.hash === '#admin' && !isAdmin) router.navigate('home');
+            if (window.location.pathname === '/admin' && !isAdmin) router.navigate('home');
         });
 
         // --- Auto-rotate slider ---
