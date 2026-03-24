@@ -1076,105 +1076,6 @@
                 </div>
             </div>
         </div>
-        <script>
-            (function() {
-                // --- Replace with your Gemini API Key ---
-                const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY";
-
-                const fileInput = document.getElementById('file-input');
-                const dropZone = document.getElementById('drop-zone');
-                const solveBtn = document.getElementById('solve-btn');
-                const outputArea = document.getElementById('solution-output');
-                const outputText = document.getElementById('solution-text');
-                const preview = document.getElementById('image-preview');
-                const previewCont = document.getElementById('preview-container');
-                const uploadPrompt = document.getElementById('upload-prompt');
-
-                // 1. Handle File Selection
-                dropZone.onclick = () => fileInput.click();
-
-                fileInput.onchange = (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                            preview.src = event.target.result;
-                            previewCont.classList.remove('hidden');
-                            uploadPrompt.classList.add('hidden');
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                };
-
-                // 2. API Call on Button Click
-                solveBtn.onclick = async () => {
-                    if (!fileInput.files[0]) {
-                        alert("Please upload an image first!");
-                        return;
-                    }
-
-                    // UI Loading State
-                    solveBtn.disabled = true;
-                    solveBtn.innerHTML = '<span class="flex items-center justify-center gap-2"><i data-lucide="loader-2" class="animate-spin w-5 h-5"></i> Thinking...</span>';
-                    if (window.lucide) lucide.createIcons();
-
-                    try {
-                        const base64Data = await toBase64(fileInput.files[0]);
-                        const mimeType = fileInput.files[0].type; // e.g., image/jpeg
-
-                        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                contents: [{
-                                    parts: [
-                                        { text: "You are an expert Math and Science tutor. Identify the educational problem in this image. Provide a detailed, step-by-step solution with clear explanations suitable for a Class 10-12 student. Use markdown formatting (headings, bullet points, math expressions) for clarity." },
-                                        { inline_data: { mime_type: mimeType, data: base64Data } }
-                                    ]
-                                }]
-                            })
-                        });
-
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error?.message || "API request failed");
-                        }
-
-                        const data = await response.json();
-                        const resultText = data.candidates[0].content.parts[0].text;
-
-                        // Display Result with Markdown (if marked.js is loaded)
-                        outputArea.classList.remove('hidden');
-                        if (typeof marked !== 'undefined') {
-                            outputText.innerHTML = marked.parse(resultText);
-                        } else {
-                            outputText.innerText = resultText;
-                        }
-
-                        // Smooth Scroll to Result
-                        outputArea.scrollIntoView({ behavior: 'smooth' });
-
-                    } catch (error) {
-                        console.error("API Error:", error);
-                        alert("Mentor AI is currently busy: " + error.message);
-                    } finally {
-                        solveBtn.disabled = false;
-                        solveBtn.innerHTML = "Get Step-by-Step Solution";
-                        if (window.lucide) lucide.createIcons();
-                    }
-                };
-
-                // Helper: Convert File to Base64
-                const toBase64 = file => new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => resolve(reader.result.split(',')[1]);
-                    reader.onerror = error => reject(error);
-                });
-            })();
-        </script>
-    `;
-};
 
         // Auto-rotate slider
         setInterval(() => {
@@ -1182,7 +1083,7 @@
                 currentSlide = (currentSlide + 1) % slides.length;
                 router.navigate('home');
             }
-        }, 15000);
+        }, 10000);
 
         router.navigate('home');
     </script>
