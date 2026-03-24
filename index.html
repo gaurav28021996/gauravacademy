@@ -165,7 +165,16 @@
                     authMode = 'login'; 
                     view = 'auth'; 
                 }
-                
+                root.innerHTML = views[view]();
+        updateNavbar();
+        lucide.createIcons();
+        
+        // --- ADD THIS LINE ---
+        if (view === 'solver') initMentorAI(); 
+        
+        window.scrollTo(0,0);
+    }
+};
                 // Store data for views
                 if (data) {
                     if (view === 'checkout') selectedCourseForCheckout = data;
@@ -987,7 +996,7 @@
                 currentSlide = (currentSlide + 1) % slides.length;
                 router.navigate('home');
             }
-        }, 8000);
+        }, 15000);
 
         router.navigate('home');
     </script>
