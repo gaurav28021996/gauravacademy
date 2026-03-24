@@ -35,7 +35,7 @@ const MentorAIView = () => `
 // --- Mentor AI Logic ---
 
 // Replace with your key from https://aistudio.google.com/
-const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY"; 
+const GEMINI_API_KEY = "AIzaSyAbNpAPUGV5NiMRqBGfxxVBwBNApKQ4eCw"; 
 
 const initMentorAI = () => {
     const fileInput = document.getElementById('file-input');
