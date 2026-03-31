@@ -62,6 +62,21 @@
     <main id="app-root" class="max-w-7xl mx-auto px-6 py-12 min-h-screen"></main>
 
     <script type="module">
+// --- Persistence Layer (The "Database") ---
+const initializeDB = () => {
+    if (!localStorage.getItem('courses')) localStorage.setItem('courses', JSON.stringify(courses));
+    if (!localStorage.getItem('books')) localStorage.setItem('books', JSON.stringify(subjectsByClass));
+    // Add others as needed
+};
+initializeDB();
+
+// --- Auth State ---
+let userRole = localStorage.getItem('userRole') || 'student'; // 'student' or 'admin'
+const ADMIN_CREDENTIALS = { email: 'admin@gauravclasses.com', pass: 'admin123' };
+
+const isUserLoggedIn = () => localStorage.getItem('isLoggedIn') === 'true';
+const isAdmin = () => isUserLoggedIn() && localStorage.getItem('userRole') === 'admin';
+        
         // --- State Management ---
         let currentFilter = 'all';
         let selectedClass = '10'; 
@@ -150,7 +165,8 @@
                 { id: 2, title: "02. Calculus - Limits", duration: "48:10", completed: false, videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
             ]
         };
-        
+
+       
         const defaultCurriculum = [
             { id: 1, title: "01. Introduction to Course", duration: "15:00", completed: false, videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
             { id: 2, title: "02. Key Concepts", duration: "22:30", completed: false, videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
@@ -374,6 +390,51 @@
             `;
         };
 
+        const AdminDashboardView = () => {
+    const allCourses = JSON.parse(localStorage.getItem('courses'));
+    
+    return `
+    <div class="animate-fade space-y-10 pb-20">
+        <div class="flex justify-between items-center bg-slate-900 p-8 rounded-[2rem] text-white">
+            <div>
+                <h2 class="text-3xl font-black font-heading">Admin Control Center</h2>
+                <p class="text-slate-400 text-sm">Manage courses, books, and students</p>
+            </div>
+            <button onclick="openAddCourseModal()" class="bg-indigo-600 px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-indigo-500 transition">
+                <i data-lucide="plus-circle" class="w-5 h-5"></i> Add New Course
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6">
+            <h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="layout-list" class="text-indigo-600"></i> Active Courses</h3>
+            <div class="bg-white border border-slate-200 rounded-[2rem] overflow-hidden shadow-sm">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b border-slate-100">
+                        <tr>
+                            <th class="p-5 text-xs font-bold text-slate-400 uppercase">Course Name</th>
+                            <th class="p-5 text-xs font-bold text-slate-400 uppercase">Category</th>
+                            <th class="p-5 text-xs font-bold text-slate-400 uppercase">Price</th>
+                            <th class="p-5 text-xs font-bold text-slate-400 uppercase text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        ${allCourses.map(c => `
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="p-5 font-bold text-slate-700">${c.title}</td>
+                                <td class="p-5"><span class="text-[10px] bg-indigo-50 text-indigo-600 px-2 py-1 rounded-full font-bold uppercase">${c.cat}</span></td>
+                                <td class="p-5 font-black text-slate-900">₹${c.price}</td>
+                                <td class="p-5 text-right space-x-2">
+                                    <button onclick="editCourse(${c.id})" class="text-slate-400 hover:text-indigo-600 p-2"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                                    <button onclick="deleteCourse(${c.id})" class="text-slate-400 hover:text-rose-600 p-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>`;
+};
         const CoursesView = () => {
             const filtered = currentFilter === 'all' ? courses : courses.filter(c => c.cat === currentFilter);
             return `
@@ -780,15 +841,61 @@
         window.setFilter = (f) => { currentFilter = f; router.navigate('courses'); };
         window.setClass = (c, view) => { selectedClass = c; router.navigate(view); };
         window.setSlide = (index) => { currentSlide = index; router.navigate('home'); };
+       window.deleteCourse = (id) => {
+    if (confirm("Are you sure you want to delete this course? This cannot be undone.")) {
+        let dbCourses = JSON.parse(localStorage.getItem('courses'));
+        dbCourses = dbCourses.filter(c => c.id !== id);
+        localStorage.setItem('courses', JSON.stringify(dbCourses));
+        router.navigate('admin'); // Refresh view
+    }
+};
+
+window.openAddCourseModal = () => {
+    // For a real professional developer, I'd suggest a Modal, 
+    // but for this HTML structure, we can use a prompt for quick data entry:
+    const title = prompt("Enter Course Title:");
+    if (!title) return;
+    const price = prompt("Enter Price (INR):");
+    const category = prompt("Enter Category (school, engineering, medical):");
+
+    let dbCourses = JSON.parse(localStorage.getItem('courses'));
+    const newCourse = {
+        id: Date.now(),
+        title: title,
+        price: price,
+        cat: category,
+        tags: ["New"],
+        description: "Added by Admin",
+        duration: "Self-paced"
+    };
+    dbCourses.push(newCourse);
+    localStorage.setItem('courses', JSON.stringify(dbCourses));
+    router.navigate('admin');
+};
         window.handleAuthSubmit = () => { 
             localStorage.setItem('isLoggedIn', 'true'); 
             router.navigate(selectedCourseForCheckout ? 'checkout' : 'dashboard'); 
         };
-        window.handleLogout = () => { 
-            localStorage.removeItem('isLoggedIn'); 
-            selectedCourseForCheckout = null; 
-            router.navigate('home'); 
-        };
+       window.handleAuthSubmit = () => {
+    const email = document.getElementById('authEmail').value;
+    const pass = document.getElementById('authPassword').value;
+
+    if (email === ADMIN_CREDENTIALS.email && pass === ADMIN_CREDENTIALS.pass) {
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userRole', 'admin');
+        router.navigate('admin'); // Navigate to Admin Panel
+    } else {
+        // Standard Student Login
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userRole', 'student');
+        router.navigate(selectedCourseForCheckout ? 'checkout' : 'dashboard');
+    }
+};
+window.handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userRole');
+    router.navigate('home');
+};
         window.toggleAuthMode = () => { 
             authMode = authMode === 'login' ? 'register' : 'login'; 
             router.navigate('auth'); 
