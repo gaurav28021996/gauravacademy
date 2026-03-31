@@ -819,6 +819,7 @@ const isAdmin = () => isUserLoggedIn() && localStorage.getItem('userRole') === '
                     checkout: CheckoutView,
                     'course-details': CourseDetailsView,
                     'player': CoursePlayerView
+                    admin: AdminDashboardView
                 };
                 
                 const viewFn = views[view];
@@ -846,7 +847,11 @@ const isAdmin = () => isUserLoggedIn() && localStorage.getItem('userRole') === '
         let dbCourses = JSON.parse(localStorage.getItem('courses'));
         dbCourses = dbCourses.filter(c => c.id !== id);
         localStorage.setItem('courses', JSON.stringify(dbCourses));
-        router.navigate('admin'); // Refresh view
+        router.navigate('admin')
+            if (view === 'admin' && !isAdmin()) {
+    view = 'auth';
+}; // Refresh view
+        
     }
 };
 
